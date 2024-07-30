@@ -2,7 +2,6 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-
 const app = express();
 
 // Middleware
@@ -10,39 +9,45 @@ app.use(bodyParser.json());
 app.use(cors());
 
 // MongoDB Connection
-mongoose.connect('mongodb://localhost:27017/tuitionmanagement', { useNewUrlParser: true, useUnifiedTopology: true });
+const dbUrl = 'mongodb://localhost:27017';
+const dbName = 'tuition-management';
+
+mongoose.connect(`${dbUrl}/${dbName}`, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', () => {
   console.log('Connected to MongoDB');
-  
-  // List collections in the database
-  db.db.listCollections().toArray((err, collections) => {
-    if (err) {
-      console.error('Error listing collections:', err);
-    } else {
-      console.log('Collections:', collections);
-    }
-  });
 });
+
+// Example Schema and Model
+const Schema = mongoose.Schema;
+const UserSchema = new Schema({
+  name: String,
+  email: String,
+  mobile: String,
+});
+
+const User = mongoose.model('User', UserSchema);
 
 // Routes
-app.get('/', (req, res) => {
-  res.send('Hello World');
+app.post('/create', async (req, res) => {
+  try {
+    const user = new User(req.body);
+    await user.save();
+    res.json({ success: true, message: 'User created successfully', data: user });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Error creating user', error });
+  }
 });
 
-const authRoutes = require('./routes/auth');
-app.use('/api/auth', authRoutes);
-
-// API endpoint to get collections
-app.get('/api/collections', (req, res) => {
-  db.db.listCollections().toArray((err, collections) => {
-    if (err) {
-      return res.status(500).json({ error: 'Error listing collections' });
-    }
-    res.json(collections);
-  });
+app.get('/', async (req, res) => {
+  try {
+    const users = await User.find();
+    res.json({ success: true, message: 'Users fetched successfully', data: users });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Error fetching users', error });
+  }
 });
 
 // Start the Server

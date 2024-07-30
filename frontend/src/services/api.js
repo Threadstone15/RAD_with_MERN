@@ -1,19 +1,11 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import Register from './components/Register';
-import Login from './components/Login';
-import Dashboard from './components/Dashboard';
+import axios from 'axios';
 
-const App = () => {
-  return (
-    <Router>
-      <Switch>
-        <Route path="/register" component={Register} />
-        <Route path="/login" component={Login} />
-        <Route path="/dashboard" component={Dashboard} />
-      </Switch>
-    </Router>
-  );
+export const login = async (userData) => {
+  const response = await axios.post('/api/auth/login', userData);
+  return response.data;
 };
 
-export default App;
+export const register = async (userData) => {
+  const response = await axios.post('/api/auth/register', userData);
+  return response.data;
+};
