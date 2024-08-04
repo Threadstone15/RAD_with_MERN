@@ -30,25 +30,7 @@ db.once('open', () => {
 });
 
 
-// Routes
-app.post('/create', async (req, res) => {
-  try {
-    const user = new User(req.body);
-    await user.save();
-    res.json({ success: true, message: 'User created successfully', data: user });
-  } catch (error) {
-    res.status(500).json({ success: false, message: 'Error creating user', error });
-  }
-});
 
-app.get('/', async (req, res) => {
-  try {
-    const users = await User.find();
-    res.json({ success: true, message: 'Users fetched successfully', data: users });
-  } catch (error) {
-    res.status(500).json({ success: false, message: 'Error fetching users', error });
-  }
-});
 
 // Start the Server
 const PORT = process.env.PORT || 5000;
