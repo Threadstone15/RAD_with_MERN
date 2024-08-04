@@ -1,12 +1,21 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const app = express();
+const authRoutes = require('./routes/auth');
+const protectedRoutes = require('./routes/protectedRoutes');
+
 
 // Middleware
 app.use(bodyParser.json());
 app.use(cors());
+app.use(cookieParser());
+
+// Routes
+app.use('/api/auth', authRoutes);
+app.use('/api', protectedRoutes);
 
 // MongoDB Connection
 const dbUrl = 'mongodb://localhost:27017';
