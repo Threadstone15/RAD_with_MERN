@@ -18,10 +18,10 @@ app.use('/api/auth', authRoutes);
 app.use('/api', protectedRoutes);
 
 // MongoDB Connection
-const dbUrl = 'mongodb://localhost:27017';
-const dbName = 'tuition-management';
+const dbUrl = 'mongodb+srv://admin:admin106@tutionmanagement.tmvutgf.mongodb.net/TutionManagement?retryWrites=true&w=majority&appName=TutionManagement';
 
-mongoose.connect(`${dbUrl}/${dbName}`, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true});
+
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -29,15 +29,6 @@ db.once('open', () => {
   console.log('Connected to MongoDB');
 });
 
-// Example Schema and Model
-const Schema = mongoose.Schema;
-const UserSchema = new Schema({
-  name: String,
-  email: String,
-  mobile: String,
-});
-
-const User = mongoose.model('User', UserSchema);
 
 // Routes
 app.post('/create', async (req, res) => {

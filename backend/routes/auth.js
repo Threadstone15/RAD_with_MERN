@@ -1,29 +1,8 @@
 const express = require('express');
-const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const router = express.Router();
 
-// Register
-// routes/auth.js
-router.post('/register', async (req, res) => {
-  try {
-    const { username, password, role, profile } = req.body;
-
-    // Validate role
-    if (!['student', 'teacher'].includes(role)) {
-      return res.status(400).json({ error: 'Invalid role' });
-    }
-
-    // Create new user
-    const user = new User({ username, password, role, profile });
-    await user.save();
-
-    res.status(201).json({ message: 'User registered successfully' });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-});
 
 
 
@@ -54,27 +33,6 @@ router.post('/login', async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 });
-
-
-// routes/user.js
-router.put('/user/:userId/classes', authMiddleware, async (req, res) => {
-  try {
-    const { userId } = req.params;
-    const { classIds } = req.body;
-
-    // Ensure the user is authenticated and authorized
-    if (req.user._id.toString() !== userId.toString() && req.user.role !== 'manager') {
-      return res.status(403).json({ error: 'Access denied' });
-    }
-
-    // Update the user's classIds
-    await User.findByIdAndUpdate(userId, { $set: { classIds } });
-    res.json({ message: 'Classes updated successfully' });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-});
-
 
 
 module.exports = router;
