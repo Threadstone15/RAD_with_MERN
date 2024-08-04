@@ -14,6 +14,10 @@ const PaymentSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
+  month: {
+    type: String,
+    required: true,
+  },
   status: {
     type: String,
     enum: ["paid", "pending"],
