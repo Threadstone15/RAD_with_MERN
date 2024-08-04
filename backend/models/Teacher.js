@@ -10,11 +10,7 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  role: {
-    type: String,
-    enum: ["student", "teacher", "manager"],
-    required: true,
-  },
+
   profile: {
     firstName: {
       type: String,
@@ -40,14 +36,8 @@ const UserSchema = new mongoose.Schema({
       ref: "Class",
     },
   ],
-  paymentIds: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Payment",
-    },
-  ],
 });
 
-const User = mongoose.model("User", UserSchema);
+const Student = mongoose.model("User", UserSchema);
 
-module.exports = User;
+module.exports = Student;
