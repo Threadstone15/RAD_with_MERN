@@ -7,15 +7,23 @@ import './Login.css'; // Import custom CSS file
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState(''); // For displaying error messages
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await login({ email, password });
-      navigate('/dashboard');
+      const response = await login({ email, password });
+      
+      // Check for the redirectUrl in the response to determine the dashboard
+      if (response.redirectUrl) {
+        navigate(response.redirectUrl);
+      } else {
+        setErrorMessage('Login failed: Invalid credentials');
+      }
     } catch (error) {
       console.error("Login failed:", error);
+      setErrorMessage('Login failed: Invalid credentials or server error');
     }
   };
 
@@ -47,6 +55,11 @@ const Login = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+          {errorMessage && (
+            <Typography color="error" variant="body2" className="login-error">
+              {errorMessage}
+            </Typography>
+          )}
           <Button
             type="submit"
             fullWidth

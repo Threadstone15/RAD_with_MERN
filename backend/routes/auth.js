@@ -1,38 +1,56 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const User = require('../models/User');
+const Student = require('../models/Student'); // Importing the Student model
+const Teacher = require('../models/Teacher'); // Importing the Teacher model
 const router = express.Router();
 
+const SECRET_KEY = 'your_secret_key'; // Replace with your actual secret key
 
-
-
-// Login
+// Unified Login Route
 router.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body;
-    const user = await User.findOne({ username });
-    
+
+    // Try to find the user in the students collection
+    let user = await Student.findOne({ username });
+    let userType = 'student'; // Default to student
+
+    if (!user) {
+      // If not found, try to find the user in the teachers collection
+      user = await Teacher.findOne({ username });
+      userType = 'teacher';
+    }
+
+    // If user not found in either collection, return an error
     if (!user || !(await user.comparePassword(password))) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
+
+    // Generate JWT token with user ID and role
     const token = jwt.sign(
-      { id: user._id, role: user.role },
+      { id: user._id, role: userType },
       SECRET_KEY,
-      { expiresIn: '1h' } // Token expiration time
+      { expiresIn: '1h' }
     );
 
     // Set token in HTTP-only cookie
     res.cookie('token', token, {
-      httpOnly: true, // Helps prevent XSS attacks
-      secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
-      sameSite: 'strict', // CSRF protection
-      maxAge: 3600000 // 1 hour
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 3600000,
     });
-    res.json({ message: 'Login successful' });
+
+    // Redirect based on user role
+    if (userType === 'student') {
+      res.json({ message: 'Login successful', redirectUrl: '/student-dashboard' });
+    } else if (userType === 'teacher') {
+      res.json({ message: 'Login successful', redirectUrl: '/teacher-dashboard' });
+    }
+
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 });
-
 
 module.exports = router;
