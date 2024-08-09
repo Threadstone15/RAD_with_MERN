@@ -29,4 +29,4 @@ const TeacherPage = () => {
   );
 };
 
-export default TeacherPage;
+export default TeacherPage; // Corrected export

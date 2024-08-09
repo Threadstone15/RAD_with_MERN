@@ -1,11 +1,8 @@
 const mongoose = require("mongoose");
+const bcrypt = require('bcrypt');
 
 const TeacherSchema = new mongoose.Schema({
-  username: {
-    type: String,
-    required: true,
-    unique: true,
-  },
+  // Removed the username field, as it's not needed anymore.
   password: {
     type: String,
     required: true,
@@ -36,6 +33,11 @@ const TeacherSchema = new mongoose.Schema({
     },
   ],
 });
+
+// Compare password method
+TeacherSchema.methods.comparePassword = async function(candidatePassword) {
+  return bcrypt.compare(candidatePassword, this.password);
+};
 
 const Teacher = mongoose.model("Teacher", TeacherSchema);
 

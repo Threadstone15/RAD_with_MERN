@@ -1,8 +1,11 @@
 import axios from 'axios';
 
-export const login = async (credentials) => {
-  const response = await axios.post('/api/auth/login', credentials);
-  return response.data; // Returning the response data to handle redirection
+export const login = async ({ email, password }) => {
+  const response = await axios.post('http://localhost:5000/api/auth/login', {
+    email,
+    password,
+  });
+  return response.data;
 };
 
 export const register = async (userData) => {

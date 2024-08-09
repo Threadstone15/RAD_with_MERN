@@ -9,21 +9,25 @@ const SECRET_KEY = 'your_secret_key'; // Replace with your actual secret key
 // Unified Login Route
 router.post('/login', async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
 
-    // Try to find the user in the students collection
-    let user = await Student.findOne({ username });
+    // Log the incoming email and password
+    console.log('Received email:', email);
+    console.log('Received password:', password);
+
+    // Try to find the user in the students collection by email
+    let user = await Student.findOne({ 'profile.email': email });
     let userType = 'student'; // Default to student
 
     if (!user) {
-      // If not found, try to find the user in the teachers collection
-      user = await Teacher.findOne({ username });
+      // If not found, try to find the user in the teachers collection by email
+      user = await Teacher.findOne({ 'profile.email': email });
       userType = 'teacher';
     }
 
     // If user not found in either collection, return an error
     if (!user || !(await user.comparePassword(password))) {
-      return res.status(401).json({ error: 'Invalid credentials' });
+      return res.status(401).json({ error: 'Invalid credentials....' });
     }
 
     // Generate JWT token with user ID and role

@@ -1,23 +1,22 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { TextField, Button, Container, Typography, Paper, Box } from '@mui/material';
 import { login } from '../services/api';
+import { TextField, Button, Container, Typography, Paper, Box } from '@mui/material';
 import './Login.css'; // Import custom CSS file
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState(''); // For displaying error messages
+  const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await login({ email, password });
-      
-      // Check for the redirectUrl in the response to determine the dashboard
+
       if (response.redirectUrl) {
-        navigate(response.redirectUrl);
+        navigate(response.redirectUrl); // Redirect based on URL from backend
       } else {
         setErrorMessage('Login failed: Invalid credentials');
       }

@@ -5,6 +5,7 @@ import Home from './components/Home';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import Register from './components/Register';
+import TeacherDashboard from './pages/Teacher'; // Corrected path after moving it inside src/
 import './App.css';
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/teacher-dashboard" element={<TeacherDashboard />} /> {/* Route for teacher dashboard */}
       </Routes>
     </Router>
   );
