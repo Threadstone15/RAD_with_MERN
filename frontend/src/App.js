@@ -6,7 +6,8 @@ import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import Register from './components/Register';
 import TeacherDashboard from './pages/Teacher'; // Corrected path after moving it inside src/
-import ManagerDashboard from './pages/Manager'; // Corrected path after moving it inside src/
+import ManagerDashboard from './pages/Manager';
+import StudentDashboard from './pages/Student'; // Corrected path after moving it inside src/
 import './App.css';
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/teacher-dashboard" element={<TeacherDashboard />} /> {/* Route for teacher dashboard */}
         <Route path="/manager-dashboard" element={<ManagerDashboard />} /> 
+        <Route path="/student-dashboard" element={<StudentDashboard />} />
       </Routes>
     </Router>
   );
