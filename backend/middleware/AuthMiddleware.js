@@ -6,6 +6,7 @@ const SECRET_KEY = process.env.JWT_SECRET || 'your_jwt_secret_key'; // Use an en
 
 module.exports = async (req, res, next) => {
   const token = req.cookies.token; // Read token from cookie
+ 
 
   if (!token) {
     return res.status(401).json({ error: 'No token provided' });
@@ -19,7 +20,7 @@ module.exports = async (req, res, next) => {
     let user;
     if (userRole === 'student') {
       user = await Student.findById(userId);
-    } else if (userRole === 'teacher') {
+    } else if (userRole === 'teacher' || userRole ==='manager') {
       user = await Teacher.findById(userId);
     } else {
       return res.status(401).json({ error: 'Invalid role in token' });

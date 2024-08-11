@@ -8,19 +8,13 @@ const MONGO_URI = 'mongodb+srv://admin:admin106@tutionmanagement.tmvutgf.mongodb
 // Test data
 const teachers = [
   {
-    firstName: 'John',
-    lastName: 'Doe',
-    email: 'john.doe@example.com',
+    firstName: 'manager',
+    lastName: 'manager',
+    email: 'manager@tuition.com',
     phone: '123-456-7890',
     password: 'password123', // Real password for reference
   },
-  {
-    firstName: 'Jane',
-    lastName: 'Smith',
-    email: 'jane.smith@example.com',
-    phone: '987-654-3210',
-    password: 'securePass456', // Real password for reference
-  },
+  
 ];
 
 async function seedTeachers() {
