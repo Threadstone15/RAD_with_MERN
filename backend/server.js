@@ -6,6 +6,7 @@ const cors = require('cors');
 const app = express();
 const authRoutes = require('./routes/auth');
 const protectedRoutes = require('./routes/protectedRoutes');
+const managerRoutes = require('./routes/manager')
 
 
 // Middleware
@@ -14,6 +15,7 @@ app.use(cors());
 app.use(cookieParser());
 
 // Routes
+app.use('/manager-dashboard', managerRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api', protectedRoutes);
 

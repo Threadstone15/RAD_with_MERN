@@ -5,6 +5,7 @@ const Teacher = require('../models/Teacher'); // Importing the Teacher model
 const router = express.Router();
 
 const SECRET_KEY = 'your_secret_key'; // Replace with your actual secret key
+const MANAGER_URL = 'manager@tuition.com'; // Replace with your actual secret key
 
 // Unified Login Route
 router.post('/login', async (req, res) => {
@@ -22,7 +23,11 @@ router.post('/login', async (req, res) => {
     if (!user) {
       // If not found, try to find the user in the teachers collection by email
       user = await Teacher.findOne({ 'profile.email': email });
-      userType = 'teacher';
+      if(user.profile.email === MANAGER_URL) {
+          userType = 'manager';
+        } else {
+          userType = 'teacher';
+      }
     }
 
     // If user not found in either collection, return an error
@@ -50,7 +55,9 @@ router.post('/login', async (req, res) => {
       res.json({ message: 'Login successful', redirectUrl: '/student-dashboard' });
     } else if (userType === 'teacher') {
       res.json({ message: 'Login successful', redirectUrl: '/teacher-dashboard' });
-    }
+    } else if (userType === 'manager') {
+        res.json({ message: 'Login successful', redirectUrl: '/manager-dashboard' });
+      }
 
   } catch (error) {
     res.status(400).json({ error: error.message });

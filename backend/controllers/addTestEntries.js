@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
-const User = require('./models/User'); // Adjust the path if necessary
+const Student = require('../models/Student');
+const bcrypt = require('bcrypt');
+
 
 const dbUrl = 'mongodb+srv://admin:admin106@tutionmanagement.tmvutgf.mongodb.net/TutionManagement?retryWrites=true&w=majority&appName=TutionManagement';
 
@@ -10,9 +12,8 @@ db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', async () => {
   console.log('Connected to MongoDB');
 
-  const testUsers = [
+  const students = [
     {
-      username: 'student1',
       password: 'password1',
       profile: {
         firstName: 'John',
@@ -24,7 +25,6 @@ db.once('open', async () => {
       paymentIds: [], // Add ObjectId references if available
     },
     {
-      username: 'student2',
       password: 'password2',
       profile: {
         firstName: 'Jane',
@@ -36,7 +36,6 @@ db.once('open', async () => {
       paymentIds: [],
     },
     {
-      username: 'student3',
       password: 'password3',
       profile: {
         firstName: 'Jim',
@@ -48,7 +47,6 @@ db.once('open', async () => {
       paymentIds: [],
     },
     {
-      username: 'student4',
       password: 'password4',
       profile: {
         firstName: 'Jake',
@@ -60,7 +58,6 @@ db.once('open', async () => {
       paymentIds: [],
     },
     {
-      username: 'student5',
       password: 'password5',
       profile: {
         firstName: 'Jill',
@@ -74,8 +71,24 @@ db.once('open', async () => {
   ];
 
   try {
-    await User.insertMany(testUsers);
-    console.log('Test users added successfully');
+    for (const student of students) {
+      // Hash the password
+      const hashedPassword = await bcrypt.hash(student.password, 10);
+      
+      // Create a new teacher instance
+      const newStudent = new Student({
+        profile: {
+          firstName: student.profile.firstName,
+          lastName: student.profile.lastName,
+          email: student.profile.email,
+          phone: student.profile.phone,
+        },
+        password: hashedPassword,
+      });
+
+      // Save to the database
+      await newStudent.save();
+    }
   } catch (err) {
     console.error('Error adding test users:', err);
   } finally {
