@@ -2,7 +2,10 @@ const mongoose = require("mongoose");
 const bcrypt = require('bcrypt');
 
 const StudentSchema = new mongoose.Schema({
-  // Removed the username field, as it's not needed anymore.
+  studentID: {
+    type: String,
+    required: true,
+  },
   password: {
     type: String,
     required: true,

@@ -5,8 +5,7 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const app = express();
 const authRoutes = require('./routes/auth');
-const protectedRoutes = require('./routes/protectedRoutes');
-const managerRoutes = require('./routes/manager')
+const managerRoutes = require('./routes/managerDashboard')
 
 
 // Middleware
@@ -17,7 +16,6 @@ app.use(cookieParser());
 // Routes
 app.use('/manager-dashboard', managerRoutes);
 app.use('/api/auth', authRoutes);
-app.use('/api', protectedRoutes);
 
 // MongoDB Connection
 const dbUrl = 'mongodb+srv://admin:admin106@tutionmanagement.tmvutgf.mongodb.net/TutionManagement?retryWrites=true&w=majority&appName=TutionManagement';
