@@ -1,9 +1,6 @@
 const express = require('express');
 const crypto = require('crypto');
-<<<<<<< Udeepa
 const Payment = require('../models/Payment'); // Import the Payment model
-=======
->>>>>>> main
 const router = express.Router();
 
 const MERCHANT_ID = '1227926'; // Replace with your actual Merchant ID
@@ -40,7 +37,6 @@ router.post('/generate-hash', (req, res) => {
     res.json({ hash });
 });
 
-<<<<<<< Udeepa
 // Notify URL route to handle payment status updates from PayHere
 router.post('/payhere/notify', async (req, res) => {
     const { merchant_id, order_id, payhere_amount, payhere_currency, status_code, md5sig, method } = req.body;
@@ -77,6 +73,4 @@ router.post('/payhere/notify', async (req, res) => {
     }
 });
 
-=======
->>>>>>> main
 module.exports = router;
