@@ -1,5 +1,9 @@
 const express = require('express');
 const crypto = require('crypto');
+<<<<<<< Udeepa
+const Payment = require('../models/Payment'); // Import the Payment model
+=======
+>>>>>>> main
 const router = express.Router();
 
 const MERCHANT_ID = '1227926'; // Replace with your actual Merchant ID
@@ -36,4 +40,43 @@ router.post('/generate-hash', (req, res) => {
     res.json({ hash });
 });
 
+<<<<<<< Udeepa
+// Notify URL route to handle payment status updates from PayHere
+router.post('/payhere/notify', async (req, res) => {
+    const { merchant_id, order_id, payhere_amount, payhere_currency, status_code, md5sig, method } = req.body;
+
+    // Verify the md5sig to ensure the notification is genuine
+    const local_md5sig = crypto.createHash('md5')
+        .update(
+            merchant_id +
+            order_id +
+            payhere_amount +
+            payhere_currency +
+            status_code +
+            crypto.createHash('md5').update(MERCHANT_SECRET).digest('hex').toUpperCase()
+        )
+        .digest('hex')
+        .toUpperCase();
+
+    if (local_md5sig === md5sig && status_code === '2') {
+        try {
+            // Update the Payment collection with payment status as 'paid'
+            await Payment.findOneAndUpdate(
+                { order_id: order_id },
+                { status: 'paid', date: new Date() }
+            );
+            console.log(`Payment for order ${order_id} updated successfully.`);
+            res.status(200).send('Payment notification received and processed successfully.');
+        } catch (error) {
+            console.error('Error updating payment:', error);
+            res.status(500).send('Internal server error');
+        }
+    } else {
+        console.error('Payment verification failed or payment not successful');
+        res.status(400).send('Invalid payment notification');
+    }
+});
+
+=======
+>>>>>>> main
 module.exports = router;
