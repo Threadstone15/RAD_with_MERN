@@ -1,28 +1,95 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import SettingsIcon from '@mui/icons-material/Settings';
+import { Drawer, List, ListItem, ListItemText, ListItemIcon, Box, Typography, Divider, Button } from '@mui/material';
+import { Link, useLocation } from 'react-router-dom';
+import HomeIcon from '@mui/icons-material/Home';
+import PeopleIcon from '@mui/icons-material/People';
+import ClassIcon from '@mui/icons-material/Class';
+import SchoolIcon from '@mui/icons-material/School';
+import PaymentIcon from '@mui/icons-material/Payment';
 import LogoutIcon from '@mui/icons-material/Logout';
 
 const Sidebar = () => {
+  const location = useLocation();
+  const isDashboard = location.pathname === '/dashboard';
+
+  const handleLogout = () => {
+    window.location.href = '/';
+  };
+
   return (
-    <div className="sidebar">
+    <Drawer
+      variant="permanent"
+      sx={{
+        width: 240,
+        flexShrink: 0,
+        [`& .MuiDrawer-paper`]: {
+          width: 240,
+          boxSizing: 'border-box',
+          backgroundColor: '#333',
+          color: '#fff',
+        },
+      }}
+    >
+      <Box sx={{ display: 'flex', alignItems: 'center', padding: 2 }}>
+        <img src={require('../assets/logo.png')} alt="Logo" width={40} height={40} style={{ marginRight: 16 }} />
+        <Typography variant="h6" component="div">
+          Tutor
+        </Typography>
+      </Box>
+      <Divider sx={{ backgroundColor: '#555' }} />
+
       <List>
-        <ListItem button component={Link} to="/dashboard">
-          <ListItemIcon><DashboardIcon /></ListItemIcon>
-          <ListItemText primary="Dashboard" />
+        <ListItem button component={Link} to="/manager-dashboard">
+          <ListItemIcon sx={{ color: '#fff' }}>
+            <HomeIcon />
+          </ListItemIcon>
+          <ListItemText primary="Home" />
         </ListItem>
-        <ListItem button component={Link} to="/settings">
-          <ListItemIcon><SettingsIcon /></ListItemIcon>
-          <ListItemText primary="Settings" />
+        <ListItem button component={Link} to="/student-dashboard">
+          <ListItemIcon sx={{ color: '#fff' }}>
+            <PeopleIcon />
+          </ListItemIcon>
+          <ListItemText primary="Students" />
         </ListItem>
-        <ListItem button>
-          <ListItemIcon><LogoutIcon /></ListItemIcon>
-          <ListItemText primary="Logout" />
+        <ListItem button component={Link} to="/classes">
+          <ListItemIcon sx={{ color: '#fff' }}>
+            <ClassIcon />
+          </ListItemIcon>
+          <ListItemText primary="Classes" />
+        </ListItem>
+        <ListItem button component={Link} to="/tutors">
+          <ListItemIcon sx={{ color: '#fff' }}>
+            <SchoolIcon />
+          </ListItemIcon>
+          <ListItemText primary="Tutors" />
+        </ListItem>
+        <ListItem button component={Link} to="/payments">
+          <ListItemIcon sx={{ color: '#fff' }}>
+            <PaymentIcon />
+          </ListItemIcon>
+          <ListItemText primary="Payments" />
         </ListItem>
       </List>
-    </div>
+
+      <Divider sx={{ backgroundColor: '#555' }} />
+
+      <Box sx={{ padding: 2 }}>
+          <Button
+            color="inherit"
+            fullWidth
+            startIcon={<LogoutIcon />}
+            onClick={handleLogout}
+            sx={{
+              backgroundColor: '#dc3545',
+              color: '#fff',
+              '&:hover': { backgroundColor: '#c82333' },
+            }}
+          >
+            Logout
+          </Button>
+        
+      </Box>
+    </Drawer>
   );
 };
 

@@ -6,16 +6,19 @@ import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import Register from './components/Register';
 import TeacherDashboard from './pages/Teacher'; // Corrected path after moving it inside src/
-import ManagerDashboard from './pages/Manager';
+import ManagerDashboard from './pages/ManagerDashboard';
 import StudentDashboard from './pages/Student'; // Corrected path after moving it inside src/
 import './App.css';
+import About from './components/About';
+import Contact from './components/Contact'
 
 function App() {
   return (
     <Router>
-      <Navbar />
       <Routes>
         <Route path="/" element={<Home />} /> {/* Set Home as the default route */}
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/dashboard" element={<Dashboard />} />

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Sidebar from '../components/Sidebar';
 
 const StudentPage = () => {
   const [hash, setHash] = useState('');
@@ -93,21 +94,24 @@ const StudentPage = () => {
   };
 
   return (
-    <div>
-      <h1>Welcome, {student.name}</h1>
-      <p>Email: {student.email}</p>
+    <div style={{ display: 'flex' }}>
+      <Sidebar />
+      <div style={{ flexGrow: 1, padding: '20px' }}>
+        <h1>Welcome, {student.name}</h1>
+        <p>Email: {student.email}</p>
 
-      <h2>Your Courses</h2>
-      <ul>
-        {student.courses.map(course => (
-          <li key={course.id}>
-            {course.name} - LKR {course.amount}
-            <button onClick={() => handlePayment(course)} disabled={loading}>
-              {loading ? 'Processing...' : 'Pay Now'}
-            </button>
-          </li>
-        ))}
-      </ul>
+        <h2>Your Courses</h2>
+        <ul>
+          {student.courses.map(course => (
+            <li key={course.id}>
+              {course.name} - LKR {course.amount}
+              <button onClick={() => handlePayment(course)} disabled={loading}>
+                {loading ? 'Processing...' : 'Pay Now'}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };
