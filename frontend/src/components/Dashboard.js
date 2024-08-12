@@ -1,17 +1,10 @@
-import React from 'react';
-import { Outlet } from 'react-router-dom';
-import Sidebar from './Sidebar';
-import './Dashboard.css'; // Import the CSS file for styling
+import React from 'react'
+import Sidebar from './Sidebar'
 
-const Dashboard = () => {
+function Dashboard() {
   return (
-    <div className="dashboard-container">
-      <Sidebar />
-      <main className="dashboard-content">
-        <Outlet /> {/* This will render the nested routes */}
-      </main>
-    </div>
-  );
-};
+    <div><Sidebar/>Dashboard</div>
+  )
+}
 
-export default Dashboard;
+export default Dashboard

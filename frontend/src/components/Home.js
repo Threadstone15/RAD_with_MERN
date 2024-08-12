@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Container, Typography, Box, Grid, Card, CardContent, CardMedia, Button } from '@mui/material';
+import Navbar from './Navbar';
 
 const features = [
   {
@@ -49,6 +50,8 @@ const features = [
 
 const Home = () => {
   return (
+    <div>
+      <Navbar/>
     <Container maxWidth="lg">
       <Box my={4} textAlign="center">
         <Typography variant="h2" component="h1" gutterBottom>
@@ -83,6 +86,7 @@ const Home = () => {
         </Grid>
       </Box>
     </Container>
+    </div>
   );
 };
 
