@@ -5,8 +5,8 @@ import Home from './components/Home';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import Register from './components/Register';
-import TeacherDashboard from './pages/Teacher'; // Corrected path after moving it inside src/
-import ManagerDashboard from './pages/Manager'; // Corrected path after moving it inside src/
+import TeacherDashboard from './pages/Teacher'; 
+import ManagerDashboard from './pages/Manager'; 
 import './App.css';
 
 function App() {
