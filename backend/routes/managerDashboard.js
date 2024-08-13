@@ -192,30 +192,48 @@ router.post('/Teacher', async (req, res) => {
 
 
 
-router.post('/markAttendance', async (req, res) => {
+router.post('/mark-attendance', async (req, res) => {
     try {
-        const { classID, studentID } = req.body;
+        const { studentID } = req.body;
 
-        const student = await Student.findOne({
-            studentID: studentID,
-            classIds: classID
-        });
-        if (!student) {
-            return res.status(401).json({ error: 'Student is not enrolled in Class' });
+        if (!studentID) {
+            return res.status(400).json({ error: 'Student ID is required' });
         }
-        const today = new Date();
-        const newAttendance = new Attendance({
-            classId: classID,
-            studentId: studentID,
-            date: today,
-            status: "present",
+
+        const student = await Student.findOne({ studentID });
+        if (!student) {
+            return res.status(404).json({ error: 'Student not found' });
+        }
+
+        const twoMinutesAgo = new Date(Date.now() - 2 * 60 * 1000);
+
+        const recentAttendance = await Attendance.findOne({
+            studentID,
+            date: { $gte: twoMinutesAgo }  // Check if there's a record within the last 2 minutes
         });
+
+        if (recentAttendance) {
+            return res.status(400).json({ error: 'Attendance already marked within the last 2 minutes' });
+        }
+
+        const newAttendance = new Attendance({
+            studentID,
+            date: new Date(),
+            status: 'present',
+        });
+
         await newAttendance.save();
-        res.status(201).json(newAttendance);
+        res.status(201).json({ success: true, message: 'Attendance marked successfully', data: newAttendance });
     } catch (err) {
-        res.status(500).json({ error: 'Error creating Teacher' });
+        console.error('Error marking attendance:', err);
+        res.status(500).json({ error: 'Error marking attendance', details: err });
     }
 });
+
+
+  
+  
+  
 
 router.post('/AddStudentToClass', async (req, res) => {
     try {

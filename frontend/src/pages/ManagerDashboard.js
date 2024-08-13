@@ -3,6 +3,7 @@ import { Box, Grid, Card, CardContent, Typography, Container, ButtonBase, Button
 import Sidebar from '../components/Sidebar';
 import AddStudentForm from '../popups/AddStudentForm';
 import AddTeacherForm from '../popups/AddTeacherForm';
+import MarkAttendance from '../popups/MarkAttendance';
 import { ManagerStatistics } from '../services/api';
 
 const drawerWidth = 240;
@@ -10,8 +11,16 @@ const drawerWidth = 240;
 const ManagerDashboard = () => {
   const [isAddStudentOpen, setAddStudentOpen] = useState(false);
   const [isAddTeacherOpen, setAddTeacherOpen] = useState(false);
+  const [isMarkAttendanceOpen, setMarkAttendanceOpen] = useState(false);
   const [stats, setStats] = useState('');
 
+  const handleOpenMarkAttendance = () => {
+    setMarkAttendanceOpen(true);
+  };
+  
+  const handleCloseMarkAttendance = () => {
+    setMarkAttendanceOpen(false);
+  };
   const handleCardClick = (type) => {
     console.log(`${type} card clicked`);
   };
@@ -145,12 +154,21 @@ const ManagerDashboard = () => {
           >
             Add Teacher
           </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleOpenMarkAttendance}
+            sx={{ mt: 4, alignSelf: 'center' }}
+          >
+            Mark Attendance
+          </Button>
         </Container>
       </Box>
 
       {/* Form Components */}
       <AddStudentForm open={isAddStudentOpen} onClose={handleCloseAddStudent} />
       <AddTeacherForm open={isAddTeacherOpen} onClose={handleCloseAddTeacher} />
+      <MarkAttendance open={isMarkAttendanceOpen} onClose={handleCloseMarkAttendance} />
     </Box>
   );
 };
