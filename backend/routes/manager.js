@@ -10,11 +10,11 @@ router.use(AuthMiddleware);
 router.use(roleMiddleware(['manager']));
 
 router.post('/Student', async (req, res) => {
+    console.log("Got an http request");
     try {
-        console.log("Got an http request");
         const student = req.body;
 
-        // Checking if the email is already registered
+        console.log(student);
         user = await Student.findOne({ 'profile.email': student.email });
         if (user) {
             return res.status(401).json({ error: 'This email is already registered as a Student' });
@@ -25,7 +25,7 @@ router.post('/Student', async (req, res) => {
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
-
+        console.log("Must be an error here");
 
         const newStudent = new Student({
             profile: {
