@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Grid, Card, CardContent, Typography, Container, ButtonBase, Button } from '@mui/material';
-import Sidebar from '../components/Sidebar'; // Assuming Sidebar component is imported
-import AddStudentForm from '../popups/AddStudentForm'; // Import the AddStudentForm component
+import Sidebar from '../components/Sidebar';
+import AddStudentForm from '../popups/AddStudentForm';
+import AddTeacherForm from '../popups/AddTeacherForm';
 import { ManagerStatistics } from '../services/api';
-
 
 const drawerWidth = 240;
 
 const ManagerDashboard = () => {
   const [isAddStudentOpen, setAddStudentOpen] = useState(false);
+  const [isAddTeacherOpen, setAddTeacherOpen] = useState(false);
   const [stats, setStats] = useState('');
 
   const handleCardClick = (type) => {
-    // Handle card click event
     console.log(`${type} card clicked`);
   };
 
@@ -20,24 +20,30 @@ const ManagerDashboard = () => {
     setAddStudentOpen(true);
   };
 
+  const handleOpenAddTeacher = () => {
+    setAddTeacherOpen(true);
+  };
+
   const handleCloseAddStudent = () => {
     setAddStudentOpen(false);
   };
 
+  const handleCloseAddTeacher = () => {
+    setAddTeacherOpen(false);
+  };
+
   useEffect(() => {
-    // Fetch data on component mount
     const fetchData = async () => {
       try {
         const result = await ManagerStatistics();
-        console.log(stats);
         setStats(result);
+        console.log(result);
       } catch (error) {
-
+        console.error('Error fetching statistics:', error);
       }
     };
 
     fetchData();
-    console.log(stats);
   }, []);
 
   return (
@@ -53,7 +59,7 @@ const ManagerDashboard = () => {
           p: 3,
           ml: `${drawerWidth}px`,
           display: 'flex',
-          flexDirection: 'column', // Added to allow for column layout
+          flexDirection: 'column',
           minHeight: '100vh',
         }}
       >
@@ -66,7 +72,7 @@ const ManagerDashboard = () => {
             spacing={3}
             justifyContent="center"
             alignItems="center"
-            sx={{ flexWrap: 'wrap' }} // Ensure cards wrap properly
+            sx={{ flexWrap: 'wrap' }}
           >
             <Grid item xs={12} sm={6} md={3}>
               <ButtonBase
@@ -122,7 +128,7 @@ const ManagerDashboard = () => {
             </Grid>
           </Grid>
 
-          {/* Button to trigger AddStudentForm */}
+          {/* Buttons to trigger forms */}
           <Button
             variant="contained"
             color="primary"
@@ -131,14 +137,22 @@ const ManagerDashboard = () => {
           >
             Add Student
           </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleOpenAddTeacher}
+            sx={{ mt: 4, alignSelf: 'center' }}
+          >
+            Add Teacher
+          </Button>
         </Container>
       </Box>
 
-      {/* AddStudentForm Component */}
+      {/* Form Components */}
       <AddStudentForm open={isAddStudentOpen} onClose={handleCloseAddStudent} />
+      <AddTeacherForm open={isAddTeacherOpen} onClose={handleCloseAddTeacher} />
     </Box>
   );
 };
-
 
 export default ManagerDashboard;
