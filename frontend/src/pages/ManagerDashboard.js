@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Grid, Card, CardContent, Typography, Container, ButtonBase, Button } from '@mui/material';
 import Sidebar from '../components/Sidebar'; // Assuming Sidebar component is imported
 import AddStudentForm from '../popups/AddStudentForm'; // Import the AddStudentForm component
+import { ManagerStatistics } from '../services/api';
+
 
 const drawerWidth = 240;
 
 const ManagerDashboard = () => {
   const [isAddStudentOpen, setAddStudentOpen] = useState(false);
+  const [stats, setStats] = useState('');
 
   const handleCardClick = (type) => {
     // Handle card click event
@@ -21,13 +24,21 @@ const ManagerDashboard = () => {
     setAddStudentOpen(false);
   };
 
-  // Dummy data for the dashboard
-  const stats = {
-    students: 200,
-    tutors: 50,
-    unpaidStudents: 30,
-    feesGenerated: '$50,000',
-  };
+  useEffect(() => {
+    // Fetch data on component mount
+    const fetchData = async () => {
+      try {
+        const result = await ManagerStatistics();
+        console.log(stats);
+        setStats(result);
+      } catch (error) {
+
+      }
+    };
+
+    fetchData();
+    console.log(stats);
+  }, []);
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -50,10 +61,10 @@ const ManagerDashboard = () => {
           <Typography variant="h4" gutterBottom align="center">
             Manager Dashboard
           </Typography>
-          <Grid 
-            container 
-            spacing={3} 
-            justifyContent="center" 
+          <Grid
+            container
+            spacing={3}
+            justifyContent="center"
             alignItems="center"
             sx={{ flexWrap: 'wrap' }} // Ensure cards wrap properly
           >
@@ -65,7 +76,7 @@ const ManagerDashboard = () => {
                 <Card sx={{ width: '100%' }}>
                   <CardContent>
                     <Typography variant="h6">Number of Students</Typography>
-                    <Typography variant="h4">{stats.students}</Typography>
+                    <Typography variant="h4">{stats.StudentCount}</Typography>
                   </CardContent>
                 </Card>
               </ButtonBase>
@@ -78,7 +89,7 @@ const ManagerDashboard = () => {
                 <Card sx={{ width: '100%' }}>
                   <CardContent>
                     <Typography variant="h6">Number of Tutors</Typography>
-                    <Typography variant="h4">{stats.tutors}</Typography>
+                    <Typography variant="h4">{stats.TeacherCount}</Typography>
                   </CardContent>
                 </Card>
               </ButtonBase>
@@ -91,7 +102,7 @@ const ManagerDashboard = () => {
                 <Card sx={{ width: '100%' }}>
                   <CardContent>
                     <Typography variant="h6">Unpaid Students</Typography>
-                    <Typography variant="h4">{stats.unpaidStudents}</Typography>
+                    <Typography variant="h4">{stats.notPaid}</Typography>
                   </CardContent>
                 </Card>
               </ButtonBase>
@@ -104,7 +115,7 @@ const ManagerDashboard = () => {
                 <Card sx={{ width: '100%' }}>
                   <CardContent>
                     <Typography variant="h6">Fees Generated</Typography>
-                    <Typography variant="h4">{stats.feesGenerated}</Typography>
+                    <Typography variant="h4">{stats.monthlyIncome}</Typography>
                   </CardContent>
                 </Card>
               </ButtonBase>
@@ -128,5 +139,6 @@ const ManagerDashboard = () => {
     </Box>
   );
 };
+
 
 export default ManagerDashboard;

@@ -1,7 +1,6 @@
 module.exports = (roles) => {
     return (req, res, next) => {
       // Check if user is authenticated
-      console.log("Now in role middlewear")
       if (!req.user) {
         return res.status(401).json({ error: 'Unauthorized' });
       }
