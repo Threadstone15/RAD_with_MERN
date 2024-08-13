@@ -1,12 +1,41 @@
 import React from 'react';
 import { Box, TextField, Button, Typography, Modal, IconButton } from '@mui/material';
+import { useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close'; // Import CloseIcon for the close button
+import axios from 'axios';
+import {addStudent} from '../services/api';
+axios.defaults.withCredentials = true;
+
 
 const AddStudentForm = ({ open, onClose }) => {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // Handle form submission logic here
+  const [formData, setFormData] = useState({
+    Name: '',
+    Email: '',
+    DOB: '',
+    Medium: '',
+    School: '',
+    Address: '',
+    PName:'',
+    PContact:'',
+  });
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // Prevent default form submission
+    console.log("Sending request");
+    try {
+      const response = await addStudent(formData);
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    }
     onClose();
+  };
+
+  const handleChange = (e) => {
+    console.log("Changing");
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
   };
 
   return (
@@ -49,22 +78,25 @@ const AddStudentForm = ({ open, onClose }) => {
           <Typography variant="h6" component="h2" gutterBottom sx={{margin:0,}}>
             Add Student
           </Typography>
-          <form onSubmit={handleSubmit}>
-            <TextField label="Name" fullWidth margin="normal" required />
-            <TextField label="Email" fullWidth margin="normal" required />
+          <form onSubmit={handleSubmit} onChange={handleChange}>
+            <TextField label="Name" name="Name" value={formData.Name} onChange={handleChange} fullWidth margin="normal" required />
+            <TextField label="Email" name="Email" value={formData.Email}onChange={handleChange}  fullWidth margin="normal" required />
             <TextField
               label="Date of Birth"
+              value={formData.DOB}
+              name="DOB"
               type="date"
               fullWidth
               margin="normal"
               required
               InputLabelProps={{ shrink: true }}
+              onChange={handleChange}
             />
-            <TextField label="Medium" fullWidth margin="normal" required />
-            <TextField label="School" fullWidth margin="normal" required />
-            <TextField label="Address" fullWidth margin="normal" required />
-            <TextField label="Parent's Name" fullWidth margin="normal" required />
-            <TextField label="Parent's Contact Number" fullWidth margin="normal" required />
+            <TextField label="Medium" name="Medium" value={formData.Medium} onChange={handleChange} fullWidth margin="normal" required />
+            <TextField label="School" name="School"value={formData.School} onChange={handleChange} fullWidth margin="normal" required />
+            <TextField label="Address" name="Address"value={formData.Address} onChange={handleChange} fullWidth margin="normal" required />
+            <TextField label="Parent's Name" value={formData.PName} name="PName" onChange={handleChange} fullWidth margin="normal" required />
+            <TextField label="Parent's Contact Number" value={formData.PContact} name="PContact" onChange={handleChange} fullWidth margin="normal" required />
             <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
               Add Student
             </Button>
