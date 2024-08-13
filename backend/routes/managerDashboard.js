@@ -146,7 +146,7 @@ router.post('/Teacher', async (req, res) => {
         const teacher = req.body;
 
         // Checking if the email is already registered
-        user = await Student.findOne({ 'profile.email': teacher.email });
+        let user = await Student.findOne({ 'profile.email': teacher.email });
         if (user) {
             return res.status(401).json({ error: 'This email is already registered as a Student' });
         }
@@ -155,6 +155,7 @@ router.post('/Teacher', async (req, res) => {
             return res.status(401).json({ error: 'This email is already registered as a Teacher' });
         }
 
+        const password = String(generateRandomId()); // Generate random password
         const hashedPassword = await bcrypt.hash(password, 10);
 
         let TeacherId;
@@ -162,7 +163,7 @@ router.post('/Teacher', async (req, res) => {
 
         while (!unique) {
             TeacherId = generateRandomId();
-            const existingTeacher = await Teacher.findOne({ TeacherID: TeacherID });
+            const existingTeacher = await Teacher.findOne({ TeacherID: TeacherId });
             if (!existingTeacher) {
                 unique = true;
             }
@@ -180,13 +181,14 @@ router.post('/Teacher', async (req, res) => {
             classIds: [],
         });
 
-
         await newTeacher.save();
         res.status(201).json(newTeacher);
     } catch (err) {
+        console.error('Error creating Teacher:', err);
         res.status(500).json({ error: 'Error creating Teacher' });
     }
 });
+
 
 
 

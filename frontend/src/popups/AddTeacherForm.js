@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Box, TextField, Button, Typography, Modal, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import axios from 'axios';
+import {addTeacher} from '../services/api';
+axios.defaults.withCredentials = true;
 
 const AddTeacherForm = ({ open, onClose }) => {
   const [formData, setFormData] = useState({
@@ -14,8 +16,9 @@ const AddTeacherForm = ({ open, onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Sending request");
     try {
-      const response = await axios.post('/Teacher', formData);
+      const response = await addTeacher(formData);
       console.log('Teacher added successfully:', response.data);
     } catch (error) {
       console.error('Error adding teacher:', error.response?.data?.error || error.message);
