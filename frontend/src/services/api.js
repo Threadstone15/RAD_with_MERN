@@ -22,3 +22,8 @@ export const addStudent = async (userData) => {
   const response = await axios.post('http://localhost:5000/manager-dashboard/Student', userData);
   return response.data;
 };
+
+export const ManagerStatistics = async() => {
+  const response = await axios.get('http://localhost:5000/manager-dashboard/');
+  return response.data;
+}

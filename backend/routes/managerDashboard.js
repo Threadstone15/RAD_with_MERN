@@ -5,7 +5,7 @@ const Teacher = require('../models/Teacher');
 const Attendance = require('../models/Attendance');
 const AuthMiddleware = require('../middleware/AuthMiddleware');
 const roleMiddleware = require('../middleware/roleMiddleware');
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt');
 
 // Apply middleware to all routes under /manager-dashboard
 router.use(AuthMiddleware);
@@ -13,38 +13,56 @@ router.use(roleMiddleware(['manager']));
 
 const Payment = require('../models/Payment'); // Adjust the path as needed
 
-const getTotalPaidStudentsForMonth = async () => {
-  try {
-    // Get the current date
-    const now = new Date();
-    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-    const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
 
-    // Aggregate to count unique paid students for the current month
-    const result = await Payment.aggregate([
-      {
-        $match: {
-          date: { $gte: startOfMonth, $lte: endOfMonth },
-          status: "paid"
-        }
-      },
-      {
-        $group: {
-          _id: "$studentId" // Group by studentId
-        }
-      },
-      {
-        $count: "totalPaidStudents" // Count unique studentIds
-      }
-    ]);
+async function getPaymentStatisticsForCurrentMonth(totalStudents) {
+    try {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = now.getMonth();
 
-    const totalPaidStudents = result.length > 0 ? result[0].totalPaidStudents : 0;
-    console.log(`Total paid students for the current month: ${totalPaidStudents}`);
+        const startOfMonth = new Date(year, month, 1);
+        const endOfMonth = new Date(year, month + 1, 0, 23, 59, 59, 999);
 
-  } catch (error) {
-    console.error('Error calculating total paid students:', error);
-  }
-};
+        const paymentResult = await Payment.aggregate([
+            {
+                $match: {
+                    date: {
+                        $gte: startOfMonth,
+                        $lte: endOfMonth,
+                    },
+                },
+            },
+            {
+                $group: {
+                    _id: null,
+                    totalAmount: {
+                        $sum: '$amount',
+                    },
+                },
+            },
+        ]);
+
+        const totalAmountPaid = paymentResult.length > 0 ? paymentResult[0].totalAmount : 0;
+
+        const paidStudents = await Payment.distinct('studentId', {
+            date: {
+                $gte: startOfMonth,
+                $lte: endOfMonth,
+            },
+        });
+
+        const numberOfPaidStudents = paidStudents.length;
+
+        const numberOfStudentsWhoHaventPaid = totalStudents - numberOfPaidStudents;
+
+        return {
+            totalAmountPaid,
+            numberOfStudentsWhoHaventPaid,
+        };
+    } catch (error) {
+        console.error('Error calculating payment statistics for the current month:', error);
+    }
+}
 
 const generateRandomId = () => {
     return Math.floor(100000 + Math.random() * 900000);
@@ -101,6 +119,25 @@ router.post('/Student', async (req, res) => {
     } catch (err) {
         console.log(err);
         res.status(500).json({ error: 'Error creating Student' });
+    }
+});
+
+router.get('/', async (req, res) => {
+    try {
+        console.log("Got an http request to /manager-dashboard/")
+        const StudentCount = await Student.countDocuments();
+        const TeacherCount = await Teacher.countDocuments();
+        const { monthlyIncome, notPaid } = getPaymentStatisticsForCurrentMonth();
+        console.log(StudentCount , TeacherCount,monthlyIncome, notPaid);
+        res.json({
+            StudentCount: StudentCount,
+            TeacherCount: TeacherCount,
+            monthlyIncome: monthlyIncome,
+            notPaid: notPaid,
+        })
+
+    } catch (error) {
+        res.status(500).json({ error: 'Error getting statistics' });
     }
 });
 
@@ -194,7 +231,7 @@ router.post('/AddStudentToClass', async (req, res) => {
         if (!class_) {
             return res.status(401).json({ error: 'Invalid Class Name' });
         }
-        
+
         res.status(201).json(newAttendance);
     } catch (err) {
         res.status(500).json({ error: 'Error creating Teacher' });
