@@ -12,6 +12,7 @@ const AddStudentForm = ({ open, onClose }) => {
     Name: '',
     Email: '',
     DOB: '',
+    CNumber: '',
     Medium: '',
     School: '',
     Address: '',
@@ -93,6 +94,7 @@ const AddStudentForm = ({ open, onClose }) => {
               onChange={handleChange}
             />
             <TextField label="Medium" name="Medium" value={formData.Medium} onChange={handleChange} fullWidth margin="normal" required />
+            <TextField label="Contact Number" name="CNumber" value={formData.CNumber} onChange={handleChange} fullWidth margin="normal" required />
             <TextField label="School" name="School"value={formData.School} onChange={handleChange} fullWidth margin="normal" required />
             <TextField label="Address" name="Address"value={formData.Address} onChange={handleChange} fullWidth margin="normal" required />
             <TextField label="Parent's Name" value={formData.PName} name="PName" onChange={handleChange} fullWidth margin="normal" required />

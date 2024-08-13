@@ -11,11 +11,7 @@ const StudentSchema = new mongoose.Schema({
     required: true,
   },
   profile: {
-    firstName: {
-      type: String,
-      required: true,
-    },
-    lastName: {
+    Name: {
       type: String,
       required: true,
     },
@@ -24,7 +20,30 @@ const StudentSchema = new mongoose.Schema({
       required: true,
       unique: true,
     },
+    DOB: {
+      type: Date,
+      required: true,
+    },
     phone: {
+      type: String,
+      required: true,
+    },
+    Medium: {
+      type: String,
+      required: true,
+    },
+    School: {
+      type: String,
+    },
+    Address: {
+      type: String,
+      required: true,
+    },
+    PName: {
+      type: String,
+      required: true,
+    },
+    PContact: {
       type: String,
       required: true,
     },

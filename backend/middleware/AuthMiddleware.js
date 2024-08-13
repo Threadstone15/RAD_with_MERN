@@ -10,7 +10,6 @@ module.exports = async (req, res, next) => {
   
 
   if (!token) {
-    console.log("No token in the request");
     return res.status(401).json({ error: 'No token provided' });
   }
 

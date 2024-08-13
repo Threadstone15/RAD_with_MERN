@@ -5,6 +5,7 @@ const Teacher = require('../models/Teacher');
 const Attendance = require('../models/Attendance');
 const AuthMiddleware = require('../middleware/AuthMiddleware');
 const roleMiddleware = require('../middleware/roleMiddleware');
+const bcrypt = require('bcrypt')
 
 // Apply middleware to all routes under /manager-dashboard
 router.use(AuthMiddleware);
@@ -51,7 +52,6 @@ const generateRandomId = () => {
 
 router.post('/Student', async (req, res) => {
     try {
-        console.log("Got an http request");
         const student = req.body;
 
         // Checking if the email is already registered
@@ -63,9 +63,8 @@ router.post('/Student', async (req, res) => {
         if (user) {
             return res.status(401).json({ error: 'This email is already registered as a Teacher' });
         }
-
+        password = String(generateRandomId());
         const hashedPassword = await bcrypt.hash(password, 10);
-
         let studentId;
         let unique = false;
 
@@ -76,14 +75,20 @@ router.post('/Student', async (req, res) => {
                 unique = true;
             }
         }
-
+        console.log(student);
         const newStudent = new Student({
             studentID: studentId,
             profile: {
-                firstName: student.firstName,
-                lastName: student.lastName,
-                email: student.email,
-                phone: student.phone,
+                Name: student.Name,
+                email: student.Email,
+                phone: student.CNumber,
+                DOB: student.DOB,
+                Medium: student.Medium,
+                School: student.School,
+                Address: student.Address,
+                PName: student.PName,
+                PContact: student.PContact
+
             },
             password: hashedPassword,
             classIds: [],
@@ -94,6 +99,7 @@ router.post('/Student', async (req, res) => {
         await newStudent.save();
         res.status(201).json(user);
     } catch (err) {
+        console.log(err);
         res.status(500).json({ error: 'Error creating Student' });
     }
 });
