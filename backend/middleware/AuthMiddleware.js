@@ -6,14 +6,14 @@ const SECRET_KEY = process.env.JWT_SECRET || 'your_jwt_secret_key'; // Use an en
 
 module.exports = async (req, res, next) => {
   const token = req.cookies.token; // Read token from cookie
- 
-
+  console.log(req.cookies)
   if (!token) {
     return res.status(401).json({ error: 'No token provided' });
   }
 
   try {
     const decoded = jwt.verify(token, SECRET_KEY);
+    console.log(decoded);
     const userId = decoded.id;
     const userRole = decoded.role; // Ensure you include 'role' in your JWT payload
 

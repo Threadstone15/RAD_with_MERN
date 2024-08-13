@@ -10,6 +10,41 @@ const roleMiddleware = require('../middleware/roleMiddleware');
 router.use(AuthMiddleware);
 router.use(roleMiddleware(['manager']));
 
+const Payment = require('../models/Payment'); // Adjust the path as needed
+
+const getTotalPaidStudentsForMonth = async () => {
+  try {
+    // Get the current date
+    const now = new Date();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
+
+    // Aggregate to count unique paid students for the current month
+    const result = await Payment.aggregate([
+      {
+        $match: {
+          date: { $gte: startOfMonth, $lte: endOfMonth },
+          status: "paid"
+        }
+      },
+      {
+        $group: {
+          _id: "$studentId" // Group by studentId
+        }
+      },
+      {
+        $count: "totalPaidStudents" // Count unique studentIds
+      }
+    ]);
+
+    const totalPaidStudents = result.length > 0 ? result[0].totalPaidStudents : 0;
+    console.log(`Total paid students for the current month: ${totalPaidStudents}`);
+
+  } catch (error) {
+    console.error('Error calculating total paid students:', error);
+  }
+};
+
 const generateRandomId = () => {
     return Math.floor(100000 + Math.random() * 900000);
 };
@@ -79,8 +114,19 @@ router.post('/Teacher', async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
+        let TeacherId;
+        let unique = false;
+
+        while (!unique) {
+            TeacherId = generateRandomId();
+            const existingTeacher = await Teacher.findOne({ TeacherID: TeacherID });
+            if (!existingTeacher) {
+                unique = true;
+            }
+        }
 
         const newTeacher = new Teacher({
+            TeacherID: TeacherId,
             profile: {
                 firstName: teacher.firstName,
                 lastName: teacher.lastName,
@@ -120,6 +166,29 @@ router.post('/markAttendance', async (req, res) => {
             status: "present",
         });
         await newAttendance.save();
+        res.status(201).json(newAttendance);
+    } catch (err) {
+        res.status(500).json({ error: 'Error creating Teacher' });
+    }
+});
+
+router.post('/AddStudentToClass', async (req, res) => {
+    try {
+        const { StudentID, ClassName } = req.body;
+
+        const student = await Student.findOne({
+            StudentID: StudentID,
+        });
+        if (!student) {
+            return res.status(401).json({ error: 'Invalid Student Id' });
+        }
+        const class_ = await Class.findOne({
+            ClassName: ClassName,
+        });
+        if (!class_) {
+            return res.status(401).json({ error: 'Invalid Class Name' });
+        }
+        
         res.status(201).json(newAttendance);
     } catch (err) {
         res.status(500).json({ error: 'Error creating Teacher' });

@@ -8,8 +8,8 @@ const app = express();
 
 // Import routes
 const authRoutes = require('./routes/auth');
-const protectedRoutes = require('./routes/protectedRoutes');
-const managerRoutes = require('./routes/manager');
+const managerRoutes = require('./routes/managerDashboard');
+const paymentRoutes = require('./routes/paymentRoutes')
 
 
 // Middleware
