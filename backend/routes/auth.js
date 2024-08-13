@@ -12,10 +12,6 @@ router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Log the incoming email and password
-    console.log('Received email:', email);
-    console.log('Received password:', password);
-
     // Try to find the user in the students collection by email
     let user = await Student.findOne({ 'profile.email': email });
     let userType = 'student'; // Default to student
@@ -41,6 +37,7 @@ router.post('/login', async (req, res) => {
       SECRET_KEY,
       { expiresIn: '1h' }
     );
+  
 
     // Set token in HTTP-only cookie
     res.cookie('token', token, {
@@ -49,6 +46,12 @@ router.post('/login', async (req, res) => {
       sameSite: 'strict',
       maxAge: 3600000,
     });
+
+    const cookies = res.getHeader('Set-Cookie');
+  if (cookies) {
+    console.log('Cookies being sent with response:', cookies);
+  }
+
 
     // Redirect based on user role
     if (userType === 'student') {

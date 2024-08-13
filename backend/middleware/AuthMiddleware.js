@@ -16,6 +16,7 @@ module.exports = async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, SECRET_KEY);
+    console.log(decoded);
     const userId = decoded.id;
     const userRole = decoded.role; // Ensure you include 'role' in your JWT payload
     console.log('decoded');
