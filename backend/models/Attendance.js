@@ -4,10 +4,10 @@ const AttendanceSchema = new mongoose.Schema({
   classId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Class",
-    required: true,
+    required: false,
   },
-  studentId: {
-    type: mongoose.Schema.Types.ObjectId,
+  studentID: {
+    type: String,
     ref: "Student",
     required: true,
   },

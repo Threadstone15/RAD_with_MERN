@@ -6,21 +6,27 @@ const cors = require('cors');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const app = express();
 
+
 // Import routes
 const authRoutes = require('./routes/auth');
-const protectedRoutes = require('./routes/protectedRoutes');
-const managerRoutes = require('./routes/manager');
-const paymentRoutes = require('./routes/paymentRoutes'); // Ensure this is correctly imported
+const managerRoutes = require('./routes/managerDashboard');
+const paymentRoutes = require('./routes/paymentRoutes')
+
+
+const corsOptions ={
+  origin:'http://localhost:3000', 
+  credentials:true,            //access-control-allow-credentials:true
+  optionSuccessStatus:200
+}
 
 // Middleware
 app.use(bodyParser.json());
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(cookieParser());
 
 // Routes
 app.use('/manager-dashboard', managerRoutes);
 app.use('/api/auth', authRoutes);
-app.use('/api', protectedRoutes);
 app.use('/api', paymentRoutes); // Use the payment routes
 
 // Proxy PayHere requests

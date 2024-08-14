@@ -11,9 +11,9 @@ const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', async () => {
   console.log('Connected to MongoDB');
-
   const students = [
     {
+      studentID: '123456',
       password: 'password1',
       profile: {
         firstName: 'John',
@@ -25,6 +25,7 @@ db.once('open', async () => {
       paymentIds: [], // Add ObjectId references if available
     },
     {
+      studentID: '123457',
       password: 'password2',
       profile: {
         firstName: 'Jane',
@@ -36,6 +37,7 @@ db.once('open', async () => {
       paymentIds: [],
     },
     {
+      studentID: '123458',
       password: 'password3',
       profile: {
         firstName: 'Jim',
@@ -47,6 +49,7 @@ db.once('open', async () => {
       paymentIds: [],
     },
     {
+      studentID: '123459',
       password: 'password4',
       profile: {
         firstName: 'Jake',
@@ -58,6 +61,7 @@ db.once('open', async () => {
       paymentIds: [],
     },
     {
+      studentID: '123450',
       password: 'password5',
       profile: {
         firstName: 'Jill',
@@ -77,6 +81,7 @@ db.once('open', async () => {
       
       // Create a new teacher instance
       const newStudent = new Student({
+        studentID: student.studentID,
         profile: {
           firstName: student.profile.firstName,
           lastName: student.profile.lastName,

@@ -14,7 +14,7 @@ const Login = () => {
     e.preventDefault();
     try {
       const response = await login({ email, password });
-
+      console.log(response);
       if (response.redirectUrl) {
         navigate(response.redirectUrl); // Redirect based on URL from backend
       } else {

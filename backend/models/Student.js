@@ -2,17 +2,16 @@ const mongoose = require("mongoose");
 const bcrypt = require('bcrypt');
 
 const StudentSchema = new mongoose.Schema({
-  // Removed the username field, as it's not needed anymore.
+  studentID: {
+    type: String,
+    required: true,
+  },
   password: {
     type: String,
     required: true,
   },
   profile: {
-    firstName: {
-      type: String,
-      required: true,
-    },
-    lastName: {
+    Name: {
       type: String,
       required: true,
     },
@@ -21,7 +20,30 @@ const StudentSchema = new mongoose.Schema({
       required: true,
       unique: true,
     },
+    DOB: {
+      type: Date,
+      required: true,
+    },
     phone: {
+      type: String,
+      required: true,
+    },
+    Medium: {
+      type: String,
+      required: true,
+    },
+    School: {
+      type: String,
+    },
+    Address: {
+      type: String,
+      required: true,
+    },
+    PName: {
+      type: String,
+      required: true,
+    },
+    PContact: {
       type: String,
       required: true,
     },
