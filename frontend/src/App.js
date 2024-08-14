@@ -11,6 +11,8 @@ import StudentDashboard from './pages/Student'; // Corrected path after moving i
 import './App.css';
 import About from './components/About';
 import Contact from './components/Contact'
+import Tutors from './pages/Tutors';
+import Students from './pages/Students';
 
 function App() {
   return (
@@ -23,8 +25,10 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/teacher-dashboard" element={<TeacherDashboard />} /> {/* Route for teacher dashboard */}
+        <Route path="/tutors" element={<Tutors/>} />
         <Route path="/manager-dashboard" element={<ManagerDashboard />} /> 
-        <Route path="/student-dashboard" element={<StudentDashboard />} />
+        <Route path="/student-dashboard" element={<Students />} />
+        <Route path="/payments" element={<StudentDashboard/>}/>
       </Routes>
     </Router>
   );
