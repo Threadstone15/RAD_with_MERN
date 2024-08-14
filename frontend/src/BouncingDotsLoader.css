@@ -1,0 +1,31 @@
+/* BouncingDotsLoader.css */
+.loader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.loader-dot {
+    width: 12px;
+    height: 12px;
+    margin: 0 5px;
+    background-color: #3498db;
+    border-radius: 50%;
+    animation: bounce 0.6s infinite alternate;
+}
+
+.loader-dot:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.loader-dot:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes bounce {
+    to {
+        transform: translateY(-15px);
+        opacity: 0.5;
+    }
+}
