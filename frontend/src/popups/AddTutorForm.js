@@ -2,44 +2,36 @@ import React, { useState, useEffect } from 'react';
 import { Box, TextField, Button, Typography, Modal, IconButton, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close'; // Import CloseIcon for the close button
 
-const AddStudentForm = ({ open, onClose, studentData }) => {
+const AddTutorForm = ({ open, onClose, tutorData, onConfirmClose }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    dateOfBirth: '',
-    medium: '',
-    school: '',
+    telephone: '',
     address: '',
-    parentsName: '',
-    parentsContact: ''
+    subjects: ''
   });
+
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
   useEffect(() => {
-    if (studentData) {
+    if (tutorData) {
       setFormData({
-        name: studentData.name || '',
-        email: studentData.email || '',
-        dateOfBirth: studentData.dateOfBirth || '',
-        medium: studentData.medium || '',
-        school: studentData.school || '',
-        address: studentData.address || '',
-        parentsName: studentData.parentsName || '',
-        parentsContact: studentData.parentsContact || ''
+        name: tutorData.name || '',
+        email: tutorData.email || '',
+        telephone: tutorData.telephone || '',
+        address: tutorData.address || '',
+        subjects: tutorData.subjects || ''
       });
     } else {
       setFormData({
         name: '',
         email: '',
-        dateOfBirth: '',
-        medium: '',
-        school: '',
+        telephone: '',
         address: '',
-        parentsName: '',
-        parentsContact: ''
+        subjects: ''
       });
     }
-  }, [studentData]);
+  }, [tutorData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -49,6 +41,7 @@ const AddStudentForm = ({ open, onClose, studentData }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     // Handle form submission logic here
+    console.log('Form data submitted:', formData);
     onClose();
   };
 
@@ -65,12 +58,9 @@ const AddStudentForm = ({ open, onClose, studentData }) => {
     setFormData({
       name: '',
       email: '',
-      dateOfBirth: '',
-      medium: '',
-      school: '',
+      telephone: '',
       address: '',
-      parentsName: '',
-      parentsContact: ''
+      subjects: ''
     });
     onClose();
   };
@@ -89,15 +79,15 @@ const AddStudentForm = ({ open, onClose, studentData }) => {
             left: '50%',
             transform: 'translate(-50%, -50%)',
             width: 400,
-            maxHeight: '80vh', // Reduce the maximum height for a shorter modal
+            maxHeight: '80vh',
             bgcolor: 'background.paper',
             borderRadius: 2,
             boxShadow: 24,
             p: 4,
-            overflowY: 'auto', // Make content scrollable if it overflows
+            overflowY: 'auto',
             display: 'flex',
             flexDirection: 'column',
-            margin: 0, // Ensure the close button is positioned correctly
+            margin: 0,
           }}
         >
           {/* Close Button */}
@@ -118,7 +108,7 @@ const AddStudentForm = ({ open, onClose, studentData }) => {
           {/* Content Container */}
           <Box sx={{ mt: 5, mb: 2 }}>
             <Typography variant="h6" component="h2" gutterBottom sx={{ margin: 0 }}>
-              {studentData ? 'Update Student Details' : 'Add a Student'}
+              {tutorData ? 'Update Tutor Details' : 'Add a Tutor'}
             </Typography>
             <form onSubmit={handleSubmit}>
               <TextField
@@ -140,29 +130,9 @@ const AddStudentForm = ({ open, onClose, studentData }) => {
                 required
               />
               <TextField
-                label="Date of Birth"
-                type="date"
-                name="dateOfBirth"
-                value={formData.dateOfBirth}
-                onChange={handleChange}
-                fullWidth
-                margin="normal"
-                required
-                InputLabelProps={{ shrink: true }}
-              />
-              <TextField
-                label="Medium"
-                name="medium"
-                value={formData.medium}
-                onChange={handleChange}
-                fullWidth
-                margin="normal"
-                required
-              />
-              <TextField
-                label="School"
-                name="school"
-                value={formData.school}
+                label="Telephone Number"
+                name="telephone"
+                value={formData.telephone}
                 onChange={handleChange}
                 fullWidth
                 margin="normal"
@@ -178,25 +148,16 @@ const AddStudentForm = ({ open, onClose, studentData }) => {
                 required
               />
               <TextField
-                label="Parent's Name"
-                name="parentsName"
-                value={formData.parentsName}
-                onChange={handleChange}
-                fullWidth
-                margin="normal"
-                required
-              />
-              <TextField
-                label="Parent's Contact Number"
-                name="parentsContact"
-                value={formData.parentsContact}
+                label="Subjects Teaching"
+                name="subjects"
+                value={formData.subjects}
                 onChange={handleChange}
                 fullWidth
                 margin="normal"
                 required
               />
               <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
-                {studentData ? 'Update' : 'Submit'}
+                {tutorData ? 'Update' : 'Submit'}
               </Button>
             </form>
           </Box>
@@ -225,4 +186,4 @@ const AddStudentForm = ({ open, onClose, studentData }) => {
   );
 };
 
-export default AddStudentForm;
+export default AddTutorForm;
