@@ -56,34 +56,6 @@ const ManagerDashboard = () => {
   }, []);
 
   return (
-
-<div><Sidebar/>
-<Box
-    component="main"
-    sx={{
-    flexGrow: 1,
-    p: 3,
-    ml: `${drawerWidth}px`, // Offset the main content to make space for the sidebar
-    minHeight: '100vh',
-    display: 'flex',
-    justifyContent: 'center', // Center horizontally
-}}
->
-<Container>
-      <Typography variant="h4" gutterBottom align="center">
-        Student Management
-      </Typography>
-      <Button
-          variant="contained"
-          color="primary"
-          onClick={handleOpenAddStudent}
-          sx={{ mt: 4 }}>
-          Add Student
-        </Button>
-      <AddStudentForm open={isAddStudentOpen} onClose={handleCloseAddStudent} />
-</Container>
-</Box>
-</div>
     <Box sx={{ display: 'flex' }}>
       {/* Sidebar */}
       <Sidebar />
@@ -201,8 +173,4 @@ const ManagerDashboard = () => {
   );
 };
 
-
-);
-};
 export default ManagerDashboard;
-
