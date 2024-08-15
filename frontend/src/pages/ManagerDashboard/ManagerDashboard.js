@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Grid, Card, CardContent, Typography, Container, ButtonBase, Button } from '@mui/material';
-import Sidebar from '../components/Sidebar';
-import AddStudentForm from '../popups/AddStudentForm';
-import AddTeacherForm from '../popups/AddTutorForm';
-import MarkAttendance from '../popups/MarkAttendance';
-import { ManagerStatistics } from '../services/api';
+import Sidebar from '../../components/Sidebar';
+import AddStudentForm from '../../popups/AddStudentForm';
+import AddTeacherForm from '../../popups/AddTutorForm';
+import MarkAttendance from '../../popups/MarkAttendance';
+import { ManagerStatistics } from '../../services/api';
 
 const drawerWidth = 240;
 

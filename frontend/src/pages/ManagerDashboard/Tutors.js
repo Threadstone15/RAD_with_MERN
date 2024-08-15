@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Button, Typography, Container, Card, CardContent, Table, TableHead, TableBody, TableRow, TableCell } from '@mui/material';
-import AddTutorForm from '../popups/AddTutorForm'; // Import the AddTutorForm component
-import Sidebar from '../components/Sidebar';
+import AddTutorForm from '../../popups/AddTutorForm'; // Import the AddTutorForm component
+import Sidebar from '../../components/Sidebar';
+import { AllTutors } from '../../services/api';
 
 const drawerWidth = 240; // Assuming the width of the sidebar is 240px
 
 const Tutors = () => {
   const [open, setOpen] = useState(false);
   const [selectedTutor, setSelectedTutor] = useState(null);
+  const [tutors, setTutors] = useState([]);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -21,6 +23,20 @@ const Tutors = () => {
     setSelectedTutor(null);
     handleOpen();
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const result = await AllTutors();
+        setTutors(result);
+        console.log(result);
+      } catch (error) {
+        console.error('Error fetching statistics:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   // Dummy data for the table
   const dummyData = [
@@ -76,7 +92,7 @@ const Tutors = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {dummyData.map((row) => (
+                  {tutors.map((row) => (
                     <TableRow key={row.id} onDoubleClick={() => handleRowDoubleClick(row)} sx={{ cursor: 'pointer' }}>
                       <TableCell>{row.id}</TableCell>
                       <TableCell>{row.name}</TableCell>

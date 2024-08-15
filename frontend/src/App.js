@@ -5,14 +5,14 @@ import Home from './components/Home';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import Register from './components/Register';
-import TeacherDashboard from './pages/Tutor'; // Corrected path after moving it inside src/
-import ManagerDashboard from './pages/ManagerDashboard';
-import StudentDashboard from './pages/Student'; // Corrected path after moving it inside src/
+import TeacherDashboard from './pages/TutorDashboard/TutorDashboard'; // Corrected path after moving it inside src/
+import ManagerDashboard from './pages/ManagerDashboard/ManagerDashboard';
+import StudentDashboard from './pages/StudentDashboard/StudentDashboard'; // Corrected path after moving it inside src/
 import './App.css';
 import About from './components/About';
 import Contact from './components/Contact'
-import Tutors from './pages/Tutor';
-import Students from './pages/Student'
+import Tutors from './pages/ManagerDashboard/Tutors';
+import Students from './pages/ManagerDashboard/Student'
 import BouncingDotsLoader from './BouncingDotsLoader';
 
 function RouteLoader({ children }) {
@@ -42,10 +42,12 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/tutors" element={<Tutors />} />
-        <Route path="/students" element={<Students />} />
-        <Route path="/teacher-dashboard" element={<TeacherDashboard />} /> {/* Route for teacher dashboard */}
+        
         <Route path="/manager-dashboard" element={<ManagerDashboard />} /> 
+        <Route path="/manager-dashboard/tutors" element={<Tutors />} />
+        <Route path="/manager-dashboard/students" element={<Students />} />
+        
+        <Route path="/teacher-dashboard" element={<TeacherDashboard />} /> {/* Route for teacher dashboard */}
         <Route path="/student-dashboard" element={<StudentDashboard />} />
       </Routes>
       </RouteLoader>
