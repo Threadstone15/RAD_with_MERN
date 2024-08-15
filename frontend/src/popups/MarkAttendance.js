@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { QrReader } from 'react-qr-reader';
 import axios from 'axios';
-import { Dialog, DialogActions, DialogContent, DialogTitle, Button, Typography, TextField, Box } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogTitle, Button, Typography, TextField } from '@mui/material';
 
 const MarkAttendance = ({ open, onClose }) => {
   const [scanResult, setScanResult] = useState(null);
@@ -67,8 +67,8 @@ const MarkAttendance = ({ open, onClose }) => {
   };
 
   return (
-    <Dialog open={open} onClose={handleClose} PaperProps={{ style: { backgroundColor: '#333', color: '#fff' } }}>
-      <DialogTitle sx={{ backgroundColor: '#444', color: '#fff' }}>Mark Attendance</DialogTitle>
+    <Dialog open={open} onClose={handleClose}>
+      <DialogTitle>Mark Attendance</DialogTitle>
       <DialogContent>
         {isScanning && !isScanComplete ? (
           <>
@@ -76,7 +76,7 @@ const MarkAttendance = ({ open, onClose }) => {
               delay={300}
               onResult={handleResult}
               onError={handleError}
-              style={{ width: '100%', marginBottom: '16px' }}
+              style={{ width: '100%' }}
             />
             <TextField
               label="Enter Class ID"
@@ -86,13 +86,6 @@ const MarkAttendance = ({ open, onClose }) => {
               fullWidth
               margin="normal"
               disabled={isProcessing}
-              sx={{ backgroundColor: '#555', color: '#fff' }}
-              InputLabelProps={{
-                style: { color: '#fff' },
-              }}
-              InputProps={{
-                style: { color: '#fff' },
-              }}
             />
           </>
         ) : (
@@ -101,7 +94,7 @@ const MarkAttendance = ({ open, onClose }) => {
         {scanResult && <Typography color="primary">{scanResult}</Typography>}
         {error && <Typography color="error">{error}</Typography>}
       </DialogContent>
-      <DialogActions sx={{ backgroundColor: '#444' }}>
+      <DialogActions>
         {!isScanComplete && (
           <Button onClick={() => setIsScanning(true)} color="primary" disabled={isProcessing || isScanning}>
             {isScanning ? 'Scanning...' : 'Start Scanning'}
