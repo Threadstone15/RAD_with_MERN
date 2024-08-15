@@ -2,24 +2,108 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const Teacher = require('../models/Teacher'); // Adjust the path as needed
 
-const SECRET_KEY = 'your_secret_key'; // Use your actual secret key here
 const MONGO_URI = 'mongodb+srv://admin:admin106@tutionmanagement.tmvutgf.mongodb.net/TutionManagement?retryWrites=true&w=majority&appName=TutionManagement';
 
 // Test data
 const teachers = [
   {
-    firstName: 'John',
-    lastName: 'Doe',
-    email: 'john.doe@example.com',
-    phone: '123-456-7890',
-    password: 'password123', // Real password for reference
+    TeacherID: '100001',
+    name: 'John Smith',
+    email: 'john.smith@example.com',
+    phone: '555-123-7890',
+    address: '123 Main St, Cityville',
+    password: 'teacherPass123',
+    subjects: 'Mathematics, Physics',
   },
   {
-    firstName: 'Jane',
-    lastName: 'Smith',
-    email: 'jane.smith@example.com',
-    phone: '987-654-3210',
-    password: 'securePass456', // Real password for reference
+    TeacherID: '100002',
+    name: 'Emily Davis',
+    email: 'emily.davis@example.com',
+    phone: '555-987-6543',
+    address: '456 Elm St, Townsville',
+    password: 'anotherPass456',
+    subjects: 'English, History',
+  },
+  {
+    TeacherID: '100011',
+    name: 'Manager Smith',
+    email: 'manager@tuition.com',
+    phone: '555-987-6543',
+    address: '456 Elm St, Townsville',
+    password: 'password123',
+    subjects: 'English, History',
+  },
+  {
+    TeacherID: '100003',
+    name: 'Michael Johnson',
+    email: 'michael.johnson@example.com',
+    phone: '555-654-3210',
+    address: '789 Pine St, Villageton',
+    password: 'michaelPass789',
+    subjects: 'Chemistry, Biology',
+  },
+  {
+    TeacherID: '100004',
+    name: 'Jessica Lee',
+    email: 'jessica.lee@example.com',
+    phone: '555-789-4561',
+    address: '101 Maple Ave, Suburbia',
+    password: 'jessicaPass321',
+    subjects: 'Geography, Social Studies',
+  },
+  {
+    TeacherID: '100005',
+    name: 'David Brown',
+    email: 'david.brown@example.com',
+    phone: '555-321-9876',
+    address: '102 Cedar St, Metropolis',
+    password: 'davidPass654',
+    subjects: 'Physics, Computer Science',
+  },
+  {
+    TeacherID: '100006',
+    name: 'Laura Wilson',
+    email: 'laura.wilson@example.com',
+    phone: '555-654-7890',
+    address: '103 Oak St, Urbanville',
+    password: 'lauraPass456',
+    subjects: 'English, Literature',
+  },
+  {
+    TeacherID: '100007',
+    name: 'Robert Martinez',
+    email: 'robert.martinez@example.com',
+    phone: '555-789-1234',
+    address: '104 Birch St, Citytown',
+    password: 'robertPass123',
+    subjects: 'Mathematics, Statistics',
+  },
+  {
+    TeacherID: '100008',
+    name: 'Patricia Anderson',
+    email: 'patricia.anderson@example.com',
+    phone: '555-123-6547',
+    address: '105 Walnut St, Uptown',
+    password: 'patriciaPass789',
+    subjects: 'History, Political Science',
+  },
+  {
+    TeacherID: '100009',
+    name: 'Christopher Clark',
+    email: 'christopher.clark@example.com',
+    phone: '555-987-3210',
+    address: '106 Spruce St, Downtown',
+    password: 'chrisPass321',
+    subjects: 'Economics, Business Studies',
+  },
+  {
+    TeacherID: '100010',
+    name: 'Sarah Lewis',
+    email: 'sarah.lewis@example.com',
+    phone: '555-456-7891',
+    address: '107 Poplar St, Riverside',
+    password: 'sarahPass654',
+    subjects: 'Art, Music',
   },
 ];
 
@@ -41,22 +125,25 @@ async function seedTeachers() {
       
       // Create a new teacher instance
       const newTeacher = new Teacher({
+        TeacherID: teacher.TeacherID,
+        password: hashedPassword,
         profile: {
-          firstName: teacher.firstName,
-          lastName: teacher.lastName,
+          name: teacher.name,
           email: teacher.email,
           phone: teacher.phone,
+          address: teacher.address,
         },
-        password: hashedPassword,
+        subjects: teacher.subjects,
+        // classIds can be added here if needed, otherwise leave it empty
       });
 
       // Save to the database
       await newTeacher.save();
     }
 
-    console.log('Test data inserted successfully.');
+    console.log('Teacher data inserted successfully.');
   } catch (error) {
-    console.error('Error inserting test data:', error);
+    console.error('Error inserting teacher data:', error);
   } finally {
     // Close the connection
     mongoose.connection.close();

@@ -143,16 +143,17 @@ router.get('/', async (req, res) => {
 
 router.post('/Teacher', async (req, res) => {
     try {
-        const teacher = req.body;
+        const { name, email, phone, address, subjects } = req.body;
+
+        // Validate required fields
+        if (!name || !email || !phone || !address || !subjects) {
+            return res.status(400).json({ error: 'All fields are required' });
+        }
 
         // Checking if the email is already registered
-        let user = await Student.findOne({ 'profile.email': teacher.email });
+        let user = await Teacher.findOne({ 'profile.email': email });
         if (user) {
-            return res.status(401).json({ error: 'This email is already registered as a Student' });
-        }
-        user = await Teacher.findOne({ 'profile.email': teacher.email });
-        if (user) {
-            return res.status(401).json({ error: 'This email is already registered as a Teacher' });
+            return res.status(400).json({ error: 'This email is already registered as a Teacher' });
         }
 
         const password = String(generateRandomId()); // Generate random password
@@ -172,11 +173,12 @@ router.post('/Teacher', async (req, res) => {
         const newTeacher = new Teacher({
             TeacherID: TeacherId,
             profile: {
-                firstName: teacher.firstName,
-                lastName: teacher.lastName,
-                email: teacher.email,
-                phone: teacher.phone,
+                name, // Simplified assignment
+                email,
+                phone, // Ensure field name matches schema
+                address
             },
+            subjects, // Simplified assignment
             password: hashedPassword,
             classIds: [],
         });
@@ -184,8 +186,8 @@ router.post('/Teacher', async (req, res) => {
         await newTeacher.save();
         res.status(201).json(newTeacher);
     } catch (err) {
-        console.error('Error creating Teacher:', err);
-        res.status(500).json({ error: 'Error creating Teacher' });
+        console.error('Error creating Teacher:', err.message);
+        res.status(500).json({ error: 'Error creating Teacher', details: err.message });
     }
 });
 

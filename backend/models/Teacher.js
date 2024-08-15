@@ -1,22 +1,18 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
 const TeacherSchema = new mongoose.Schema({
   TeacherID: {
     type: String,
     required: true,
-    index:true,
+    index: true,
   },
   password: {
     type: String,
     required: true,
   },
   profile: {
-    firstName: {
-      type: String,
-      required: true,
-    },
-    lastName: {
+    name: { // Keep name as a single string
       type: String,
       required: true,
     },
@@ -29,6 +25,14 @@ const TeacherSchema = new mongoose.Schema({
       type: String,
       required: true,
     },
+    address: {
+      type: String,
+      required: true,
+    },
+  },
+  subjects: {
+    type: String,
+    required: false,
   },
   classIds: [
     {

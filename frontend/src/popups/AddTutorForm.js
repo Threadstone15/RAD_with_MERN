@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Box, TextField, Button, Typography, Modal, IconButton, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close'; // Import CloseIcon for the close button
+import { addTeacher } from '../services/api'; // Adjust the import path to where your API functions are located
 
 const AddTutorForm = ({ open, onClose, tutorData, onConfirmClose }) => {
   const [formData, setFormData] = useState({
@@ -38,11 +39,23 @@ const AddTutorForm = ({ open, onClose, tutorData, onConfirmClose }) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // Handle form submission logic here
-    console.log('Form data submitted:', formData);
-    onClose();
+    try {
+        // Prepare the data object to match backend schema requirements
+        const response = await addTeacher({
+            name: formData.name, // This maps to profile.name
+            email: formData.email, // This maps to profile.email
+            phone: formData.telephone, // Ensure this field is correctly mapped
+            address: formData.address, // This maps to profile.address
+            subjects: formData.subjects // This maps directly to subjects
+        });
+
+        console.log('Teacher added successfully:', response);
+        onClose(); // Close form or handle post-submission action
+    } catch (error) {
+        console.error('Error adding teacher:', error.message);
+    }
   };
 
   const handleClose = () => {
