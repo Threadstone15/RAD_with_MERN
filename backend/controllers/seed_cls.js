@@ -27,6 +27,7 @@ const seedClasses = async () => {
     const classes = [
       {
         className: "Math 101",
+        classId: "1001",
         teacherId: teacherIds[0],
         studentIds: studentIds.slice(0, 10),
         schedule: {
@@ -36,6 +37,7 @@ const seedClasses = async () => {
       },
       {
         className: "Science 102",
+        classId: "1002",
         teacherId: teacherIds[1],
         studentIds: studentIds.slice(10, 20),
         schedule: {
@@ -45,6 +47,7 @@ const seedClasses = async () => {
       },
       {
         className: "History 201",
+        classId: "1003",
         teacherId: teacherIds[2],
         studentIds: studentIds.slice(20, 30),
         schedule: {
@@ -54,6 +57,7 @@ const seedClasses = async () => {
       },
       {
         className: "English 202",
+        classId: "1004",
         teacherId: teacherIds[3],
         studentIds: studentIds.slice(30, 40),
         schedule: {
@@ -63,6 +67,7 @@ const seedClasses = async () => {
       },
       {
         className: "Art 303",
+        classId: "1005",
         teacherId: teacherIds[4],
         studentIds: studentIds.slice(40, 50),
         schedule: {

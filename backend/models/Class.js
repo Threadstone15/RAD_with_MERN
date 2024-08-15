@@ -5,6 +5,12 @@ const ClassSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  classId: {
+    type: String,
+    required: true,
+    unique: true,
+    index: true,
+  },
   teacherId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Teacher",
