@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import Sidebar from '../../components/Sidebar';
 import AddStudentForm from '../../popups/AddStudentForm';
-import StudentDetails from '../../popups/StudentDetails';
+import StudentDetails from '../../popups/StudentDetails'; // Import the StudentDetails component
 import { Box, Button, Typography, Container, Card, CardContent, Table, TableHead, TableBody, TableRow, TableCell } from '@mui/material';
 
-const drawerWidth = 240;
+const drawerWidth = 240; // Assuming the width of the sidebar is 240px
 
 const Students = () => {
   const [openAddStudent, setOpenAddStudent] = useState(false);
@@ -19,11 +19,16 @@ const Students = () => {
 
   const handleRowClick = (student) => {
     setSelectedStudent(student);
-    handleOpenStudentDetails();
+    handleOpenStudentDetails(); // Open the StudentDetails modal on single click
+  };
+
+  const handleRowDoubleClick = (student) => {
+    setSelectedStudent(student);
+    handleOpenAddStudent(); // Open the AddStudentForm modal on double click
   };
 
   const handleAddStudent = () => {
-    setSelectedStudent(null);
+    setSelectedStudent(null); // Clear selected student to add a new student
     handleOpenAddStudent();
   };
 
@@ -80,11 +85,11 @@ const Students = () => {
         sx={{
           flexGrow: 1,
           p: 3,
-          ml: `${drawerWidth}px`,
+          ml: `${drawerWidth}px`, // Offset the main content to make space for the sidebar
           minHeight: '100vh',
           display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
+          flexDirection: 'column', // Stack items vertically
+          alignItems: 'center', // Center items horizontally
         }}
       >
         <Container>
@@ -94,12 +99,13 @@ const Students = () => {
           <Button 
             variant="contained" 
             color="primary" 
-            onClick={handleAddStudent}
+            onClick={handleAddStudent} // Open form for adding a student
             sx={{ mb: 3 }}
           >
             Add Student
           </Button>
           
+          {/* Card containing the table */}
           <Card sx={{ width: '100%', mb: 3 }}>
             <CardContent>
               <Typography variant="h6" gutterBottom>
@@ -124,7 +130,8 @@ const Students = () => {
                   {dummyData.map((row) => (
                     <TableRow 
                       key={row.id} 
-                      onClick={() => handleRowClick(row)}
+                      onClick={() => handleRowClick(row)} // Single click opens StudentDetails
+                      onDoubleClick={() => handleRowDoubleClick(row)} // Double click opens AddStudentForm
                       sx={{ cursor: 'pointer' }}
                     >
                       <TableCell>{row.id}</TableCell>
@@ -145,18 +152,13 @@ const Students = () => {
           </Card>
 
           {/* AddStudentForm Modal */}
-          <AddStudentForm 
-            open={openAddStudent} 
-            onClose={handleCloseAddStudent} 
-            studentData={selectedStudent} 
-          />
+          <AddStudentForm open={openAddStudent} onClose={handleCloseAddStudent} studentData={selectedStudent} />
 
           {/* StudentDetails Modal */}
           <StudentDetails 
             open={openStudentDetails} 
             onClose={handleCloseStudentDetails} 
             studentData={selectedStudent} 
-            onUpdate={handleOpenAddStudent}  // Pass the function to open AddStudentForm
             onDelete={handleDeleteStudent} 
           />
         </Container>
