@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Button, Typography, Container, Card, CardContent, Table, TableHead, TableBody, TableRow, TableCell } from '@mui/material';
 import AddTutorForm from '../../popups/AddTutorForm'; // Import the AddTutorForm component
+import TutorDetails from '../../popups/TutorDetails'; // Import the TutorDetails component
 import Sidebar from '../../components/Sidebar';
 import { AllTutors } from '../../services/api';
 
@@ -10,13 +11,14 @@ const Tutors = () => {
   const [open, setOpen] = useState(false);
   const [selectedTutor, setSelectedTutor] = useState(null);
   const [tutors, setTutors] = useState([]);
+  const [detailsOpen, setDetailsOpen] = useState(false); // State to control the TutorDetails modal
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const handleRowDoubleClick = (tutor) => {
+  const handleRowClick = (tutor) => {
     setSelectedTutor(tutor);
-    handleOpen();
+    setDetailsOpen(true); // Open the TutorDetails modal
   };
 
   const handleAddTutor = () => {
@@ -32,6 +34,7 @@ const Tutors = () => {
         console.log(result);
       } catch (error) {
         console.error('Error fetching statistics:', error);
+        setTutors(dummyData);
       }
     };
 
@@ -53,10 +56,10 @@ const Tutors = () => {
         sx={{
           flexGrow: 1,
           p: 3,
-          ml: `${drawerWidth}px`, // Offset the main content to make space for the sidebar
+          ml: `${drawerWidth}px`, // Corrected string interpolation
           minHeight: '100vh',
           display: 'flex',
-          flexDirection: 'column', // Changed to column to stack items vertically
+          flexDirection: 'column', // Stack items vertically
           alignItems: 'center', // Center items horizontally
         }}
       >
@@ -93,7 +96,7 @@ const Tutors = () => {
                 </TableHead>
                 <TableBody>
                   {tutors.map((row) => (
-                    <TableRow key={row.id} onDoubleClick={() => handleRowDoubleClick(row)} sx={{ cursor: 'pointer' }}>
+                    <TableRow key={row.id} onClick={() => handleRowClick(row)} sx={{ cursor: 'pointer' }}>
                       <TableCell>{row.id}</TableCell>
                       <TableCell>{row.name}</TableCell>
                       <TableCell>{row.subject}</TableCell>
@@ -110,6 +113,10 @@ const Tutors = () => {
 
           {/* AddTutorForm Modal */}
           <AddTutorForm open={open} onClose={handleClose} tutorData={selectedTutor} />
+          {/* TutorDetails Modal */}
+          {detailsOpen && (
+            <TutorDetails open={detailsOpen} onClose={() => setDetailsOpen(false)} tutorData={selectedTutor} />
+          )}
         </Container>
       </Box>
     </div>
