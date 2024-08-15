@@ -45,25 +45,25 @@ const Sidebar = () => {
           </ListItemIcon>
           <ListItemText primary="Home" />
         </ListItem>
-        <ListItem button component={Link} to="/student-dashboard">
+        <ListItem button component={Link} to="/manager-dashboard/students">
           <ListItemIcon sx={{ color: '#fff' }}>
             <PeopleIcon />
           </ListItemIcon>
           <ListItemText primary="Students" />
         </ListItem>
-        <ListItem button component={Link} to="/classes">
+        <ListItem button component={Link} to="/manager-dashboard/classes">
           <ListItemIcon sx={{ color: '#fff' }}>
             <ClassIcon />
           </ListItemIcon>
           <ListItemText primary="Classes" />
         </ListItem>
-        <ListItem button component={Link} to="/tutors">
+        <ListItem button component={Link} to="/manager-dashboard/tutors">
           <ListItemIcon sx={{ color: '#fff' }}>
             <SchoolIcon />
           </ListItemIcon>
           <ListItemText primary="Tutors" />
         </ListItem>
-        <ListItem button component={Link} to="/payments">
+        <ListItem button component={Link} to="/manager-dashboard/payments">
           <ListItemIcon sx={{ color: '#fff' }}>
             <PaymentIcon />
           </ListItemIcon>
