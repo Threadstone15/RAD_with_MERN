@@ -5,14 +5,13 @@ import Home from './components/Home';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import Register from './components/Register';
-import TeacherDashboard from './pages/TutorDashboard/TutorDashboard'; // Corrected path after moving it inside src/
 import ManagerDashboard from './pages/ManagerDashboard/ManagerDashboard';
-import StudentDashboard from './pages/StudentDashboard/StudentDashboard'; // Corrected path after moving it inside src/
 import './App.css';
 import About from './components/About';
 import Contact from './components/Contact'
 import Tutors from './pages/ManagerDashboard/Tutors';
 import Students from './pages/ManagerDashboard/Student'
+import Classes from './pages/ManagerDashboard/Classes';
 import BouncingDotsLoader from './BouncingDotsLoader';
 
 function RouteLoader({ children }) {
@@ -46,9 +45,10 @@ function App() {
         <Route path="/manager-dashboard" element={<ManagerDashboard />} /> 
         <Route path="/manager-dashboard/tutors" element={<Tutors />} />
         <Route path="/manager-dashboard/students" element={<Students />} />
+        <Route path="/manager-dashboard/classes" element={<Classes />} />
         
-        <Route path="/teacher-dashboard" element={<TeacherDashboard />} /> {/* Route for teacher dashboard */}
-        <Route path="/student-dashboard" element={<StudentDashboard />} />
+        <Route path="/manager-dashboard" element={<ManagerDashboard />} /> 
+
       </Routes>
       </RouteLoader>
     </Router>

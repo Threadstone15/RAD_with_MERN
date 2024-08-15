@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Box, TextField, Button, Typography, Modal, IconButton, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close'; // Import CloseIcon for the close button
+import CloseIcon from '@mui/icons-material/Close';
 
 const AddStudentForm = ({ open, onClose, studentData }) => {
   const [formData, setFormData] = useState({
@@ -89,15 +89,14 @@ const AddStudentForm = ({ open, onClose, studentData }) => {
             left: '50%',
             transform: 'translate(-50%, -50%)',
             width: 400,
-            maxHeight: '80vh', // Reduce the maximum height for a shorter modal
+            maxHeight: '80vh',
             bgcolor: 'background.paper',
             borderRadius: 2,
             boxShadow: 24,
             p: 4,
-            overflowY: 'auto', // Make content scrollable if it overflows
+            overflowY: 'auto',
             display: 'flex',
             flexDirection: 'column',
-            margin: 0, // Ensure the close button is positioned correctly
           }}
         >
           {/* Close Button */}
