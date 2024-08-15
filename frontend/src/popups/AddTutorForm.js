@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Box, TextField, Button, Typography, Modal, IconButton, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close'; // Import CloseIcon for the close button
 
-const AddTutorForm = ({ open, onClose, tutorData, onConfirmClose }) => {
+const AddTutorForm = ({ open, onClose, tutorData }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -42,14 +42,14 @@ const AddTutorForm = ({ open, onClose, tutorData, onConfirmClose }) => {
     event.preventDefault();
     // Handle form submission logic here
     console.log('Form data submitted:', formData);
-    onClose();
+    onClose(); // Close modal after submitting
   };
 
   const handleClose = () => {
     if (Object.values(formData).some(value => value !== '')) {
       setShowConfirmDialog(true); // Show confirmation dialog if there are unsaved changes
     } else {
-      onClose();
+      onClose(); // Close modal if no unsaved changes
     }
   };
 

@@ -1,10 +1,16 @@
 import React, { useState } from 'react';
+<<<<<<< Updated upstream:frontend/src/pages/Student.js
 import Sidebar from '../components/Sidebar';
 import AddStudentForm from '../popups/AddStudentForm';
 import StudentDetails from '../popups/StudentDetails'; // Import the StudentDetails component
+=======
+import Sidebar from '../../components/Sidebar';
+import AddStudentForm from '../../popups/AddStudentForm';
+import StudentDetails from '../../popups/StudentDetails';
+>>>>>>> Stashed changes:frontend/src/pages/ManagerDashboard/Student.js
 import { Box, Button, Typography, Container, Card, CardContent, Table, TableHead, TableBody, TableRow, TableCell } from '@mui/material';
 
-const drawerWidth = 240; // Assuming the width of the sidebar is 240px
+const drawerWidth = 240;
 
 const Students = () => {
   const [openAddStudent, setOpenAddStudent] = useState(false);
@@ -19,16 +25,11 @@ const Students = () => {
 
   const handleRowClick = (student) => {
     setSelectedStudent(student);
-    handleOpenStudentDetails(); // Open the StudentDetails modal on single click
-  };
-
-  const handleRowDoubleClick = (student) => {
-    setSelectedStudent(student);
-    handleOpenAddStudent(); // Open the AddStudentForm modal on double click
+    handleOpenStudentDetails();
   };
 
   const handleAddStudent = () => {
-    setSelectedStudent(null); // Clear selected student to add a new student
+    setSelectedStudent(null);
     handleOpenAddStudent();
   };
 
@@ -85,11 +86,11 @@ const Students = () => {
         sx={{
           flexGrow: 1,
           p: 3,
-          ml: `${drawerWidth}px`, // Offset the main content to make space for the sidebar
+          ml: `${drawerWidth}px`,
           minHeight: '100vh',
           display: 'flex',
-          flexDirection: 'column', // Stack items vertically
-          alignItems: 'center', // Center items horizontally
+          flexDirection: 'column',
+          alignItems: 'center',
         }}
       >
         <Container>
@@ -99,13 +100,12 @@ const Students = () => {
           <Button 
             variant="contained" 
             color="primary" 
-            onClick={handleAddStudent} // Open form for adding a student
+            onClick={handleAddStudent}
             sx={{ mb: 3 }}
           >
             Add Student
           </Button>
           
-          {/* Card containing the table */}
           <Card sx={{ width: '100%', mb: 3 }}>
             <CardContent>
               <Typography variant="h6" gutterBottom>
@@ -130,8 +130,7 @@ const Students = () => {
                   {dummyData.map((row) => (
                     <TableRow 
                       key={row.id} 
-                      onClick={() => handleRowClick(row)} // Single click opens StudentDetails
-                      onDoubleClick={() => handleRowDoubleClick(row)} // Double click opens AddStudentForm
+                      onClick={() => handleRowClick(row)}
                       sx={{ cursor: 'pointer' }}
                     >
                       <TableCell>{row.id}</TableCell>
@@ -152,13 +151,18 @@ const Students = () => {
           </Card>
 
           {/* AddStudentForm Modal */}
-          <AddStudentForm open={openAddStudent} onClose={handleCloseAddStudent} studentData={selectedStudent} />
+          <AddStudentForm 
+            open={openAddStudent} 
+            onClose={handleCloseAddStudent} 
+            studentData={selectedStudent} 
+          />
 
           {/* StudentDetails Modal */}
           <StudentDetails 
             open={openStudentDetails} 
             onClose={handleCloseStudentDetails} 
             studentData={selectedStudent} 
+            onUpdate={handleOpenAddStudent}  // Pass the function to open AddStudentForm
             onDelete={handleDeleteStudent} 
           />
         </Container>

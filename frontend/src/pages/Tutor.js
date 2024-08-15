@@ -1,20 +1,32 @@
 import React, { useState } from 'react';
 import { Box, Button, Typography, Container, Card, CardContent, Table, TableHead, TableBody, TableRow, TableCell } from '@mui/material';
+<<<<<<< Updated upstream:frontend/src/pages/Tutor.js
 import AddTutorForm from '../popups/AddTutorForm'; // Import the AddTutorForm component
 import Sidebar from '../components/Sidebar';
+=======
+import AddTutorForm from '../../popups/AddTutorForm'; // Import the AddTutorForm component
+import TutorDetails from '../../popups/TutorDetails'; // Import the TutorDetails component
+import Sidebar from '../../components/Sidebar';
+import { AllTutors } from '../../services/api';
+>>>>>>> Stashed changes:frontend/src/pages/ManagerDashboard/Tutors.js
 
 const drawerWidth = 240; // Assuming the width of the sidebar is 240px
 
 const Tutors = () => {
   const [open, setOpen] = useState(false);
   const [selectedTutor, setSelectedTutor] = useState(null);
+<<<<<<< Updated upstream:frontend/src/pages/Tutor.js
+=======
+  const [tutors, setTutors] = useState([]);
+  const [detailsOpen, setDetailsOpen] = useState(false); // State to control the TutorDetails modal
+>>>>>>> Stashed changes:frontend/src/pages/ManagerDashboard/Tutors.js
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const handleRowDoubleClick = (tutor) => {
+  const handleRowClick = (tutor) => {
     setSelectedTutor(tutor);
-    handleOpen();
+    setDetailsOpen(true); // Open the TutorDetails modal
   };
 
   const handleAddTutor = () => {
@@ -22,6 +34,10 @@ const Tutors = () => {
     handleOpen();
   };
 
+<<<<<<< Updated upstream:frontend/src/pages/Tutor.js
+=======
+
+>>>>>>> Stashed changes:frontend/src/pages/ManagerDashboard/Tutors.js
   // Dummy data for the table
   const dummyData = [
     { id: 1, name: 'John Doe', subject: 'Math', email: 'john.doe@example.com', telephone: '123-456-7890', address: '123 Main St', subjects: 'Algebra' },
@@ -37,10 +53,10 @@ const Tutors = () => {
         sx={{
           flexGrow: 1,
           p: 3,
-          ml: `${drawerWidth}px`, // Offset the main content to make space for the sidebar
+          ml: `${drawerWidth}px`, // Corrected string interpolation
           minHeight: '100vh',
           display: 'flex',
-          flexDirection: 'column', // Changed to column to stack items vertically
+          flexDirection: 'column', // Stack items vertically
           alignItems: 'center', // Center items horizontally
         }}
       >
@@ -77,7 +93,11 @@ const Tutors = () => {
                 </TableHead>
                 <TableBody>
                   {dummyData.map((row) => (
+<<<<<<< Updated upstream:frontend/src/pages/Tutor.js
                     <TableRow key={row.id} onDoubleClick={() => handleRowDoubleClick(row)} sx={{ cursor: 'pointer' }}>
+=======
+                    <TableRow key={row.id} onClick={() => handleRowClick(row)} sx={{ cursor: 'pointer' }}>
+>>>>>>> Stashed changes:frontend/src/pages/ManagerDashboard/Tutors.js
                       <TableCell>{row.id}</TableCell>
                       <TableCell>{row.name}</TableCell>
                       <TableCell>{row.subject}</TableCell>
@@ -94,6 +114,10 @@ const Tutors = () => {
 
           {/* AddTutorForm Modal */}
           <AddTutorForm open={open} onClose={handleClose} tutorData={selectedTutor} />
+          {/* TutorDetails Modal */}
+          {detailsOpen && (
+            <TutorDetails open={detailsOpen} onClose={() => setDetailsOpen(false)} tutorData={selectedTutor} />
+          )}
         </Container>
       </Box>
     </div>

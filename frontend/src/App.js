@@ -11,8 +11,14 @@ import StudentDashboard from './pages/Student'; // Corrected path after moving i
 import './App.css';
 import About from './components/About';
 import Contact from './components/Contact'
+<<<<<<< Updated upstream
 import Tutors from './pages/Tutor';
 import Students from './pages/Student'
+=======
+import Tutors from './pages/ManagerDashboard/Tutors';
+import Students from './pages/ManagerDashboard/Student'
+import Classes from './pages/ManagerDashboard/Classes';
+>>>>>>> Stashed changes
 import BouncingDotsLoader from './BouncingDotsLoader';
 
 function RouteLoader({ children }) {
@@ -42,8 +48,17 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/dashboard" element={<Dashboard />} />
+<<<<<<< Updated upstream
         <Route path="/tutors" element={<Tutors />} />
         <Route path="/students" element={<Students />} />
+=======
+        
+        <Route path="/manager-dashboard" element={<ManagerDashboard />} /> 
+        <Route path="/manager-dashboard/tutors" element={<Tutors />} />
+        <Route path="/manager-dashboard/students" element={<Students />} />
+        <Route path="/manager-dashboard/classes" element={<Classes />} />
+        
+>>>>>>> Stashed changes
         <Route path="/teacher-dashboard" element={<TeacherDashboard />} /> {/* Route for teacher dashboard */}
         <Route path="/manager-dashboard" element={<ManagerDashboard />} /> 
         <Route path="/student-dashboard" element={<StudentDashboard />} />
