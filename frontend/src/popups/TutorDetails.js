@@ -87,25 +87,22 @@ const TutorDetails = ({ open, onClose, tutorData, onDelete, onUpdate }) => {
             {tutorData ? (
               <>
                 <Typography variant="body1">
-                  <strong>ID:</strong> {tutorData.id}
+                  <strong>ID:</strong> {tutorData.TeacherID}
                 </Typography>
                 <Typography variant="body1">
-                  <strong>Name:</strong> {tutorData.name}
+                  <strong>Name:</strong> {tutorData.profile.name}
                 </Typography>
                 <Typography variant="body1">
-                  <strong>Email:</strong> {tutorData.email}
+                  <strong>Email:</strong> {tutorData.profile.email}
                 </Typography>
                 <Typography variant="body1">
                   <strong>Subjects:</strong> {tutorData.subjects}
                 </Typography>
                 <Typography variant="body1">
-                  <strong>Telephone:</strong> {tutorData.telephone}
+                  <strong>Telephone:</strong> {tutorData.profile.phone}
                 </Typography>
                 <Typography variant="body1">
-                  <strong>Address:</strong> {tutorData.address}
-                </Typography>
-                <Typography variant="body1">
-                  <strong>Days of Teaching:</strong> {tutorData.daysOfTeaching}
+                  <strong>Address:</strong> {tutorData.profile.address}
                 </Typography>
               </>
             ) : (
