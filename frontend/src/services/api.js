@@ -1,9 +1,9 @@
-import axios from 'axios';
+import axios from "axios";
 
 axios.defaults.withCredentials = true;
 
 export const login = async ({ email, password }) => {
-  const response = await axios.post('http://localhost:5000/api/auth/login', {
+  const response = await axios.post("http://localhost:5000/api/auth/login", {
     email,
     password,
   });
@@ -12,27 +12,41 @@ export const login = async ({ email, password }) => {
 };
 
 export const register = async (userData) => {
-  const response = await axios.post('/api/auth/register', userData);
+  const response = await axios.post("/api/auth/register", userData);
   return response.data;
 };
 
-
-
 export const addStudent = async (userData) => {
-  const response = await axios.post('http://localhost:5000/manager-dashboard/Student', userData);
+  const response = await axios.post(
+    "http://localhost:5000/manager-dashboard/Student",
+    userData
+  );
   return response.data;
 };
 
 export const addTeacher = async (userData) => {
-  const response = await axios.post('http://localhost:5000/manager-dashboard/Teacher', userData);
+  const response = await axios.post(
+    "http://localhost:5000/manager-dashboard/Teacher",
+    userData
+  );
   return response.data;
 };
 
-export const ManagerStatistics = async() => {
-  const response = await axios.get('http://localhost:5000/manager-dashboard/');
+export const ManagerStatistics = async () => {
+  const response = await axios.get("http://localhost:5000/manager-dashboard/");
   return response.data;
-}
-export const AllTutors = async() => {
-  const response = await axios.get('http://localhost:5000/manager-dashboard/getTeachers');
+};
+export const AllTutors = async () => {
+  const response = await axios.get(
+    "http://localhost:5000/manager-dashboard/GetTeachers"
+  );
   return response.data;
-}
+};
+
+export const deleteTutor = async (TeacherID) => {
+  const response = await axios.post(
+    "http://localhost:5000/manager-dashboard/deleteTeacher",
+    TeacherID
+  );
+  return response.data;
+};

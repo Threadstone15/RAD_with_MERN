@@ -1,7 +1,18 @@
-import React, { useState } from 'react';
-import { Box, Typography, Modal, IconButton, Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import AddTutorForm from './AddTutorForm'; // Import AddTutorForm component
+import React, { useState } from "react";
+import {
+  Box,
+  Typography,
+  Modal,
+  IconButton,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import AddTutorForm from "./AddTutorForm"; // Import AddTutorForm component
+import { deleteTutor } from "../services/api";
 
 const TutorDetails = ({ open, onClose, tutorData, onDelete, onUpdate }) => {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
@@ -11,9 +22,13 @@ const TutorDetails = ({ open, onClose, tutorData, onDelete, onUpdate }) => {
     setShowConfirmDialog(true);
   };
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async () => {
     setShowConfirmDialog(false);
-    onDelete(tutorData.id); // Call the delete function passed as a prop
+    try {
+      const response = await deleteTutor({ TeacherID: tutorData.TeacherID });
+    } catch {
+      console.log("Couldn't delete teacher");
+    }
     onClose(); // Close the details modal
   };
 
@@ -34,27 +49,27 @@ const TutorDetails = ({ open, onClose, tutorData, onDelete, onUpdate }) => {
       <Modal open={open} onClose={onClose}>
         <Box
           sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
             width: 400,
-            bgcolor: 'background.paper',
+            bgcolor: "background.paper",
             borderRadius: 2,
             boxShadow: 24,
             p: 4,
-            overflowY: 'auto',
-            display: 'flex',
-            flexDirection: 'column',
-            position: 'relative'
+            overflowY: "auto",
+            display: "flex",
+            flexDirection: "column",
+            position: "relative",
           }}
         >
           {/* Close Button */}
           <Box
             sx={{
-              display: 'flex',
-              justifyContent: 'flex-end',
-              position: 'absolute',
+              display: "flex",
+              justifyContent: "flex-end",
+              position: "absolute",
               top: 10,
               right: 10,
             }}
@@ -71,28 +86,41 @@ const TutorDetails = ({ open, onClose, tutorData, onDelete, onUpdate }) => {
             </Typography>
             {tutorData ? (
               <>
-                <Typography variant="body1"><strong>ID:</strong> {tutorData.id}</Typography>
-                <Typography variant="body1"><strong>Name:</strong> {tutorData.name}</Typography>
-                <Typography variant="body1"><strong>Email:</strong> {tutorData.email}</Typography>
-                <Typography variant="body1"><strong>Subjects:</strong> {tutorData.subjects}</Typography>
-                <Typography variant="body1"><strong>Telephone:</strong> {tutorData.telephone}</Typography>
-                <Typography variant="body1"><strong>Address:</strong> {tutorData.address}</Typography>
-                <Typography variant="body1"><strong>Days of Teaching:</strong> {tutorData.daysOfTeaching}</Typography>
+                <Typography variant="body1">
+                  <strong>ID:</strong> {tutorData.TeacherID}
+                </Typography>
+                <Typography variant="body1">
+                  <strong>Name:</strong> {tutorData.profile.name}
+                </Typography>
+                <Typography variant="body1">
+                  <strong>Email:</strong> {tutorData.profile.email}
+                </Typography>
+                <Typography variant="body1">
+                  <strong>Subjects:</strong> {tutorData.subjects}
+                </Typography>
+                <Typography variant="body1">
+                  <strong>Telephone:</strong> {tutorData.profile.phone}
+                </Typography>
+                <Typography variant="body1">
+                  <strong>Address:</strong> {tutorData.profile.address}
+                </Typography>
               </>
             ) : (
               <Typography variant="body1">No tutor data available.</Typography>
             )}
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 3 }}>
-              <Button 
-                variant="contained" 
-                color="secondary" 
+            <Box
+              sx={{ display: "flex", justifyContent: "space-between", mt: 3 }}
+            >
+              <Button
+                variant="contained"
+                color="secondary"
                 onClick={handleDeleteClick}
               >
                 Delete Tutor
               </Button>
-              <Button 
-                variant="contained" 
-                color="primary" 
+              <Button
+                variant="contained"
+                color="primary"
                 onClick={handleUpdateClick}
                 disabled={!tutorData} // Disable the button if there's no tutor data
               >
@@ -104,10 +132,7 @@ const TutorDetails = ({ open, onClose, tutorData, onDelete, onUpdate }) => {
       </Modal>
 
       {/* Confirmation Dialog */}
-      <Dialog
-        open={showConfirmDialog}
-        onClose={handleCancelDelete}
-      >
+      <Dialog open={showConfirmDialog} onClose={handleCancelDelete}>
         <DialogTitle>Confirm Delete</DialogTitle>
         <DialogContent>
           <Typography>Are you sure you want to delete this tutor?</Typography>

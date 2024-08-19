@@ -1,15 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { Box, TextField, Button, Typography, Modal, IconButton, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close'; // Import CloseIcon for the close button
-import { addTeacher } from '../services/api'; // Adjust the import path to where your API functions are located
+import React, { useState, useEffect } from "react";
+import {
+  Box,
+  TextField,
+  Button,
+  Typography,
+  Modal,
+  IconButton,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close"; // Import CloseIcon for the close button
+import { addTeacher } from "../services/api"; // Adjust the import path to where your API functions are located
 
 const AddTutorForm = ({ open, onClose, tutorData, onConfirmClose }) => {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    telephone: '',
-    address: '',
-    subjects: ''
+    name: "",
+    email: "",
+    telephone: "",
+    address: "",
+    subjects: "",
   });
 
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
@@ -17,19 +28,19 @@ const AddTutorForm = ({ open, onClose, tutorData, onConfirmClose }) => {
   useEffect(() => {
     if (tutorData) {
       setFormData({
-        name: tutorData.name || '',
-        email: tutorData.email || '',
-        telephone: tutorData.telephone || '',
-        address: tutorData.address || '',
-        subjects: tutorData.subjects || ''
+        name: tutorData.profile.name || "",
+        email: tutorData.profile.email || "",
+        telephone: tutorData.profile.phone || "",
+        address: tutorData.profile.address || "",
+        subjects: tutorData.subjects || "",
       });
     } else {
       setFormData({
-        name: '',
-        email: '',
-        telephone: '',
-        address: '',
-        subjects: ''
+        name: "",
+        email: "",
+        telephone: "",
+        address: "",
+        subjects: "",
       });
     }
   }, [tutorData]);
@@ -42,24 +53,24 @@ const AddTutorForm = ({ open, onClose, tutorData, onConfirmClose }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-        // Prepare the data object to match backend schema requirements
-        const response = await addTeacher({
-            name: formData.name, // This maps to profile.name
-            email: formData.email, // This maps to profile.email
-            phone: formData.telephone, // Ensure this field is correctly mapped
-            address: formData.address, // This maps to profile.address
-            subjects: formData.subjects // This maps directly to subjects
-        });
+      // Prepare the data object to match backend schema requirements
+      const response = await addTeacher({
+        name: formData.name, // This maps to profile.name
+        email: formData.email, // This maps to profile.email
+        phone: formData.telephone, // Ensure this field is correctly mapped
+        address: formData.address, // This maps to profile.address
+        subjects: formData.subjects, // This maps directly to subjects
+      });
 
-        console.log('Teacher added successfully:', response);
-        onClose(); // Close form or handle post-submission action
+      console.log("Teacher added successfully:", response);
+      onClose(); // Close form or handle post-submission action
     } catch (error) {
-        console.error('Error adding teacher:', error.message);
+      console.error("Error adding teacher:", error.message);
     }
   };
 
   const handleClose = () => {
-    if (Object.values(formData).some(value => value !== '')) {
+    if (Object.values(formData).some((value) => value !== "")) {
       setShowConfirmDialog(true); // Show confirmation dialog if there are unsaved changes
     } else {
       onClose();
@@ -69,11 +80,11 @@ const AddTutorForm = ({ open, onClose, tutorData, onConfirmClose }) => {
   const handleConfirmClose = () => {
     setShowConfirmDialog(false);
     setFormData({
-      name: '',
-      email: '',
-      telephone: '',
-      address: '',
-      subjects: ''
+      name: "",
+      email: "",
+      telephone: "",
+      address: "",
+      subjects: "",
     });
     onClose();
   };
@@ -87,28 +98,28 @@ const AddTutorForm = ({ open, onClose, tutorData, onConfirmClose }) => {
       <Modal open={open} onClose={handleClose}>
         <Box
           sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
             width: 400,
-            maxHeight: '80vh',
-            bgcolor: 'background.paper',
+            maxHeight: "80vh",
+            bgcolor: "background.paper",
             borderRadius: 2,
             boxShadow: 24,
             p: 4,
-            overflowY: 'auto',
-            display: 'flex',
-            flexDirection: 'column',
+            overflowY: "auto",
+            display: "flex",
+            flexDirection: "column",
             margin: 0,
           }}
         >
           {/* Close Button */}
           <Box
             sx={{
-              display: 'flex',
-              justifyContent: 'flex-end',
-              position: 'absolute',
+              display: "flex",
+              justifyContent: "flex-end",
+              position: "absolute",
               top: 10,
               right: 10,
             }}
@@ -117,11 +128,16 @@ const AddTutorForm = ({ open, onClose, tutorData, onConfirmClose }) => {
               <CloseIcon />
             </IconButton>
           </Box>
-          
+
           {/* Content Container */}
           <Box sx={{ mt: 5, mb: 2 }}>
-            <Typography variant="h6" component="h2" gutterBottom sx={{ margin: 0 }}>
-              {tutorData ? 'Update Tutor Details' : 'Add a Tutor'}
+            <Typography
+              variant="h6"
+              component="h2"
+              gutterBottom
+              sx={{ margin: 0 }}
+            >
+              {tutorData ? "Update Tutor Details" : "Add a Tutor"}
             </Typography>
             <form onSubmit={handleSubmit}>
               <TextField
@@ -169,8 +185,13 @@ const AddTutorForm = ({ open, onClose, tutorData, onConfirmClose }) => {
                 margin="normal"
                 required
               />
-              <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
-                {tutorData ? 'Update' : 'Submit'}
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                sx={{ mt: 2 }}
+              >
+                {tutorData ? "Update" : "Submit"}
               </Button>
             </form>
           </Box>
@@ -178,13 +199,12 @@ const AddTutorForm = ({ open, onClose, tutorData, onConfirmClose }) => {
       </Modal>
 
       {/* Confirmation Dialog */}
-      <Dialog
-        open={showConfirmDialog}
-        onClose={handleCancelClose}
-      >
+      <Dialog open={showConfirmDialog} onClose={handleCancelClose}>
         <DialogTitle>Unsaved Changes</DialogTitle>
         <DialogContent>
-          <Typography>Are you sure you want to close without saving changes?</Typography>
+          <Typography>
+            Are you sure you want to close without saving changes?
+          </Typography>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCancelClose} color="primary">
