@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Box, TextField, Button, Typography, Modal, IconButton, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close'; // Import CloseIcon for the close button
+import { addStudent } from '../services/api';
 
 const AddStudentForm = ({ open, onClose, studentData }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     dateOfBirth: '',
+    phone: '',
     medium: '',
     school: '',
     address: '',
@@ -21,6 +23,7 @@ const AddStudentForm = ({ open, onClose, studentData }) => {
         name: studentData.name || '',
         email: studentData.email || '',
         dateOfBirth: studentData.dateOfBirth || '',
+        phone: studentData.phone || '',
         medium: studentData.medium || '',
         school: studentData.school || '',
         address: studentData.address || '',
@@ -32,6 +35,7 @@ const AddStudentForm = ({ open, onClose, studentData }) => {
         name: '',
         email: '',
         dateOfBirth: '',
+        phone:'',
         medium: '',
         school: '',
         address: '',
@@ -46,9 +50,13 @@ const AddStudentForm = ({ open, onClose, studentData }) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // Handle form submission logic here
+    try {
+      const response = await addStudent(formData);
+    } catch (error) {
+      console.error("Add Student failed:", error);
+    }
     onClose();
   };
 
@@ -66,6 +74,7 @@ const AddStudentForm = ({ open, onClose, studentData }) => {
       name: '',
       email: '',
       dateOfBirth: '',
+      phone: '',
       medium: '',
       school: '',
       address: '',
@@ -149,6 +158,15 @@ const AddStudentForm = ({ open, onClose, studentData }) => {
                 margin="normal"
                 required
                 InputLabelProps={{ shrink: true }}
+              />
+              
+              <TextField
+                label="Contact Number"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                fullWidth
+                margin="normal"
               />
               <TextField
                 label="Medium"

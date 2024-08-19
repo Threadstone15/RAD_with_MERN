@@ -97,15 +97,15 @@ router.post('/Student', async (req, res) => {
         const newStudent = new Student({
             studentID: studentId,
             profile: {
-                Name: student.Name,
-                email: student.Email,
-                phone: student.CNumber,
-                DOB: student.DOB,
-                Medium: student.Medium,
-                School: student.School,
-                Address: student.Address,
-                PName: student.PName,
-                PContact: student.PContact
+                Name: student.name,
+                email: student.email,
+                phone: student.phone,
+                DOB: student.dateOfBirth,
+                Medium: student.medium,
+                School: student.school,
+                Address: student.address,
+                PName: student.parentsName,
+                PContact: student.parentsContact
 
             },
             password: hashedPassword,
