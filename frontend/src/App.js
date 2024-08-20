@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes ,useLocation } from 'react-router-dom';
-import Navbar from './components/Navbar';
 import Home from './components/Home';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import Register from './components/Register';
 import ManagerDashboard from './pages/ManagerDashboard/ManagerDashboard';
+import StudentDashboard from './pages/StudentDashboard/StudentDashboard';
 import './App.css';
 import About from './components/About';
 import Contact from './components/Contact'
@@ -42,7 +42,8 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/dashboard" element={<Dashboard />} />
         
-        <Route path="/manager-dashboard" element={<ManagerDashboard />} /> 
+        <Route path="/manager-dashboard" element={<ManagerDashboard />} />
+        <Route path="/student-dashboard" element={<StudentDashboard />} />  
         <Route path="/manager-dashboard/tutors" element={<Tutors />} />
         <Route path="/manager-dashboard/students" element={<Students />} />
         <Route path="/manager-dashboard/classes" element={<Classes />} />

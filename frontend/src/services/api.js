@@ -36,6 +36,12 @@ export const ManagerStatistics = async () => {
   const response = await axios.get("http://localhost:5000/manager-dashboard/");
   return response.data;
 };
+
+export const StudentStatistics = async () => {
+  const response = await axios.get("http://localhost:5000/student-dashboard/");
+  return response.data;
+};
+
 export const AllTutors = async () => {
   const response = await axios.get(
     "http://localhost:5000/manager-dashboard/GetTeachers"

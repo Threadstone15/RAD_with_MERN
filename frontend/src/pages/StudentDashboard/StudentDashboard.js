@@ -1,82 +1,39 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Sidebar from '../../components/Sidebar';
+import { fetchHash, startPayment } from './paymentService';
 
 const StudentPage = () => {
-  const [hash, setHash] = useState('');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Dynamically load the PayHere script
     const script = document.createElement('script');
     script.src = "https://www.payhere.lk/lib/payhere.js";
     script.async = true;
     document.body.appendChild(script);
 
-    // Clean up the script when the component unmounts
     return () => {
       document.body.removeChild(script);
     };
   }, []);
 
-  const fetchHash = async (order_id, amount, currency) => {
-    setLoading(true);
-    try {
-      const response = await fetch('http://localhost:5000/api/generate-hash', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ order_id, amount, currency }),
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text(); // Get the response text
-        throw new Error(`HTTP error! Status: ${response.status}. Response: ${errorText}`);
-      }
-
-      const data = await response.json();
-      setHash(data.hash); // Save hash to state
-    } catch (error) {
-      console.error('Error fetching hash:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handlePayment = async (course) => {
-    const order_id = `Order${course.id}`;
-    const amount = course.amount;
-    const currency = 'LKR';
-
-    await fetchHash(order_id, amount, currency);
-
-    if (!hash) {
-      console.error('Hash not available');
-      return;
-    }
-
-    const payment = {
-      sandbox: true,
-      merchant_id: "1227926",
-      return_url: 'http://localhost:5000/return',
-      cancel_url: 'http://localhost:5000/cancel',
-      notify_url: 'http://localhost:5000/payhere/notify',
-      order_id: order_id,
-      items: course.name,
-      amount: amount,
-      currency: currency,
-      hash: hash, // Use the hash from state
-      first_name: student.name.split(' ')[0],
-      last_name: student.name.split(' ')[1] || '',
-      email: student.email,
-      phone: student.phone,
-      address: student.address,
-      city: student.city,
-      country: student.country,
+    const student = {
+      name: 'Student',
+      email: 'john.doe@example.com',
+      phone: '0771234567',
+      address: 'No.1, Galle Road',
+      city: 'Colombo',
+      country: 'Sri Lanka',
     };
 
-    if (window.payhere) {
-      window.payhere.startPayment(payment);
-    } else {
-      console.error("PayHere script not loaded");
+    setLoading(true);
+    try {
+      const hash = await fetchHash(`Order${course.id}`, course.amount, 'LKR');
+      await startPayment(course, student, hash);
+    } catch (error) {
+      console.error('Payment failed:', error);
+    } finally {
+      setLoading(false);
     }
   };
 

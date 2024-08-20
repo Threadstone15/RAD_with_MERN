@@ -1,9 +1,8 @@
 const mongoose = require("mongoose");
 
 const PaymentSchema = new mongoose.Schema({
-  studentId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Student",
+  studentID: {
+    type: String,
     required: true,
   },
   amount: {
@@ -21,6 +20,18 @@ const PaymentSchema = new mongoose.Schema({
   status: {
     type: String,
     enum: ["paid", "pending"],
+    required: true,
+  },
+  method: {
+    type: String,
+    required: true,
+  },
+  order_id: {
+    type: String,
+    required: true,
+  },
+  currency: {
+    type: String,
     required: true,
   },
 });
