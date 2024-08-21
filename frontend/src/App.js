@@ -12,6 +12,7 @@ import Contact from './components/Contact'
 import Tutors from './pages/ManagerDashboard/Tutors';
 import Students from './pages/ManagerDashboard/Student'
 import Classes from './pages/ManagerDashboard/Classes';
+import Payments from './pages/ManagerDashboard/Payment';
 import BouncingDotsLoader from './BouncingDotsLoader';
 
 function RouteLoader({ children }) {
@@ -47,6 +48,7 @@ function App() {
         <Route path="/manager-dashboard/tutors" element={<Tutors />} />
         <Route path="/manager-dashboard/students" element={<Students />} />
         <Route path="/manager-dashboard/classes" element={<Classes />} />
+        <Route path="/manager-dashboard/payments" element={<Payments />} />
         
         <Route path="/manager-dashboard" element={<ManagerDashboard />} /> 
 
