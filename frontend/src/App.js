@@ -15,6 +15,8 @@ import Classes from './pages/ManagerDashboard/Classes';
 import Payments from './pages/ManagerDashboard/Payment';
 import BouncingDotsLoader from './BouncingDotsLoader';
 
+import StudentProfile from './pages/StudentDashboard/StudentProfile'
+
 function RouteLoader({ children }) {
   const [loading, setLoading] = useState(false);
   const location = useLocation();
@@ -49,6 +51,9 @@ function App() {
         <Route path="/manager-dashboard/students" element={<Students />} />
         <Route path="/manager-dashboard/classes" element={<Classes />} />
         <Route path="/manager-dashboard/payments" element={<Payments />} />
+
+        <Route path="/student-dashboard/" element={<StudentDashboard />} />
+        <Route path="/student-dashboard/profile" element={<StudentProfile />} />
         
         <Route path="/manager-dashboard" element={<ManagerDashboard />} /> 
 
