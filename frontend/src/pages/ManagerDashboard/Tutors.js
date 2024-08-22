@@ -105,12 +105,12 @@ const Tutors = () => {
                       sx={{ cursor: "pointer" }}
                     >
                       <TableCell>{row.TeacherID}</TableCell>
-                      <TableCell>{row.name}</TableCell>
+                      <TableCell>{row.profile.name}</TableCell>
                       <TableCell>{row.subjects}</TableCell>
-                      <TableCell>{row.email}</TableCell>
-                      <TableCell>{row.phone}</TableCell>
-                      <TableCell>{row.address}</TableCell>
-                      <TableCell>{row.classIds}</TableCell>
+                      <TableCell>{row.profile.email}</TableCell>
+                      <TableCell>{row.profile.phone}</TableCell>
+                      <TableCell>{row.profile.address}</TableCell>
+                      <TableCell>{row.subjects}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

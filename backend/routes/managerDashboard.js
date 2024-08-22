@@ -248,6 +248,16 @@ router.get("/teachers", async (req, res) => {
   }
 });
 
+router.get("/students", async (req, res) => {
+  try {
+    const students = await Student.find(); 
+    res.json(students);
+  } catch (error) {
+    console.error("Error fetching teachers:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 router.post("/deleteTeacher", async (req, res) => {
   try {
     console.log(req.body.TeacherID);

@@ -1,106 +1,86 @@
-import React, { useState } from 'react';
-import Sidebar from '../../components/Sidebar';
-import AddStudentForm from '../../popups/AddStudentForm';
-import StudentDetails from '../../popups/StudentDetails';
-import { Box, Button, Typography, Container, Card, CardContent, Table, TableHead, TableBody, TableRow, TableCell } from '@mui/material';
+import React, { useState, useEffect } from "react";
+import {
+  Box,
+  Button,
+  Typography,
+  Container,
+  Card,
+  CardContent,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+} from "@mui/material";
+import Sidebar from "../../components/Sidebar";
+import AddStudentForm from "../../popups/AddStudentForm";
+import StudentDetails from "../../popups/StudentDetails";
+import axios from "axios";
 
 const drawerWidth = 240;
 
 const Students = () => {
-  const [openAddStudent, setOpenAddStudent] = useState(false);
-  const [openStudentDetails, setOpenStudentDetails] = useState(false);
+  const [open, setOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);
+  const [students, setStudents] = useState([]);
+  const [detailsOpen, setDetailsOpen] = useState(false);
 
-  const handleOpenAddStudent = () => setOpenAddStudent(true);
-  const handleCloseAddStudent = () => setOpenAddStudent(false);
-
-  const handleOpenStudentDetails = () => setOpenStudentDetails(true);
-  const handleCloseStudentDetails = () => setOpenStudentDetails(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const handleRowClick = (student) => {
     setSelectedStudent(student);
-    handleOpenStudentDetails();
+    setDetailsOpen(true);
   };
 
   const handleAddStudent = () => {
     setSelectedStudent(null);
-    handleOpenAddStudent();
+    handleOpen();
   };
 
-  const handleDeleteStudent = (studentId) => {
-    console.log(`Deleting student with ID: ${studentId}`);
-    // Add delete logic here
-  };
-
-  // Dummy data for the table
-  const dummyData = [
-    { 
-      id: 1, 
-      name: 'John Doe', 
-      email: 'john.doe@example.com', 
-      dateOfBirth: '1980-01-15', 
-      telephone: '123-456-7890', 
-      medium: 'English', 
-      school: 'Springfield High', 
-      address: '123 Main St', 
-      parentsName: 'Jane Doe', 
-      parentsContact: '987-654-3210', 
-    },
-    { 
-      id: 2, 
-      name: 'Jane Smith', 
-      email: 'jane.smith@example.com', 
-      dateOfBirth: '1990-05-22', 
-      telephone: '987-654-3210', 
-      medium: 'Sinhala', 
-      school: 'Riverside School', 
-      address: '456 Elm St', 
-      parentsName: 'John Smith', 
-      parentsContact: '555-555-5555', 
-    },
-    { 
-      id: 3, 
-      name: 'Jim Brown', 
-      email: 'jim.brown@example.com', 
-      dateOfBirth: '1985-09-30', 
-      telephone: '555-555-5555', 
-      medium: 'Tamil', 
-      school: 'Greenfield Academy', 
-      address: '789 Oak St', 
-      parentsName: 'Mary Brown', 
-      parentsContact: '123-456-7890', 
-    },
-  ];
+  useEffect(() => {
+    const fetchStudents = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/manager-dashboard/students');
+        setStudents(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.error('Error fetching students:', error);
+      }
+    };
+  
+    fetchStudents();
+  }, []);
 
   return (
     <div>
-      <Sidebar/>
+      <Sidebar />
       <Box
         component="main"
         sx={{
           flexGrow: 1,
           p: 3,
           ml: `${drawerWidth}px`,
-          minHeight: '100vh',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
+          minHeight: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
         }}
       >
         <Container>
           <Typography variant="h4" gutterBottom align="center">
             Student Management
           </Typography>
-          <Button 
-            variant="contained" 
-            color="primary" 
+          <Button
+            variant="contained"
+            color="primary"
             onClick={handleAddStudent}
             sx={{ mb: 3 }}
           >
             Add Student
           </Button>
-          
-          <Card sx={{ width: '100%', mb: 3 }}>
+
+          <Card sx={{ width: "100%", mb: 3 }}>
             <CardContent>
               <Typography variant="h6" gutterBottom>
                 Students List
@@ -121,22 +101,22 @@ const Students = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {dummyData.map((row) => (
-                    <TableRow 
-                      key={row.id} 
+                  {students.map((row) => (
+                    <TableRow
+                      key={row.StudentID}
                       onClick={() => handleRowClick(row)}
-                      sx={{ cursor: 'pointer' }}
+                      sx={{ cursor: "pointer" }}
                     >
-                      <TableCell>{row.id}</TableCell>
-                      <TableCell>{row.name}</TableCell>
-                      <TableCell>{row.email}</TableCell>
-                      <TableCell>{row.dateOfBirth}</TableCell>
-                      <TableCell>{row.telephone}</TableCell>
-                      <TableCell>{row.medium}</TableCell>
-                      <TableCell>{row.school}</TableCell>
-                      <TableCell>{row.address}</TableCell>
-                      <TableCell>{row.parentsName}</TableCell>
-                      <TableCell>{row.parentsContact}</TableCell>
+                      <TableCell>{row.studentID}</TableCell>
+                      <TableCell>{row.profile.Name}</TableCell>
+                      <TableCell>{row.profile.email}</TableCell>
+                      <TableCell>{row.profile.DOB}</TableCell>
+                      <TableCell>{row.profile.phone}</TableCell>
+                      <TableCell>{row.profile.Medium}</TableCell>
+                      <TableCell>{row.profile.School}</TableCell>
+                      <TableCell>{row.profile.Address}</TableCell>
+                      <TableCell>{row.profile.PName}</TableCell>
+                      <TableCell>{row.profile.PContact}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -144,25 +124,22 @@ const Students = () => {
             </CardContent>
           </Card>
 
-          {/* AddStudentForm Modal */}
-          <AddStudentForm 
-            open={openAddStudent} 
-            onClose={handleCloseAddStudent} 
-            studentData={selectedStudent} 
+          <AddStudentForm
+            open={open}
+            onClose={handleClose}
+            studentData={selectedStudent}
           />
-
-          {/* StudentDetails Modal */}
-          <StudentDetails 
-            open={openStudentDetails} 
-            onClose={handleCloseStudentDetails} 
-            studentData={selectedStudent} 
-            onUpdate={handleOpenAddStudent}  // Pass the function to open AddStudentForm
-            onDelete={handleDeleteStudent} 
-          />
+          {detailsOpen && (
+            <StudentDetails
+              open={detailsOpen}
+              onClose={() => setDetailsOpen(false)}
+              studentData={selectedStudent}
+            />
+          )}
         </Container>
       </Box>
     </div>
   );
-}
+};
 
 export default Students;
