@@ -238,15 +238,13 @@ router.post("/AddStudentToClass", async (req, res) => {
   }
 });
 
-router.get("/GetTeachers", async (req, res) => {
+router.get("/teachers", async (req, res) => {
   try {
-    const teachers = await Teacher.find(
-      {},
-      "profile TeacherID subjects classIDs"
-    );
-    return res.status(201).json(teachers);
-  } catch (err) {
-    return res.status(500).json({ error: "Cannot fetch teacher data" });
+    const teachers = await Teacher.find(); 
+    res.json(teachers);
+  } catch (error) {
+    console.error("Error fetching teachers:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 

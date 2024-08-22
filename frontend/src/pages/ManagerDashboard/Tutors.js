@@ -12,25 +12,25 @@ import {
   TableRow,
   TableCell,
 } from "@mui/material";
-import AddTutorForm from "../../popups/AddTutorForm"; // Import the AddTutorForm component
-import TutorDetails from "../../popups/TutorDetails"; // Import the TutorDetails component
+import AddTutorForm from "../../popups/AddTutorForm";
+import TutorDetails from "../../popups/TutorDetails";
 import Sidebar from "../../components/Sidebar";
-import { AllTutors } from "../../services/api";
+import axios from "axios"; // Import axios for HTTP requests
 
-const drawerWidth = 240; // Assuming the width of the sidebar is 240px
+const drawerWidth = 240;
 
 const Tutors = () => {
   const [open, setOpen] = useState(false);
   const [selectedTutor, setSelectedTutor] = useState(null);
   const [tutors, setTutors] = useState([]);
-  const [detailsOpen, setDetailsOpen] = useState(false); // State to control the TutorDetails modal
+  const [detailsOpen, setDetailsOpen] = useState(false);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   const handleRowClick = (tutor) => {
     setSelectedTutor(tutor);
-    setDetailsOpen(true); // Open the TutorDetails modal
+    setDetailsOpen(true);
   };
 
   const handleAddTutor = () => {
@@ -39,50 +39,18 @@ const Tutors = () => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchTutors = async () => {
       try {
-        const result = await AllTutors();
-        setTutors(result);
-        console.log(result);
+        const response = await axios.get('http://localhost:5000/manager-dashboard/teachers');
+        setTutors(response.data);
+        console.log(response.data);
       } catch (error) {
-        console.error("Error fetching statistics:", error);
-        setTutors(dummyData);
+        console.error('Error fetching tutors:', error);
       }
     };
-
-    fetchData();
+  
+    fetchTutors();
   }, []);
-
-  // Dummy data for the table
-  const dummyData = [
-    {
-      id: 1,
-      name: "John Doe",
-      subject: "Math",
-      email: "john.doe@example.com",
-      telephone: "123-456-7890",
-      address: "123 Main St",
-      subjects: "Algebra",
-    },
-    {
-      id: 2,
-      name: "Jane Smith",
-      subject: "Science",
-      email: "jane.smith@example.com",
-      telephone: "987-654-3210",
-      address: "456 Elm St",
-      subjects: "Physics",
-    },
-    {
-      id: 3,
-      name: "Jim Brown",
-      subject: "English",
-      email: "jim.brown@example.com",
-      telephone: "555-555-5555",
-      address: "789 Oak St",
-      subjects: "Literature",
-    },
-  ];
 
   return (
     <div>
@@ -92,11 +60,11 @@ const Tutors = () => {
         sx={{
           flexGrow: 1,
           p: 3,
-          ml: `${drawerWidth}px`, // Corrected string interpolation
+          ml: `${drawerWidth}px`,
           minHeight: "100vh",
           display: "flex",
-          flexDirection: "column", // Stack items vertically
-          alignItems: "center", // Center items horizontally
+          flexDirection: "column",
+          alignItems: "center",
         }}
       >
         <Container>
@@ -106,13 +74,12 @@ const Tutors = () => {
           <Button
             variant="contained"
             color="primary"
-            onClick={handleAddTutor} // Open form for adding a tutor
+            onClick={handleAddTutor}
             sx={{ mb: 3 }}
           >
             Add Tutor
           </Button>
 
-          {/* Card containing the table */}
           <Card sx={{ width: "100%", mb: 3 }}>
             <CardContent>
               <Typography variant="h6" gutterBottom>
@@ -131,7 +98,6 @@ const Tutors = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {console.log(tutors)}
                   {tutors.map((row) => (
                     <TableRow
                       key={row.TeacherID}
@@ -139,12 +105,12 @@ const Tutors = () => {
                       sx={{ cursor: "pointer" }}
                     >
                       <TableCell>{row.TeacherID}</TableCell>
-                      <TableCell>{row.profile.name}</TableCell>
-                      <TableCell>{row.subject}</TableCell>
-                      <TableCell>{row.profile.email}</TableCell>
-                      <TableCell>{row.profile.phone}</TableCell>
-                      <TableCell>{row.profile.address}</TableCell>
-                      <TableCell>{row.classIDs}</TableCell>
+                      <TableCell>{row.name}</TableCell>
+                      <TableCell>{row.subjects}</TableCell>
+                      <TableCell>{row.email}</TableCell>
+                      <TableCell>{row.phone}</TableCell>
+                      <TableCell>{row.address}</TableCell>
+                      <TableCell>{row.classIds}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -152,13 +118,11 @@ const Tutors = () => {
             </CardContent>
           </Card>
 
-          {/* AddTutorForm Modal */}
           <AddTutorForm
             open={open}
             onClose={handleClose}
             tutorData={selectedTutor}
           />
-          {/* TutorDetails Modal */}
           {detailsOpen && (
             <TutorDetails
               open={detailsOpen}
