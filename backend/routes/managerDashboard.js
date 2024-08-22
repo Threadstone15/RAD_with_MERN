@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Student = require("../models/Student");
 const Teacher = require("../models/Teacher");
+const Class = require("../models/Class");
 const Attendance = require("../models/Attendance");
 const AuthMiddleware = require("../middleware/AuthMiddleware");
 const roleMiddleware = require("../middleware/roleMiddleware");
@@ -238,6 +239,8 @@ router.post("/AddStudentToClass", async (req, res) => {
   }
 });
 
+//Manager Dashboard Fetch Routes
+
 router.get("/teachers", async (req, res) => {
   try {
     const teachers = await Teacher.find(); 
@@ -254,6 +257,31 @@ router.get("/students", async (req, res) => {
     res.json(students);
   } catch (error) {
     console.error("Error fetching teachers:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.get("/classes", async (req, res) => {
+  try {
+    const classes = await Class.find(); 
+    res.json(classes);
+  } catch (error) {
+    console.error("Error fetching teachers:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+router.get("/classes-with-teachers", async (req, res) => {
+  try {
+    const classes = await Class.find()
+      .populate({
+        path: "TeacherID",
+        select: "profile.name",
+      })
+      .exec();
+
+    res.json(classes);
+  } catch (error) {
+    console.error("Error fetching class details:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });

@@ -15,7 +15,7 @@ import {
 import AddTutorForm from "../../popups/AddTutorForm";
 import TutorDetails from "../../popups/TutorDetails";
 import Sidebar from "../../components/Sidebar";
-import axios from "axios"; // Import axios for HTTP requests
+import axios from "axios";
 
 const drawerWidth = 240;
 

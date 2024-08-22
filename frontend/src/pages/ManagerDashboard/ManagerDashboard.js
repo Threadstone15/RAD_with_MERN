@@ -5,7 +5,7 @@ import Sidebar from '../../components/Sidebar';
 import AddStudentForm from '../../popups/AddStudentForm';
 import AddTeacherForm from '../../popups/AddTutorForm';
 import MarkAttendance from '../../popups/MarkAttendance';
-import { ManagerStatistics } from '../../services/api';
+import axios from 'axios';
 
 const drawerWidth = 240;
 
@@ -13,15 +13,15 @@ const ManagerDashboard = () => {
   const [isAddStudentOpen, setAddStudentOpen] = useState(false);
   const [isAddTeacherOpen, setAddTeacherOpen] = useState(false);
   const [isMarkAttendanceOpen, setMarkAttendanceOpen] = useState(false);
-  const [stats, setStats] = useState({});
+  const [stats] = useState({});
   const [classTimetable, setClassTimetable] = useState([]);
-  const navigate = useNavigate();  // Hook to navigate
+  const navigate = useNavigate();
 
   const handleOpenMarkAttendance = () => setMarkAttendanceOpen(true);
   const handleCloseMarkAttendance = () => setMarkAttendanceOpen(false);
 
   const handleCardClick = (path) => {
-    navigate(path);  // Navigate to the specified path
+    navigate(path);
   };
 
   const handleOpenAddStudent = () => setAddStudentOpen(true);
@@ -31,33 +31,26 @@ const ManagerDashboard = () => {
 
   const currentDay = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(new Date());
 
-  // Dummy data for class timetable
-  const dummyTimetable = [
-    { day: 'Monday', time: '10:00 AM - 11:00 AM', subject: 'Math', teacher: 'Mr. Smith' },
-    { day: 'Monday', time: '10:00 AM - 11:00 AM', subject: 'Science', teacher: 'Ms. Johnson' },
-    { day: 'Monday', time: '11:00 AM - 12:00 PM', subject: 'History', teacher: 'Mr. Clark' },
-    { day: 'Tuesday', time: '09:00 AM - 10:00 AM', subject: 'English', teacher: 'Ms. Davis' },
-    { day: 'Tuesday', time: '09:00 AM - 10:00 AM', subject: 'Geography', teacher: 'Mr. Lewis' },
-    { day: 'Wednesday', time: '12:00 PM - 01:00 PM', subject: 'Art', teacher: 'Ms. Thompson' },
-    { day: 'Wednesday', time: '01:00 PM - 02:00 PM', subject: 'Math', teacher: 'Mr. Smith' },
-    { day: 'Thursday', time: '09:00 AM - 10:00 AM', subject: 'Physical Education', teacher: 'Mr. Walker' },
-    { day: 'Thursday', time: '09:00 AM - 10:00 AM', subject: 'Science', teacher: 'Ms. Johnson' },
-    { day: 'Friday', time: '10:00 AM - 11:00 AM', subject: 'Math', teacher: 'Mr. Smith' },
-    { day: 'Saturday', time: '11:00 AM - 12:00 PM', subject: 'History', teacher: 'Mr. Clark' },
-    { day: 'Saturday', time: '12:00 PM - 01:00 PM', subject: 'Art', teacher: 'Ms. Thompson' },
-    { day: 'Sunday', time: '10:00 AM - 11:00 AM', subject: 'Geography', teacher: 'Mr. Lewis' },
-    { day: 'Sunday', time: '10:00 AM - 11:00 AM', subject: 'Physical Education', teacher: 'Mr. Walker' },
-  ];
-
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setClassTimetable(dummyTimetable);
-        const result = await ManagerStatistics();
-        setStats(result);
-        console.log(result);
+
+
+        const classResponse = await axios.get('http://localhost:5000/manager-dashboard/classes-with-teachers');
+        const classData = classResponse.data;
+
+        const formattedTimetable = classData.map((classEntry) => {
+          return classEntry.schedule.days.map((day) => ({
+            day,
+            time: classEntry.schedule.time,
+            subject: classEntry.className,
+            teacher: classEntry.teacherId?.profile?.name || 'Unknown',
+          }));
+        }).flat();
+
+        setClassTimetable(formattedTimetable);
       } catch (error) {
-        console.error('Error fetching statistics:', error);
+        console.error('Error fetching data:', error);
       }
     };
 
