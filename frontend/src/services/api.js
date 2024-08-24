@@ -34,6 +34,7 @@ export const addTeacher = async (userData) => {
 
 export const ManagerStatistics = async () => {
   const response = await axios.get("http://localhost:5000/manager-dashboard/");
+  console.log(response.data);
   return response.data;
 };
 

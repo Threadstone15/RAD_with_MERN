@@ -23,7 +23,6 @@ async function getPaymentStatisticsForCurrentMonth(totalStudents) {
 
     const startOfMonth = new Date(year, month, 1);
     const endOfMonth = new Date(year, month + 1, 0, 23, 59, 59, 999);
-
     const paymentResult = await Payment.aggregate([
       {
         $match: {
@@ -42,6 +41,7 @@ async function getPaymentStatisticsForCurrentMonth(totalStudents) {
         },
       },
     ]);
+    
 
     const totalAmountPaid =
       paymentResult.length > 0 ? paymentResult[0].totalAmount : 0;
@@ -56,10 +56,9 @@ async function getPaymentStatisticsForCurrentMonth(totalStudents) {
     const numberOfPaidStudents = paidStudents.length;
 
     const numberOfStudentsWhoHaventPaid = totalStudents - numberOfPaidStudents;
-
     return {
-      totalAmountPaid,
-      numberOfStudentsWhoHaventPaid,
+      monthlyIncome: totalAmountPaid,
+      notPaid: numberOfStudentsWhoHaventPaid,
     };
   } catch (error) {
     console.error(
@@ -68,6 +67,24 @@ async function getPaymentStatisticsForCurrentMonth(totalStudents) {
     );
   }
 }
+
+router.get("/", async (req, res) => {
+  try {
+    console.log("Got an http request to /manager-dashboard/");
+    const StudentCount = await Student.countDocuments();
+    const TeacherCount = await Teacher.countDocuments();
+    const { monthlyIncome, notPaid } = await getPaymentStatisticsForCurrentMonth(StudentCount);
+    console.log(StudentCount, TeacherCount, monthlyIncome, notPaid);
+    res.json({
+      StudentCount: StudentCount,
+      TeacherCount: TeacherCount,
+      monthlyIncome: monthlyIncome,
+      notPaid: notPaid,
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Error getting statistics" });
+  }
+});
 
 const generateRandomId = () => {
   return Math.floor(100000 + Math.random() * 900000);
