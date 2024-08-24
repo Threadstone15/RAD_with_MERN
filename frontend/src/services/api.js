@@ -26,11 +26,6 @@ export const login = async ({ email, password }) => {
   return response.data;
 };
 
-export const register = async (userData) => {
-  const response = await axios.post("/api/auth/register", userData);
-  return response.data;
-};
-
 export const addStudent = async (userData) => {
   const response = await axios.post(
     "http://localhost:5000/manager-dashboard/Student",
