@@ -2,6 +2,21 @@ import axios from "axios";
 
 axios.defaults.withCredentials = true;
 
+axios.interceptors.response.use(
+  response => {
+    console.log("It's successful?");
+    return response;
+  },
+  error => {
+    console.log("Response intercepted again");
+    if (error.response && error.response.status === 401) {
+      window.location.href = '/login';
+    }
+    return Promise.reject(error); 
+  }
+);
+
+
 export const login = async ({ email, password }) => {
   const response = await axios.post("http://localhost:5000/api/auth/login", {
     email,
