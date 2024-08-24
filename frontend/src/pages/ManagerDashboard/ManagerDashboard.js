@@ -13,7 +13,7 @@ const ManagerDashboard = () => {
   const [isAddStudentOpen, setAddStudentOpen] = useState(false);
   const [isAddTeacherOpen, setAddTeacherOpen] = useState(false);
   const [isMarkAttendanceOpen, setMarkAttendanceOpen] = useState(false);
-  const [stats] = useState({});
+  const [stats, setStats] = useState({});
   const [classTimetable, setClassTimetable] = useState([]);
   const navigate = useNavigate();
 
@@ -37,6 +37,9 @@ const ManagerDashboard = () => {
 
 
         const classResponse = await axios.get('http://localhost:5000/manager-dashboard/classes-with-teachers');
+        const ManagerStatistics = await axios.get("http://localhost:5000/manager-dashboard/");
+        setStats(ManagerStatistics.data);
+
         const classData = classResponse.data;
 
         const formattedTimetable = classData.map((classEntry) => {
