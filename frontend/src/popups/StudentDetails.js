@@ -1,17 +1,37 @@
-import React, { useState } from 'react';
-import { Box, Typography, Modal, IconButton, Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import React, { useState } from "react";
+import {
+  Box,
+  Typography,
+  Modal,
+  IconButton,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import AddStudentForm from "./AddStudentForm";
+import { deleteStudent } from "../services/api";
 
 const StudentDetails = ({ open, onClose, studentData, onDelete, onUpdate }) => {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [showAddStudentForm, setShowAddStudentForm] = useState(false);
 
   const handleDeleteClick = () => {
     setShowConfirmDialog(true);
   };
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async () => {
+    console.log("Deleting student with StudentID:", studentData.studentID);
     setShowConfirmDialog(false);
-    onDelete(studentData.id); // Call the delete function passed as a prop
+    try {
+      const response = await deleteStudent({ studentID: studentData.studentID });
+      console.log("Deleted student successfully:", response);
+      onDelete(studentData.studentID); // Notify parent about the deletion
+    } catch (error) {
+      console.log("Couldn't delete student:", error.message);
+    }
     onClose(); // Close the details modal
   };
 
@@ -20,7 +40,11 @@ const StudentDetails = ({ open, onClose, studentData, onDelete, onUpdate }) => {
   };
 
   const handleUpdateClick = () => {
-    onUpdate(studentData); // Call the update function passed as a prop
+    setShowAddStudentForm(true); // Open AddStudentForm modal
+  };
+
+  const handleCloseAddStudentForm = () => {
+    setShowAddStudentForm(false); // Close AddStudentForm modal
   };
 
   return (
@@ -28,26 +52,27 @@ const StudentDetails = ({ open, onClose, studentData, onDelete, onUpdate }) => {
       <Modal open={open} onClose={onClose}>
         <Box
           sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
             width: 400,
-            bgcolor: 'background.paper',
+            bgcolor: "background.paper",
             borderRadius: 2,
             boxShadow: 24,
             p: 4,
-            overflowY: 'auto',
-            display: 'flex',
-            flexDirection: 'column',
+            overflowY: "auto",
+            display: "flex",
+            flexDirection: "column",
+            position: "relative",
           }}
         >
           {/* Close Button */}
           <Box
             sx={{
-              display: 'flex',
-              justifyContent: 'flex-end',
-              position: 'absolute',
+              display: "flex",
+              justifyContent: "flex-end",
+              position: "absolute",
               top: 10,
               right: 10,
             }}
@@ -62,27 +87,45 @@ const StudentDetails = ({ open, onClose, studentData, onDelete, onUpdate }) => {
             <Typography variant="h6" component="h2" gutterBottom>
               Student Details
             </Typography>
-            {studentData && (
+            {studentData ? (
               <>
-                <Typography variant="body1"><strong>Name:</strong> {studentData.name}</Typography>
-                <Typography variant="body1"><strong>Student ID:</strong> {studentData.id}</Typography>
-                <Typography variant="body1"><strong>Attending Classes:</strong> {studentData.classes}</Typography>
-                <Typography variant="body1"><strong>Grade:</strong> {studentData.grade}</Typography>
-                <Typography variant="body1"><strong>Additional Info:</strong> {studentData.additionalInfo}</Typography>
+                <Typography variant="body1">
+                  <strong>ID:</strong> {studentData.studentID}
+                </Typography>
+                <Typography variant="body1">
+                  <strong>Name:</strong> {studentData.profile.Name}
+                </Typography>
+                <Typography variant="body1">
+                  <strong>Email:</strong> {studentData.profile.email}
+                </Typography>
+                <Typography variant="body1">
+                  <strong>Date of Birth:</strong> {studentData.profile.DOB}
+                </Typography>
+                <Typography variant="body1">
+                  <strong>Phone:</strong> {studentData.profile.phone}
+                </Typography>
+                <Typography variant="body1">
+                  <strong>Address:</strong> {studentData.profile.Address}
+                </Typography>
               </>
+            ) : (
+              <Typography variant="body1">No student data available.</Typography>
             )}
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 3 }}>
-              <Button 
-                variant="contained" 
-                color="secondary" 
+            <Box
+              sx={{ display: "flex", justifyContent: "space-between", mt: 3 }}
+            >
+              <Button
+                variant="contained"
+                color="secondary"
                 onClick={handleDeleteClick}
               >
                 Delete Student
               </Button>
-              <Button 
-                variant="contained" 
-                color="primary" 
+              <Button
+                variant="contained"
+                color="primary"
                 onClick={handleUpdateClick}
+                disabled={!studentData} // Disable the button if there's no student data
               >
                 Update Student Details
               </Button>
@@ -92,10 +135,7 @@ const StudentDetails = ({ open, onClose, studentData, onDelete, onUpdate }) => {
       </Modal>
 
       {/* Confirmation Dialog */}
-      <Dialog
-        open={showConfirmDialog}
-        onClose={handleCancelDelete}
-      >
+      <Dialog open={showConfirmDialog} onClose={handleCancelDelete}>
         <DialogTitle>Confirm Delete</DialogTitle>
         <DialogContent>
           <Typography>Are you sure you want to delete this student?</Typography>
@@ -109,6 +149,14 @@ const StudentDetails = ({ open, onClose, studentData, onDelete, onUpdate }) => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Add/Edit Student Form Modal */}
+      <AddStudentForm
+        open={showAddStudentForm}
+        onClose={handleCloseAddStudentForm}
+        studentData={studentData}
+        onUpdate={onUpdate} // Ensure onUpdate is handled properly in AddStudentForm
+      />
     </>
   );
 };

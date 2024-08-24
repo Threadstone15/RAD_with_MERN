@@ -314,6 +314,17 @@ router.post("/deleteTeacher", async (req, res) => {
   }
 });
 
+router.post("/deleteStudent", async (req, res) => {
+  try {
+    console.log(req.body.studentID);
+    const Something = await Student.findOneAndDelete({
+      studentID: req.body.studentID,
+    });
+  } catch (err) {
+    console.log("couldn't delete student");
+  }
+});
+
 router.get("/fetchClasses", async (req, res) => {
   try {
     const classes = await Class.find(); 

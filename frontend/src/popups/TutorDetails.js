@@ -23,11 +23,13 @@ const TutorDetails = ({ open, onClose, tutorData, onDelete, onUpdate }) => {
   };
 
   const handleConfirmDelete = async () => {
+    console.log("Deleting tutor with TeacherID:", tutorData.TeacherID);
     setShowConfirmDialog(false);
     try {
       const response = await deleteTutor({ TeacherID: tutorData.TeacherID });
-    } catch {
-      console.log("Couldn't delete teacher");
+      console.log("Deleted teacher successfully:", response);
+    } catch (error) {
+      console.log("Couldn't delete teacher:", error.message);
     }
     onClose(); // Close the details modal
   };

@@ -34,6 +34,14 @@ export const addStudent = async (userData) => {
   return response.data;
 };
 
+export const updateStudent = async (userData) => {
+  const response = await axios.post(
+    "http://localhost:5000/manager-dashboard/Student_udate",
+    userData
+  );
+  return response.data;
+};
+
 export const addTeacher = async (userData) => {
   const response = await axios.post(
     "http://localhost:5000/manager-dashboard/Teacher",
@@ -64,6 +72,14 @@ export const deleteTutor = async (TeacherID) => {
   const response = await axios.post(
     "http://localhost:5000/manager-dashboard/deleteTeacher",
     TeacherID
+  );
+  return response.data;
+};
+
+export const deleteStudent = async (studentID) => {
+  const response = await axios.post(
+    "http://localhost:5000/manager-dashboard/deleteStudent",
+    studentID
   );
   return response.data;
 };
