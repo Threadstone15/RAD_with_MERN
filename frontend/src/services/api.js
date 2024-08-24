@@ -72,3 +72,24 @@ export const deleteTutor = async (TeacherID) => {
   );
   return response.data;
 };
+
+export const fetchClasses = async () => {
+  try {
+    const response = await axios.get("http://localhost:5000/manager-dashboard/fetchClasses");
+    return response;
+  } catch (error) {
+    console.error("Error fetching classes:", error);
+    throw error;
+  }
+};
+
+export const fetchClasses_id = async (studentID) => {
+  try {
+    const response = await axios.get(`http://localhost:5000/student-dashboard/fetchClasses_id/${studentID}`);
+    return response;
+  } catch (error) {
+    console.error("API_Error fetching classes:", error);
+    throw error;
+  }
+};
+

@@ -2,15 +2,11 @@ import React from 'react';
 import { AppBar, Toolbar, Typography, Button, Container, Box } from '@mui/material';
 import { Link, useLocation } from 'react-router-dom';
 import Logo from '../assets/logo.png'; // Import the PNG file
+import { handleLogout } from './logout'; // Import the handleLogout function
 
 const Navbar = () => {
   const location = useLocation();
   const isDashboard = location.pathname === '/dashboard';
-
-  const handleLogout = () => {
-    // Handle logout logic here, e.g., clearing tokens or redirecting
-    window.location.href = '/'; // Redirect to home or login page after logout
-  };
 
   return (
     <AppBar position="static" sx={{ backgroundColor: '#333', color: '#fff' }}>

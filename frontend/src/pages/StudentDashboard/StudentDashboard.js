@@ -3,11 +3,12 @@ import { Card, CardContent, CardActions, Typography, Button, Table, TableBody, T
 import StudentSidebar from '../StudentDashboard/StudentSidebar';
 import { fetchHash, startPayment } from './paymentService';
 import AttendanceGraph from './AttendanceGraph';
+import { fetchClasses_id } from '../../services/api'; // Import the function to fetch classes
 
 const StudentPage = () => {
   const [loading, setLoading] = useState(false);
-  
-  const student = {
+  const [classes, setClasses] = useState([]);
+  const [student, setStudent] = useState({
     name: 'Student',
     email: 'john.doe@example.com',
     phone: '0771234567',
@@ -19,15 +20,26 @@ const StudentPage = () => {
       { id: 2, name: 'Physics 201', amount: 1500 },
     ],
     registeredClasses: ['Math 101', 'Physics 201'],
-  };
-
-  const classTimetable = [
-    { day: 'Monday', time: '09:00 AM - 10:00 AM', subject: 'Math 101', teacher: 'Mr. Silva' },
-    { day: 'Tuesday', time: '10:00 AM - 11:00 AM', subject: 'Physics 201', teacher: 'Ms. Fernando' },
-    { day: 'Wednesday', time: '11:00 AM - 12:00 PM', subject: 'Chemistry 301', teacher: 'Dr. Perera' },
-  ];
+  });
 
   useEffect(() => {
+    const fetchStudentClasses = async () => {
+      try {
+        const studentID = localStorage.getItem('studentID');
+        console.log("Got ID", studentID); // Retrieve studentID from localStorage
+        if (studentID) {
+          const response = await fetchClasses_id(studentID);
+          if (response.data) {
+            setClasses(response.data);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching classes:', error);
+      }
+    };
+
+    fetchStudentClasses();
+
     const script = document.createElement('script');
     script.src = "https://www.payhere.lk/lib/payhere.js";
     script.async = true;
@@ -135,26 +147,26 @@ const StudentPage = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {classTimetable.map((entry, index) => (
+                  {classes.map((entry, index) => (
                     <TableRow
                       key={index}
                       sx={{
-                        backgroundColor: student.registeredClasses.includes(entry.subject)
+                        backgroundColor: student.registeredClasses.includes(entry.className)
                           ? 'rgba(0, 123, 255, 0.1)'
                           : 'inherit',
                         '&:hover': {
-                          backgroundColor: student.registeredClasses.includes(entry.subject)
+                          backgroundColor: student.registeredClasses.includes(entry.className)
                             ? 'rgba(0, 123, 255, 0.2)'
                             : 'rgba(0, 0, 0, 0.04)',
                         },
                       }}
                     >
                       <TableCell component="th" scope="row">
-                        {entry.day}
+                        {entry.schedule?.days?.join(', ') || 'N/A'}
                       </TableCell>
-                      <TableCell align="center">{entry.time}</TableCell>
-                      <TableCell align="center">{entry.subject}</TableCell>
-                      <TableCell align="center">{entry.teacher}</TableCell>
+                      <TableCell align="center">{entry.schedule?.time || 'N/A'}</TableCell>
+                      <TableCell align="center">{entry.className || 'N/A'}</TableCell>
+                      <TableCell align="center">{entry.TeacherID || 'N/A'}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

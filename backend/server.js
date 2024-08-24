@@ -10,6 +10,7 @@ const app = express();
 // Import routes
 const authRoutes = require('./routes/auth');
 const managerRoutes = require('./routes/managerDashboard');
+const studentRoutes = require('./routes/studentDashboard');
 const paymentRoutes = require('./routes/paymentRoutes')
 
 
@@ -26,6 +27,7 @@ app.use(cookieParser());
 
 // Routes
 app.use('/manager-dashboard', managerRoutes);
+app.use('/student-dashboard', studentRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api', paymentRoutes); // Use the payment routes
 
