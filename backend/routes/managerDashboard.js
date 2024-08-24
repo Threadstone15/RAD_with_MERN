@@ -119,7 +119,7 @@ router.post("/Student", async (req, res) => {
         PContact: student.parentsContact,
       },
       password: hashedPassword,
-      classIds: [],
+      classIds: student.classIds,
       PaymentIds: [],
     });
 
@@ -296,4 +296,16 @@ router.post("/deleteTeacher", async (req, res) => {
     console.log("couldn't delete teacher");
   }
 });
+
+router.get("/fetchClasses", async (req, res) => {
+  try {
+    const classes = await Class.find(); 
+    res.json(classes);
+  } catch (error) {
+    console.error("Error fetching classes:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
 module.exports = router;

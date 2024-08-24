@@ -13,9 +13,29 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      // Clear any existing user-specific data from local storage
+      localStorage.removeItem('studentID');
+      localStorage.removeItem('teacherID');
+      localStorage.removeItem('manager');
+      localStorage.removeItem('authToken');
+  
       const response = await login({ email, password });
+  
+      if (response.userType === 'student') {
+        localStorage.setItem('studentID', response.userID);
+      } else if (response.userType === 'teacher') {
+        localStorage.setItem('teacherID', response.userID);
+      } else if (response.userType === 'manager') {
+        localStorage.setItem('manager', response.userID); 
+      }
+  
+      // Save the token in localStorage (if returned by your API)
+      if (response.token) {
+        localStorage.setItem('authToken', response.token);
+      }
+  
       if (response.redirectUrl) {
-        navigate(response.redirectUrl); // Redirect based on URL from backend
+        navigate(response.redirectUrl);
       } else {
         setErrorMessage('Login failed: Invalid credentials');
       }
@@ -24,6 +44,9 @@ const Login = () => {
       setErrorMessage('Login failed: Invalid credentials or server error');
     }
   };
+  
+  
+  
 
   return (
     <Container component="main" maxWidth="xs" className="login-container">

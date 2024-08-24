@@ -7,14 +7,11 @@ import ClassIcon from '@mui/icons-material/Class';
 import SchoolIcon from '@mui/icons-material/School';
 import PaymentIcon from '@mui/icons-material/Payment';
 import LogoutIcon from '@mui/icons-material/Logout';
+import { handleLogout } from './logout'; // Import the handleLogout function
 
 const Sidebar = () => {
   const location = useLocation();
   const isDashboard = location.pathname === '/dashboard';
-
-  const handleLogout = () => {
-    window.location.href = '/';
-  };
 
   return (
     <Drawer
@@ -74,20 +71,19 @@ const Sidebar = () => {
       <Divider sx={{ backgroundColor: '#555' }} />
 
       <Box sx={{ padding: 2 }}>
-          <Button
-            color="inherit"
-            fullWidth
-            startIcon={<LogoutIcon />}
-            onClick={handleLogout}
-            sx={{
-              backgroundColor: '#dc3545',
-              color: '#fff',
-              '&:hover': { backgroundColor: '#c82333' },
-            }}
-          >
-            Logout
-          </Button>
-        
+        <Button
+          color="inherit"
+          fullWidth
+          startIcon={<LogoutIcon />}
+          onClick={handleLogout}
+          sx={{
+            backgroundColor: '#dc3545',
+            color: '#fff',
+            '&:hover': { backgroundColor: '#c82333' },
+          }}
+        >
+          Logout
+        </Button>
       </Box>
     </Drawer>
   );

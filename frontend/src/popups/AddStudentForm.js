@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Box, TextField, Button, Typography, Modal, IconButton, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close'; // Import CloseIcon for the close button
+import { Box, TextField, Button, Typography, Modal, IconButton, Dialog, DialogActions, DialogContent, DialogTitle, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import { addStudent } from '../services/api';
+import { fetchClasses } from '../services/api'; // Import your API call for fetching classes
 
 const AddStudentForm = ({ open, onClose, studentData }) => {
   const [formData, setFormData] = useState({
@@ -13,9 +14,25 @@ const AddStudentForm = ({ open, onClose, studentData }) => {
     school: '',
     address: '',
     parentsName: '',
-    parentsContact: ''
+    parentsContact: '',
+    classIds: [] // New field for classes
   });
+  const [classes, setClasses] = useState([]); // State to hold available classes
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+
+  useEffect(() => {
+    // Fetch available classes when the component mounts
+    const getClasses = async () => {
+      try {
+        const response = await fetchClasses();
+        setClasses(response.data);
+      } catch (error) {
+        console.error("Failed to fetch classes:", error);
+      }
+    };
+
+    getClasses();
+  }, []);
 
   useEffect(() => {
     if (studentData) {
@@ -28,19 +45,21 @@ const AddStudentForm = ({ open, onClose, studentData }) => {
         school: studentData.school || '',
         address: studentData.address || '',
         parentsName: studentData.parentsName || '',
-        parentsContact: studentData.parentsContact || ''
+        parentsContact: studentData.parentsContact || '',
+        classIds: studentData.classIds || [] // Populate classIds if studentData is passed
       });
     } else {
       setFormData({
         name: '',
         email: '',
         dateOfBirth: '',
-        phone:'',
+        phone: '',
         medium: '',
         school: '',
         address: '',
         parentsName: '',
-        parentsContact: ''
+        parentsContact: '',
+        classIds: []
       });
     }
   }, [studentData]);
@@ -48,6 +67,13 @@ const AddStudentForm = ({ open, onClose, studentData }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleClassChange = (event) => {
+    setFormData((prev) => ({
+      ...prev,
+      classIds: event.target.value
+    }));
   };
 
   const handleSubmit = async (event) => {
@@ -61,7 +87,7 @@ const AddStudentForm = ({ open, onClose, studentData }) => {
   };
 
   const handleClose = () => {
-    if (Object.values(formData).some(value => value !== '')) {
+    if (Object.values(formData).some(value => value !== '' && (Array.isArray(value) ? value.length !== 0 : true))) {
       setShowConfirmDialog(true); // Show confirmation dialog if there are unsaved changes
     } else {
       onClose();
@@ -79,7 +105,8 @@ const AddStudentForm = ({ open, onClose, studentData }) => {
       school: '',
       address: '',
       parentsName: '',
-      parentsContact: ''
+      parentsContact: '',
+      classIds: []
     });
     onClose();
   };
@@ -98,18 +125,17 @@ const AddStudentForm = ({ open, onClose, studentData }) => {
             left: '50%',
             transform: 'translate(-50%, -50%)',
             width: 400,
-            maxHeight: '80vh', // Reduce the maximum height for a shorter modal
+            maxHeight: '80vh',
             bgcolor: 'background.paper',
             borderRadius: 2,
             boxShadow: 24,
             p: 4,
-            overflowY: 'auto', // Make content scrollable if it overflows
+            overflowY: 'auto',
             display: 'flex',
             flexDirection: 'column',
-            margin: 0, // Ensure the close button is positioned correctly
+            margin: 0,
           }}
         >
-          {/* Close Button */}
           <Box
             sx={{
               display: 'flex',
@@ -123,13 +149,13 @@ const AddStudentForm = ({ open, onClose, studentData }) => {
               <CloseIcon />
             </IconButton>
           </Box>
-          
-          {/* Content Container */}
+
           <Box sx={{ mt: 5, mb: 2 }}>
             <Typography variant="h6" component="h2" gutterBottom sx={{ margin: 0 }}>
               {studentData ? 'Update Student Details' : 'Add a Student'}
             </Typography>
             <form onSubmit={handleSubmit}>
+              {/* Other form fields */}
               <TextField
                 label="Name"
                 name="name"
@@ -213,6 +239,25 @@ const AddStudentForm = ({ open, onClose, studentData }) => {
                 margin="normal"
                 required
               />
+
+              {/* Class Selection */}
+              <FormControl fullWidth margin="normal">
+                <InputLabel>Classes</InputLabel>
+                <Select
+                  multiple
+                  name="classIds"
+                  value={formData.classIds}
+                  onChange={handleClassChange}
+                  renderValue={(selected) => selected.map(id => classes.find(cls => cls._id === id)?.className).join(', ')}
+                >
+                  {classes.map((cls) => (
+                    <MenuItem key={cls._id} value={cls._id}>
+                      {cls.className}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+
               <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
                 {studentData ? 'Update' : 'Submit'}
               </Button>
@@ -221,7 +266,6 @@ const AddStudentForm = ({ open, onClose, studentData }) => {
         </Box>
       </Modal>
 
-      {/* Confirmation Dialog */}
       <Dialog
         open={showConfirmDialog}
         onClose={handleCancelClose}
