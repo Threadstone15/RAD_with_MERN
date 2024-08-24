@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes ,useLocation } from 'react-router-dom';
 import Home from './components/Home';
 import Login from './components/Login';
-import Dashboard from './components/Dashboard';
-import Register from './components/Register';
 import ManagerDashboard from './pages/ManagerDashboard/ManagerDashboard';
 import StudentDashboard from './pages/StudentDashboard/StudentDashboard';
 import './App.css';
@@ -42,8 +40,6 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/dashboard" element={<Dashboard />} />
         
         <Route path="/manager-dashboard" element={<ManagerDashboard />} />
         <Route path="/student-dashboard" element={<StudentDashboard />} />  
