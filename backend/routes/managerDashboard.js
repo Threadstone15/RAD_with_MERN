@@ -303,6 +303,143 @@ router.get("/classes-with-teachers", async (req, res) => {
   }
 });
 
+//Manager Dashboard Update Routes
+
+router.post("/updateTeacher", async (req, res) => {
+  try {
+    const Something = await Teacher.findOneAndUpdate(
+      {
+        TeacherID: req.body.TeacherID,
+      },
+      req.body
+    );
+  } catch (err) {
+    console.log("couldn't update teacher");
+  }
+});
+
+
+//Manager Dashboard ADD Routes
+
+router.post("/addTeacher", async (req, res) => {
+  try {
+    const teacher = req.body;
+
+    // Checking if the email is already registered
+    let user = await Teacher.findOne({ "profile.email": teacher.email });
+    if (user) {
+      return res
+        .json({ error: "This email is already registered as a Teacher" });
+    }
+    user = await Student.findOne({ "profile.email": teacher.email });
+    if (user) {
+      return res
+        .json({ error: "This email is already registered as a Student" });
+    }
+
+    const password = "TCHR_" + teacher.phone;
+    const hashedPassword = await bcrypt.hash(password, 10);
+    let teacherId;
+    let unique = false;
+
+    while (!unique) {
+      teacherId = generateRandomId();
+      const existingTeacher = await Teacher.findOne({ TeacherID: teacherId });
+      if (!existingTeacher) {
+        unique = true;
+      }
+    }
+
+    const newTeacher = new Teacher({
+      TeacherID: teacherId,
+      profile: {
+        name: teacher.name,
+        email: teacher.email,
+        phone: teacher.phone,
+        address: teacher.address,
+      },
+      password: hashedPassword,
+      subjects: teacher.subjects,
+      classIds: teacher.classIds, // Assuming you pass an array of class IDs from the frontend
+    });
+
+    await newTeacher.save();
+
+    // Send email with account details
+    const transporter = nodemailer.createTransport({
+      service: "Gmail", // or another email service
+      auth: {
+        user: "udeepagallege@gmail.com", // your email
+        pass: "onnhmfmbmkqpsuom", // your email password
+      },
+      timeout: 60000,
+
+    });
+
+    const mailOptions = {
+      from: "udeepagallege@gmail.com", // or your email
+      to: teacher.email,
+      subject: "Your Teacher Account Details",
+      text: `Hello ${teacher.name},
+
+Your teacher account has been created successfully. Here are your login details:
+
+Email: ${teacher.email}
+Password: ${password}
+
+Please keep this information safe.
+
+Best regards,
+Your School`,
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log("Error sending email:", error);
+      } else {
+        console.log("Email sent successfully:", info.response);
+      }
+    });
+
+    res.status(201).json(newTeacher);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "Error creating Teacher" });
+  }
+});
+
+
+//Manager Dashboard UPDATE Routes
+
+router.put("/Teacher_update/:id", async (req, res) => {
+  try {
+    const teacherId = req.params.id;
+    console.log("Trying to update teacher with ID:", teacherId);
+    
+    // Ensure the request body contains the necessary fields
+    if (!req.body) {
+      return res.status(400).json({ error: "Request body is missing" });
+    }
+    
+    // Update the teacher details
+    const updatedTeacher = await Teacher.findOneAndUpdate(
+      { TeacherID: teacherId },
+      req.body,
+      { new: true, runValidators: true } // Return the updated document and run validators
+    );
+    
+    if (!updatedTeacher) {
+      return res.status(404).json({ error: "Teacher not found" });
+    }
+
+    console.log("Updated teacher:", updatedTeacher);
+    res.status(200).json(updatedTeacher); // Return the updated teacher
+  } catch (err) {
+    console.error("Error updating teacher:", err);
+    res.status(500).json({ error: "Internal server error" }); // Return server error status
+  }
+});
+
 router.post("/deleteTeacher", async (req, res) => {
   try {
     console.log(req.body.TeacherID);

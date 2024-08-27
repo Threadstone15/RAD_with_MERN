@@ -10,8 +10,10 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Snackbar, // Import Snackbar for alert messages
+  Alert, // Import Alert for styling the Snackbar
 } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close"; // Import CloseIcon for the close button
+import CloseIcon from "@mui/icons-material/Close";
 import { addTeacher } from "../services/api"; // Adjust the import path to where your API functions are located
 
 const AddTutorForm = ({ open, onClose, tutorData, onConfirmClose }) => {
@@ -24,6 +26,8 @@ const AddTutorForm = ({ open, onClose, tutorData, onConfirmClose }) => {
   });
 
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(""); // State to store error message
+  const [showSnackbar, setShowSnackbar] = useState(false); // State to control Snackbar visibility
 
   useEffect(() => {
     if (tutorData) {
@@ -66,6 +70,8 @@ const AddTutorForm = ({ open, onClose, tutorData, onConfirmClose }) => {
       onClose(); // Close form or handle post-submission action
     } catch (error) {
       console.error("Error adding teacher:", error.message);
+      setErrorMessage(error.message); // Set the error message
+      setShowSnackbar(true); // Show the Snackbar with the error message
     }
   };
 
@@ -91,6 +97,10 @@ const AddTutorForm = ({ open, onClose, tutorData, onConfirmClose }) => {
 
   const handleCancelClose = () => {
     setShowConfirmDialog(false);
+  };
+
+  const handleSnackbarClose = () => {
+    setShowSnackbar(false); // Hide the Snackbar
   };
 
   return (
@@ -215,6 +225,17 @@ const AddTutorForm = ({ open, onClose, tutorData, onConfirmClose }) => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Error Snackbar */}
+      <Snackbar
+        open={showSnackbar}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+      >
+        <Alert onClose={handleSnackbarClose} severity="error">
+          {errorMessage}
+        </Alert>
+      </Snackbar>
     </>
   );
 };

@@ -36,7 +36,7 @@ export const addStudent = async (userData) => {
 
 export const updateStudent = async (userData) => {
   const response = await axios.post(
-    "http://localhost:5000/manager-dashboard/Student_udate",
+    "http://localhost:5000/manager-dashboard/Student_update",
     userData
   );
   return response.data;
@@ -44,10 +44,24 @@ export const updateStudent = async (userData) => {
 
 export const addTeacher = async (userData) => {
   const response = await axios.post(
-    "http://localhost:5000/manager-dashboard/Teacher",
+    "http://localhost:5000/manager-dashboard/addTeacher",
     userData
   );
   return response.data;
+};
+
+
+export const updateTeacher = async (userData) => {
+  try {
+    const response = await axios.put(
+      `http://localhost:5000/manager-dashboard/Teacher_update/${userData.TeacherID}`, // Use PUT and include TeacherID in the URL
+      userData
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error updating teacher:", error);
+    throw error; 
+  }
 };
 
 export const ManagerStatistics = async () => {

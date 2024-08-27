@@ -11,12 +11,12 @@ import {
   DialogTitle,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import AddTutorForm from "./AddTutorForm"; // Import AddTutorForm component
+import UpdateTutorForm from "./UpdateTutorForm"; 
 import { deleteTutor } from "../services/api";
 
 const TutorDetails = ({ open, onClose, tutorData, onDelete, onUpdate }) => {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
-  const [showAddTutorForm, setShowAddTutorForm] = useState(false);
+  const [showUpdateTutor, setShowUpdateTutor] = useState(false);
 
   const handleDeleteClick = () => {
     setShowConfirmDialog(true);
@@ -39,11 +39,15 @@ const TutorDetails = ({ open, onClose, tutorData, onDelete, onUpdate }) => {
   };
 
   const handleUpdateClick = () => {
-    setShowAddTutorForm(true); // Open AddTutorForm modal
+    setShowUpdateTutor(true); // Open UpdateTutor modal with TeacherID
   };
 
-  const handleCloseAddTutorForm = () => {
-    setShowAddTutorForm(false); // Close AddTutorForm modal
+  const handleCloseUpdateTutor = () => {
+    setShowUpdateTutor(false); // Close UpdateTutor modal
+  };
+
+  const handleUpdateSuccess = () => {
+    console.log("Tutor updated successfully!");
   };
 
   return (
@@ -149,11 +153,12 @@ const TutorDetails = ({ open, onClose, tutorData, onDelete, onUpdate }) => {
         </DialogActions>
       </Dialog>
 
-      {/* Add/Edit Tutor Form Modal */}
-      <AddTutorForm
-        open={showAddTutorForm}
-        onClose={handleCloseAddTutorForm}
+      {/* Update Tutor Form Modal */}
+      <UpdateTutorForm
+        open={showUpdateTutor}
+        onClose={handleCloseUpdateTutor}
         tutorData={tutorData}
+        onUpdate={handleUpdateSuccess}
       />
     </>
   );
