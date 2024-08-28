@@ -440,6 +440,35 @@ router.put("/Teacher_update/:id", async (req, res) => {
   }
 });
 
+router.put("/Student_update/:id", async (req, res) => {
+  try {
+    const studentId = req.params.id;
+    console.log("Trying to update student with ID:", studentId);
+    
+    // Ensure the request body contains the necessary fields
+    if (!req.body) {
+      return res.status(400).json({ error: "Request body is missing" });
+    }
+    
+    // Update the teacher details
+    const updatedStudent = await Student.findOneAndUpdate(
+      { studentID: studentId },
+      req.body,
+      { new: true, runValidators: true } // Return the updated document and run validators
+    );
+    
+    if (!updatedStudent) {
+      return res.status(404).json({ error: "Student not found" });
+    }
+
+    console.log("Updated student:", updatedStudent);
+    res.status(200).json(updatedStudent); // Return the updated teacher
+  } catch (err) {
+    console.error("Error updating student:", err);
+    res.status(500).json({ error: "Internal server error" }); // Return server error status
+  }
+});
+
 router.post("/deleteTeacher", async (req, res) => {
   try {
     console.log(req.body.TeacherID);

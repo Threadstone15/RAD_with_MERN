@@ -11,7 +11,7 @@ import {
   DialogTitle,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import AddStudentForm from "./AddStudentForm";
+import UpdateStudentForm from "./UpdateStudentForm";
 import { deleteStudent } from "../services/api";
 
 const StudentDetails = ({ open, onClose, studentData, onDelete, onUpdate }) => {
@@ -28,7 +28,6 @@ const StudentDetails = ({ open, onClose, studentData, onDelete, onUpdate }) => {
     try {
       const response = await deleteStudent({ studentID: studentData.studentID });
       console.log("Deleted student successfully:", response);
-      onDelete(studentData.studentID); // Notify parent about the deletion
     } catch (error) {
       console.log("Couldn't delete student:", error.message);
     }
@@ -43,8 +42,12 @@ const StudentDetails = ({ open, onClose, studentData, onDelete, onUpdate }) => {
     setShowAddStudentForm(true); // Open AddStudentForm modal
   };
 
-  const handleCloseAddStudentForm = () => {
+  const handleCloseUpdateStudent = () => {
     setShowAddStudentForm(false); // Close AddStudentForm modal
+  };
+
+  const handleUpdateSuccess = () => {
+    console.log("Student updated successfully!");
   };
 
   return (
@@ -151,11 +154,11 @@ const StudentDetails = ({ open, onClose, studentData, onDelete, onUpdate }) => {
       </Dialog>
 
       {/* Add/Edit Student Form Modal */}
-      <AddStudentForm
+      <UpdateStudentForm
         open={showAddStudentForm}
-        onClose={handleCloseAddStudentForm}
+        onClose={handleCloseUpdateStudent}
         studentData={studentData}
-        onUpdate={onUpdate} // Ensure onUpdate is handled properly in AddStudentForm
+        onUpdate={handleUpdateSuccess} // Ensure onUpdate is handled properly in AddStudentForm
       />
     </>
   );
