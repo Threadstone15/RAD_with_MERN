@@ -8,6 +8,7 @@ const AuthMiddleware = require("../middleware/AuthMiddleware");
 const roleMiddleware = require("../middleware/roleMiddleware");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
+const QRCode = require('qrcode');
 
 // Apply middleware to all routes under /manager-dashboard
 router.use(AuthMiddleware);
@@ -142,7 +143,12 @@ router.post("/Student", async (req, res) => {
 
     await newStudent.save();
 
-    // Send email with account details
+    // Generate QR code with studentID
+    const qrCodeBuffer = await QRCode.toBuffer(String(studentId),{
+      scale: 10,
+      width: 500,
+    });
+    // Send email with account details and QR code
     const transporter = nodemailer.createTransport({
       service: "Gmail", // or another email service
       auth: {
@@ -150,24 +156,25 @@ router.post("/Student", async (req, res) => {
         pass: "onnhmfmbmkqpsuom", // your email password
       },
       timeout: 60000,
-
     });
 
     const mailOptions = {
       from: "amuthuewn@gmail.com", // or your email
       to: student.email,
       subject: "Your Student Account Details",
-      text: `Hello ${student.name},
-
-Your student account has been created successfully. Here are your login details:
-
-Email: ${student.email}
-Password: ${password}
-
-Please keep this information safe.
-
-Best regards,
-Your School`,
+      html: `<p>Hello ${student.name},</p>
+             <p>Your student account has been created successfully. Here are your login details:</p>
+             <p>Email: ${student.email}</p>
+             <p>Password: ${password}</p>
+             <p>Please keep this information safe.</p>
+             <p>Best regards,<br>Your School</p>`,
+      attachments: [
+        {
+          filename: 'studentID-'+studentId+'.png',
+          content: qrCodeBuffer,
+          contentType: 'image/png',
+        },
+      ],
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
