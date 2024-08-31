@@ -194,51 +194,80 @@ router.post("/Student", async (req, res) => {
 
 
 
+const mongoose = require('mongoose');
+
+// Utility function to introduce a delay
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+
 router.post("/mark-attendance", async (req, res) => {
   try {
-    const { studentID } = req.body;
+    const { studentID, classId } = req.body;
 
-    if (!studentID) {
-      return res.status(400).json({ error: "Student ID is required" });
+    if (!studentID || !classId) {
+      return res.status(400).json({ error: "Student ID and Class ID are required" });
     }
 
+    // Find the student
     const student = await Student.findOne({ studentID });
     if (!student) {
       return res.status(404).json({ error: "Student not found" });
     }
 
-    const twoMinutesAgo = new Date(Date.now() - 2 * 60 * 1000);
+    // Find the class
+    const classExists = await Class.findById(classId);
+    if (!classExists) {
+      return res.status(404).json({ error: "Class not found" });
+    }
 
+    // Check for recent attendance
+    const twoMinutesAgo = new Date(Date.now() - 2 * 60 * 1000);
+    await delay(1000); // Delay for synchronization
     const recentAttendance = await Attendance.findOne({
       studentID,
+      classId,
       date: { $gte: twoMinutesAgo }, // Check if there's a record within the last 2 minutes
     });
 
     if (recentAttendance) {
-      return res
-        .status(400)
-        .json({ error: "Attendance already marked within the last 2 minutes" });
+      return res.status(400).json({
+        error: "Attendance already marked within the last 2 minutes for this class",
+      });
     }
 
+    // Create new attendance record
     const newAttendance = new Attendance({
       studentID,
+      classId,
       date: new Date(),
-      status: "present",
     });
 
     await newAttendance.save();
-    res
-      .status(201)
-      .json({
+
+    // Verify that the attendance record was saved
+    const savedAttendance = await Attendance.findOne({
+      studentID,
+      classId,
+      date: newAttendance.date, // Use the exact date of the newly created record
+    });
+
+    if (savedAttendance) {
+      res.status(201).json({
         success: true,
         message: "Attendance marked successfully",
-        data: newAttendance,
+        data: savedAttendance,
       });
+    } else {
+      res.status(500).json({
+        error: "Failed to verify attendance record after saving",
+      });
+    }
   } catch (err) {
     console.error("Error marking attendance:", err);
     res.status(500).json({ error: "Error marking attendance", details: err });
   }
 });
+
+
 
 router.post("/AddStudentToClass", async (req, res) => {
   try {
