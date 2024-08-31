@@ -10,7 +10,7 @@ import {
   TableHead,
   TableBody,
   TableRow,
-  TableCell,
+  TableCell,a
 } from "@mui/material";
 import Sidebar from "../../components/Sidebar";
 import AddStudentForm from "../../popups/AddStudentForm";

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
   Box,
+  Button,
   Typography,
   Container,
   Card,
@@ -12,18 +13,29 @@ import {
   TableCell,
 } from "@mui/material";
 import Sidebar from "../../components/Sidebar";
+import AddClassForm from "../../popups/AddClassForm"; // Import the AddClassForm component
+import ClassDetails from "../../popups/ClassDetails"; // Import the ClassDetails component
 import axios from "axios";
 
 const drawerWidth = 240;
 
 const Classes = () => {
-  const [classes, setClasses] = useState([]);
+  const [open, setOpen] = useState(false);
   const [selectedClass, setSelectedClass] = useState(null);
+  const [classes, setClasses] = useState([]);
   const [detailsOpen, setDetailsOpen] = useState(false);
+
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const handleRowClick = (classData) => {
     setSelectedClass(classData);
     setDetailsOpen(true);
+  };
+
+  const handleAddClass = () => {
+    setSelectedClass(null);
+    handleOpen();
   };
 
   useEffect(() => {
@@ -59,6 +71,14 @@ const Classes = () => {
           <Typography variant="h4" gutterBottom align="center">
             Classes Management
           </Typography>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleAddClass}
+            sx={{ mb: 3 }}
+          >
+            Add Class
+          </Button>
 
           <Card sx={{ width: "100%", mb: 3 }}>
             <CardContent>
@@ -71,6 +91,7 @@ const Classes = () => {
                     <TableCell>Class ID</TableCell>
                     <TableCell>Class Name</TableCell>
                     <TableCell>Teacher Name</TableCell>
+                    <TableCell>Fee</TableCell>
                     <TableCell>Schedule</TableCell>
                     <TableCell>Students</TableCell>
                   </TableRow>
@@ -85,6 +106,7 @@ const Classes = () => {
                       <TableCell>{row.classId}</TableCell>
                       <TableCell>{row.className}</TableCell>
                       <TableCell>{row.TeacherID?.profile?.name || 'Unknown'}</TableCell>
+                      <TableCell>{row.fee}</TableCell>
                       <TableCell>{row.schedule.days.join(", ")} at {row.schedule.time}</TableCell>
                       <TableCell>{row.studentIds.length}</TableCell>
                     </TableRow>
@@ -94,14 +116,18 @@ const Classes = () => {
             </CardContent>
           </Card>
 
-          {/* Uncomment and create the ClassDetails component when ready */}
-          {/* {detailsOpen && (
+          <AddClassForm
+            open={open}
+            onClose={handleClose}
+            classData={selectedClass}
+          />
+          {detailsOpen && (
             <ClassDetails
               open={detailsOpen}
               onClose={() => setDetailsOpen(false)}
               classData={selectedClass}
             />
-          )} */}
+          )}
         </Container>
       </Box>
     </div>

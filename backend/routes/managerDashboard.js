@@ -537,5 +537,125 @@ router.get("/fetchClasses", async (req, res) => {
   }
 });
 
+router.get("/fetchTeachers", async (req, res) => {
+  try {
+    const teachers = await Teacher.find(); 
+    res.json(teachers);
+  } catch (error) {
+    console.error("Error fetching teachers:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.post('/addClass', async (req, res) => {
+  try {
+    const { className, classId, fee, TeacherID, scheduleDays, scheduleTime } = req.body;
+
+    console.log('Adding new class: ', className, classId, fee, TeacherID, scheduleDays, scheduleTime);
+
+    const teacherExists = await Teacher.findById(TeacherID);
+    if (!teacherExists) {
+      console.log('Teacher not found');
+      return res.status(404).json({ error: 'Teacher not found' });
+    }
+
+    console.log('Teacher found, creating new class');
+    const newClass = new Class({
+      className,
+      classId,
+      fee,
+      TeacherID,
+      schedule: {
+        days: scheduleDays,
+        time: scheduleTime,
+      },
+    });
+
+    console.log('Saving new class');
+    await newClass.save();
+
+    console.log('Adding class to teacher');
+    teacherExists.classIds.push(newClass._id);
+    await teacherExists.save();
+
+    console.log('Class added successfully');
+    res.status(201).json({ message: 'Class added successfully', class: newClass });
+  } catch (error) {
+    console.error('Error adding class:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+router.delete('/deleteClass/:ClassID', async (req, res) => {
+  try {
+    const { ClassID } = req.params;
+
+    console.log(`Received request to delete class with ClassID: ${ClassID}`);
+
+    const classToDelete = await Class.findById(ClassID);
+    if (!classToDelete) {
+      console.log(`Class with ClassID: ${ClassID} not found`);
+      return res.status(404).json({ error: 'Class not found' });
+    }
+
+    console.log(`Class with ClassID: ${ClassID} found, updating teacher`);
+
+    await Teacher.updateOne(
+      { _id: classToDelete.TeacherID },
+      { $pull: { classIds: ClassID } }
+    );
+
+    console.log(`Updated teacher, deleting class`);
+
+    await Class.findByIdAndDelete(ClassID);
+
+    console.log(`Class deleted successfully`);
+
+    res.status(200).json({ message: 'Class deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting class:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+router.put('/updateClass/:_id', async (req, res) => {
+  const { _id } = req.params;
+  const { className, fee, TeacherID, scheduleDays, scheduleTime } = req.body;
+
+  console.log(`Received request to update class with ID: ${_id}`);
+  console.log(`Request body: ${JSON.stringify(req.body)}`);
+
+  try {
+    const updatedClass = await Class.findOneAndUpdate(
+      { _id: _id },
+      {
+        className,
+        fee,
+        TeacherID,
+        scheduleDays,
+        scheduleTime,
+      },
+      { new: true }
+    );
+
+    if (!updatedClass) {
+      console.log(`Class with ID: ${_id} not found`);
+      return res.status(404).json({ message: 'Class not found' });
+    }
+
+    console.log(`Updated class with ID: ${_id}`);
+    console.log(`Updated class: ${JSON.stringify(updatedClass)}`);
+
+    res.status(200).json(updatedClass);
+  } catch (error) {
+    console.error(`Failed to update class: ${error.message}`);
+    console.error(`Error stack: ${error.stack}`);
+    res.status(500).json({ message: `Failed to update class: ${error.message}` });
+  }
+});
+
+
+
+
 
 module.exports = router;

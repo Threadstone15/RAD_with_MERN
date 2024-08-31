@@ -11,6 +11,10 @@ const ClassSchema = new mongoose.Schema({
     unique: true,
     index: true,
   },
+  fee: {
+    type: Number,
+    required: true,
+  },
   TeacherID: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Teacher",

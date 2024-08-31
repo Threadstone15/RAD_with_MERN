@@ -1,27 +1,44 @@
 import React, { useState, useEffect } from 'react';
-import { Box, TextField, Button, Typography, Modal, IconButton, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import { addClass, fetchTeachers } from '../services/api'; // Ensure the fetchTeachers function is correctly imported
+import { Box, TextField, Button, Typography, Modal, Snackbar, Alert, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { updateClass, fetchTeachers } from '../services/api';
 
-const AddClassForm = ({ open, onClose }) => {
+const UpdateClassForm = ({ open, onClose, classData, onUpdate }) => {
   const [formData, setFormData] = useState({
-    className: '',
+    _id: '',
     classId: '',
+    className: '',
     fee: '',
     TeacherID: '',
     scheduleDays: [],
     scheduleTime: '',
   });
-  const [teachers, setTeachers] = useState([]); // State to hold teachers data
-  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+
+  const [teachers, setTeachers] = useState([]);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+
+  useEffect(() => {
+    if (classData) {
+      setFormData({
+        _id: classData._id || '',
+        classID: classData.classId || '',
+        className: classData.className || '',
+        fee: classData.fee || '',
+        TeacherID: classData.TeacherID || '',
+        scheduleDays: classData.scheduleDays || [],
+        scheduleTime: classData.scheduleTime || '',
+      });
+    }
+  }, [classData]);
 
   useEffect(() => {
     const getTeachers = async () => {
       try {
         const response = await fetchTeachers();
-        setTeachers(response.data); // Assuming response.data is an array of teachers
+        setTeachers(response.data);
       } catch (error) {
-        console.error("Failed to fetch teachers:", error);
+        console.error('Failed to fetch teachers:', error);
       }
     };
 
@@ -44,38 +61,28 @@ const AddClassForm = ({ open, onClose }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    console.log('Submit event:', event);
+    console.log('FormData:', formData);
     try {
-      await addClass(formData);
-      // Handle success (e.g., show a success message or refresh the list)
-      setFormData({
-        className: '',
-        classId: '',
-        fee: '',
-        TeacherID: '',
-        scheduleDays: [],
-        scheduleTime: '',
-      });
+      const response = await updateClass(formData);
+      console.log('Update Class response:', response);
+      setSnackbarMessage('Class updated successfully!');
+      setSnackbarSeverity('success');
+      onUpdate(); // Call the onUpdate function passed as a prop
     } catch (error) {
-      console.error('Add Class failed:', error);
+      console.error('Update Class failed:', error);
+      setSnackbarMessage('Failed to update class.');
+      setSnackbarSeverity('error');
     }
-    onClose();
+    setSnackbarOpen(true);
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
   };
 
   const handleClose = () => {
-    if (Object.values(formData).some(value => value !== '' && value.length !== 0)) {
-      setShowConfirmDialog(true); // Show confirmation dialog if there are unsaved changes
-    } else {
-      onClose();
-    }
-  };
-
-  const handleConfirmClose = () => {
-    setShowConfirmDialog(false);
     onClose();
-  };
-
-  const handleCancelClose = () => {
-    setShowConfirmDialog(false);
   };
 
   return (
@@ -95,41 +102,26 @@ const AddClassForm = ({ open, onClose }) => {
             overflowY: 'auto',
             display: 'flex',
             flexDirection: 'column',
-            margin: 0,
           }}
         >
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'flex-end',
-              position: 'absolute',
-              top: 10,
-              right: 10,
-            }}
-          >
-            <IconButton onClick={handleClose} aria-label="close">
-              <CloseIcon />
-            </IconButton>
-          </Box>
-
-          <Box sx={{ mt: 5, mb: 2 }}>
+          <Box sx={{ mb: 2 }}>
             <Typography variant="h6" component="h2" gutterBottom>
-              Add a New Class
+              Update Class
             </Typography>
             <form onSubmit={handleSubmit}>
+              <TextField
+                label="Class ID"
+                name="classID"
+                value={formData.classID}
+                onChange={handleChange}
+                fullWidth
+                margin="normal"
+                disabled
+              />
               <TextField
                 label="Class Name"
                 name="className"
                 value={formData.className}
-                onChange={handleChange}
-                fullWidth
-                margin="normal"
-                required
-              />
-              <TextField
-                label="Class ID"
-                name="classId"
-                value={formData.classId}
                 onChange={handleChange}
                 fullWidth
                 margin="normal"
@@ -178,29 +170,24 @@ const AddClassForm = ({ open, onClose }) => {
                 required
               />
               <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
-                Submit
+                Update
               </Button>
             </form>
           </Box>
         </Box>
       </Modal>
 
-      <Dialog open={showConfirmDialog} onClose={handleCancelClose}>
-        <DialogTitle>Unsaved Changes</DialogTitle>
-        <DialogContent>
-          <Typography>Are you sure you want to close without saving changes?</Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCancelClose} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleConfirmClose} color="secondary">
-            Confirm
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </>
   );
 };
 
-export default AddClassForm;
+export default UpdateClassForm;

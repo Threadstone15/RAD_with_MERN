@@ -56,6 +56,7 @@ export const addTeacher = async (userData) => {
 };
 
 
+
 export const updateTeacher = async (userData) => {
   try {
     const response = await axios.put(
@@ -68,6 +69,43 @@ export const updateTeacher = async (userData) => {
     throw error; 
   }
 };
+
+export const addClass = async (userData) => {
+  console.log("Adding class:", userData);
+  const response = await axios.post(
+    "http://localhost:5000/manager-dashboard/addClass",
+    userData
+  );
+  console.log("Response from adding class:", response);
+  return response.data;
+};
+
+export const updateClass = async (formData) => {
+  console.log(`Updating class with ID: ${formData._id}`);
+  console.log(formData);
+  try {
+    const response = await axios.put(
+      `http://localhost:5000/manager-dashboard/updateClass/${formData._id}`,
+      formData
+    );
+    console.log(`Class updated successfully: ${response.data}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error updating class: ${error.message}`);
+    throw new Error(`Failed to update class: ${error.message}`);
+  }
+};
+
+
+export const deleteClass = async (ClassID) => {
+  console.log(`Deleting class with ClassID API: ${ClassID}`);
+  const response = await axios.delete(
+    `http://localhost:5000/manager-dashboard/deleteClass/${ClassID}`
+  );
+  console.log(`Deleted class with response: ${response.data}`);
+  return response.data;
+};
+
 
 export const ManagerStatistics = async () => {
   const response = await axios.get("http://localhost:5000/manager-dashboard/");
@@ -103,12 +141,23 @@ export const deleteStudent = async (studentID) => {
   return response.data;
 };
 
+
 export const fetchClasses = async () => {
   try {
     const response = await axios.get("http://localhost:5000/manager-dashboard/fetchClasses");
     return response;
   } catch (error) {
     console.error("Error fetching classes:", error);
+    throw error;
+  }
+};
+
+export const fetchTeachers = async () => {
+  try {
+    const response = await axios.get("http://localhost:5000/manager-dashboard/fetchTeachers");
+    return response;
+  } catch (error) {
+    console.error("Error fetching teachers:", error);
     throw error;
   }
 };
