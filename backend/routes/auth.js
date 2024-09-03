@@ -48,9 +48,6 @@ router.post('/login', async (req, res) => {
     });
 
     const cookies = res.getHeader('Set-Cookie');
-    if (cookies) {
-      console.log('Cookies being sent with response:', cookies);
-    }
 
     let redirectUrl;
     if (userType === 'student') {
