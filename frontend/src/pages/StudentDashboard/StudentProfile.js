@@ -1,4 +1,4 @@
-import React from "react";
+import React , {useState} from "react";
 import {
   Box,
   Button,
@@ -9,15 +9,27 @@ import {
   Grid,
 } from "@mui/material";
 import StudentSidebar from "../StudentDashboard/StudentSidebar"; // Import Sidebar
+import ChangePasswordPopup from "../../popups/ChangePassword";
 import { fetchStudentProfile } from "../../services/api";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+
 
 const drawerWidth = 240;
 
 
 const Profile = () => {
 
+
+  const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
+
+  const handleOpenChangePassword = () => {
+    setIsChangePasswordOpen(true);
+  };
+
+  const handleCloseChangePassword = () => {
+    setIsChangePasswordOpen(false);
+  };
 
   const navigate = useNavigate();
   const studentID = localStorage.getItem('studentID');
@@ -124,11 +136,16 @@ const Profile = () => {
             variant="contained"
             color="secondary"
             sx={{ mt: 2 }}
-            onClick={() => alert("Change Password Clicked")} // Add change password functionality here
+            onClick={handleOpenChangePassword} // Add change password functionality here
           >
             Change Password
           </Button>
         </Container>
+        <ChangePasswordPopup
+  open={isChangePasswordOpen}
+  handleClose={handleCloseChangePassword}
+/>
+
       </Box>
     </div>
   );

@@ -7,11 +7,13 @@ import { fetchClasses_id, fetchStudentData } from '../../services/api'; // Impor
 import { useNavigate } from 'react-router-dom';
 
 const StudentPage = () => {
+
   const navigate = useNavigate();
   const studentID = localStorage.getItem('studentID');
   if(!studentID) {
     navigate('/login');
   }
+
   
   const [loading, setLoading] = useState(false);
   const [student, setStudent] = useState({
