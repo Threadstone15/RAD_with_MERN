@@ -29,6 +29,30 @@ router.get('/fetchStudentData/:studentID', async (req, res) => {
     
 })
 
+router.get('/fetchStudentProfile/:studentID', async (req, res) => {
+    console.log("Got a request to fetchStudentProfile");
+    try {
+        const {studentID } = req.params;
+        const studentObjectId = new mongoose.Types.ObjectId(studentID);
+
+        // Find the student by ObjectId and populate their classIds
+        const student = await Student.findById(studentObjectId).populate("classIds");
+
+        if (!student) {
+            console.log(`Student with ID: ${studentID} not found in database`);
+            return res.status(404).json({ error: 'Student not found' });
+        }
+        console.log(student);
+        res.json({
+            'profile':student.profile,
+            'classes': student.classIds
+        });
+    } catch (error) {
+
+    }
+    
+})
+
 // Route to fetch classes by ObjectId
 router.get('/fetchClasses_id/:studentID', async (req, res) => {
     try {

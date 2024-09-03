@@ -153,10 +153,19 @@ export const fetchClasses = async () => {
 export const fetchStudentData = async (studentID) => {
   try {
     const response = await axios.get(`http://localhost:5000/student-dashboard/fetchStudentData/${studentID}`);
-    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error("Error getting student Data", error);
+    throw error;
+  }
+}
+
+export const fetchStudentProfile = async (studentID) => {
+  try {
+    const response = await axios.get(`http://localhost:5000/student-dashboard/fetchStudentProfile/${studentID}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error getting student Profile", error);
     throw error;
   }
 }
