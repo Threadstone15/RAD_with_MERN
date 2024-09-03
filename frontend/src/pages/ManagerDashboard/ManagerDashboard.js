@@ -47,7 +47,7 @@ const ManagerDashboard = () => {
             day,
             time: classEntry.schedule.time,
             subject: classEntry.className,
-            teacher: classEntry.teacherId?.profile?.name || 'Unknown',
+            teacher: classEntry.TeacherID?.profile?.name || 'Unknown',
           }));
         }).flat();
 

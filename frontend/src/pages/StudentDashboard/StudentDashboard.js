@@ -3,34 +3,32 @@ import { Card, CardContent, CardActions, Typography, Button, Table, TableBody, T
 import StudentSidebar from '../StudentDashboard/StudentSidebar';
 import { fetchHash, startPayment } from './paymentService';
 import AttendanceGraph from './AttendanceGraph';
-import { fetchClasses_id } from '../../services/api'; // Import the function to fetch classes
+import { fetchClasses_id, fetchStudentData } from '../../services/api'; // Import the function to fetch classes
+import { useNavigate } from 'react-router-dom';
 
 const StudentPage = () => {
+  const navigate = useNavigate();
+  const studentID = localStorage.getItem('studentID');
+  if(!studentID) {
+    navigate('/login');
+  }
+  
   const [loading, setLoading] = useState(false);
   const [classes, setClasses] = useState([]);
   const [student, setStudent] = useState({
-    name: 'Student',
-    email: 'john.doe@example.com',
-    phone: '0771234567',
-    address: 'No.1, Galle Road',
-    city: 'Colombo',
-    country: 'Sri Lanka',
-    courses: [
-      { id: 1, name: 'Math 101', amount: 1000 },
-      { id: 2, name: 'Physics 201', amount: 1500 },
-    ],
-    registeredClasses: ['Math 101', 'Physics 201'],
+    profile: {Name: '',},
+    classIds: [],
+    registeredClasses: [],
   });
 
   useEffect(() => {
-    const fetchStudentClasses = async () => {
+    const fetchStudentDetails = async () => {
       try {
-        const studentID = localStorage.getItem('studentID');
-        console.log("Got ID", studentID); // Retrieve studentID from localStorage
         if (studentID) {
-          const response = await fetchClasses_id(studentID);
-          if (response.data) {
-            setClasses(response.data);
+          const response = await fetchStudentData(studentID);
+          if (response) {
+            setStudent(response);
+            console.log(student);
           }
         }
       } catch (error) {
@@ -38,7 +36,7 @@ const StudentPage = () => {
       }
     };
 
-    fetchStudentClasses();
+    fetchStudentDetails();
 
     const script = document.createElement('script');
     script.src = "https://www.payhere.lk/lib/payhere.js";
@@ -71,14 +69,14 @@ const StudentPage = () => {
     }
   };
 
-  const totalAmountPaid = student.courses.reduce((total, course) => total + course.amount, 0);
+  const totalAmountPaid = student.classIds.reduce((total, course) => total + course.amount, 0);
 
   return (
     <div style={{ display: 'flex' }}>
       <StudentSidebar />
       <div style={{ flexGrow: 1, padding: '20px' }}>
         <Typography variant="h4" gutterBottom>
-          Welcome, {student.name}
+          Welcome, {student.profile.Name}
         </Typography>
 
         <Grid container spacing={2}>
@@ -89,11 +87,11 @@ const StudentPage = () => {
                 <Typography variant="h5" gutterBottom>
                   Your Courses
                 </Typography>
-                {student.courses.map(course => (
-                  <Card key={course.id} style={{ marginBottom: '10px' }}>
+                {student.classIds.map(course => (
+                  <Card key={course.classId} style={{ marginBottom: '10px' }}>
                     <CardContent>
-                      <Typography variant="h6">{course.name}</Typography>
-                      <Typography variant="body2">LKR {course.amount}</Typography>
+                      <Typography variant="h6">{course.className}</Typography>
+                      <Typography variant="body2">LKR {course.fee}</Typography>
                     </CardContent>
                     <CardActions>
                       <Button onClick={() => handlePayment(course)} disabled={loading} variant="contained">
@@ -147,17 +145,13 @@ const StudentPage = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {classes.map((entry, index) => (
+                  {student.classIds.map((entry, index) => (
                     <TableRow
                       key={index}
                       sx={{
-                        backgroundColor: student.registeredClasses.includes(entry.className)
-                          ? 'rgba(0, 123, 255, 0.1)'
-                          : 'inherit',
+                        backgroundColor: 'rgba(0, 123, 255, 0.1)',
                         '&:hover': {
-                          backgroundColor: student.registeredClasses.includes(entry.className)
-                            ? 'rgba(0, 123, 255, 0.2)'
-                            : 'rgba(0, 0, 0, 0.04)',
+                          backgroundColor:  'rgba(0, 123, 255, 0.2)',
                         },
                       }}
                     >

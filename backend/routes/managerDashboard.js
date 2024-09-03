@@ -75,7 +75,6 @@ router.get("/", async (req, res) => {
     const StudentCount = await Student.countDocuments();
     const TeacherCount = await Teacher.countDocuments();
     const { monthlyIncome, notPaid } = await getPaymentStatisticsForCurrentMonth(StudentCount);
-    console.log(StudentCount, TeacherCount, monthlyIncome, notPaid);
     res.json({
       StudentCount: StudentCount,
       TeacherCount: TeacherCount,
@@ -209,9 +208,6 @@ router.post("/Student", async (req, res) => {
 });
 
 
-
-
-const mongoose = require('mongoose');
 
 // Utility function to introduce a delay
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -363,12 +359,8 @@ router.get("/classes", async (req, res) => {
 router.get("/classes-with-teachers", async (req, res) => {
   try {
     const classes = await Class.find()
-      .populate({
-        path: "TeacherID",
-        select: "profile.name",
-      })
+      .populate("TeacherID")
       .exec();
-
     res.json(classes);
   } catch (error) {
     console.error("Error fetching class details:", error);
