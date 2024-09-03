@@ -1,4 +1,4 @@
-import React , {useState} from "react";
+import React , {useState, useEffect} from "react";
 import {
   Box,
   Button,
@@ -12,7 +12,6 @@ import StudentSidebar from "../StudentDashboard/StudentSidebar"; // Import Sideb
 import ChangePasswordPopup from "../../popups/ChangePassword";
 import { fetchStudentProfile } from "../../services/api";
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
 
 
 const drawerWidth = 240;
