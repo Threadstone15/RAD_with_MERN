@@ -17,7 +17,7 @@ const StudentPage = () => {
   const [classes, setClasses] = useState([]);
   const [student, setStudent] = useState({
     profile: {Name: '',},
-    courses: [],
+    classIds: [],
     registeredClasses: [],
   });
 
@@ -28,7 +28,7 @@ const StudentPage = () => {
           const response = await fetchStudentData(studentID);
           if (response) {
             setStudent(response);
-
+            console.log(student);
           }
         }
       } catch (error) {
@@ -69,7 +69,7 @@ const StudentPage = () => {
     }
   };
 
-  const totalAmountPaid = student.courses.reduce((total, course) => total + course.amount, 0);
+  const totalAmountPaid = student.classIds.reduce((total, course) => total + course.amount, 0);
 
   return (
     <div style={{ display: 'flex' }}>
@@ -145,17 +145,13 @@ const StudentPage = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {classes.map((entry, index) => (
+                  {student.classIds.map((entry, index) => (
                     <TableRow
                       key={index}
                       sx={{
-                        backgroundColor: student.registeredClasses.includes(entry.className)
-                          ? 'rgba(0, 123, 255, 0.1)'
-                          : 'inherit',
+                        backgroundColor: 'rgba(0, 123, 255, 0.1)',
                         '&:hover': {
-                          backgroundColor: student.registeredClasses.includes(entry.className)
-                            ? 'rgba(0, 123, 255, 0.2)'
-                            : 'rgba(0, 0, 0, 0.04)',
+                          backgroundColor:  'rgba(0, 123, 255, 0.2)',
                         },
                       }}
                     >
