@@ -10,20 +10,16 @@ import {
 } from "@mui/material";
 import StudentSidebar from "../StudentDashboard/StudentSidebar"; // Import Sidebar
 import ChangePasswordPopup from "../../popups/ChangePassword";
+import { fetchStudentProfile } from "../../services/api";
+import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 
-const drawerWidth = 240; // Assuming the width of the sidebar is 240px
 
-const studentData = {
-  name: "John Doe",
-  dob: "2005-01-15",
-  address: "123 Main St",
-  phone: "123-456-7890",
-  parentName: "Jane Doe",
-  parentPhone: "987-654-3210",
-  classes: ["Math", "Science", "English"],
-};
+const drawerWidth = 240;
+
 
 const Profile = () => {
+
 
   const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
 
@@ -34,6 +30,41 @@ const Profile = () => {
   const handleCloseChangePassword = () => {
     setIsChangePasswordOpen(false);
   };
+
+  const navigate = useNavigate();
+  const studentID = localStorage.getItem('studentID');
+  if (!studentID) {
+    navigate('/login');
+  }
+
+  const [student, setStudent] = useState({
+    'profile': {
+      'name': '',
+    },
+    'classes': [],
+  });
+
+  useEffect(() => {
+    const fetchStudentDetails = async () => {
+      try {
+        console.log("This happens before the error");
+        if (studentID) {
+          const response = await fetchStudentProfile(studentID);
+          if (response) {
+            setStudent(response);
+            console.log(student);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching classes:', error);
+      }
+    };
+
+    fetchStudentDetails();
+  }, []);
+
+
+
   return (
     <div>
       <StudentSidebar />
@@ -66,30 +97,34 @@ const Profile = () => {
             <CardContent>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
-                  <Typography variant="h6">Name: {studentData.name}</Typography>
+                  {console.log(student)}
+                  <Typography variant="h6">Name: {student.profile.Name}</Typography>
                   <Typography variant="body1">
-                    Date of Birth: {studentData.dob}
+                    Date of Birth: {student.profile.DOB}
                   </Typography>
                   <Typography variant="body1">
-                    Address: {studentData.address}
+                    Address: {student.profile.Address}
                   </Typography>
                   <Typography variant="body1">
-                    Phone: {studentData.phone}
+                    Phone: {student.profile.phone}
+                    {console.log("Here")}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <Typography variant="body1">
-                    Parent's Name: {studentData.parentName}
+                    Parent's Name: {student.profile.PName}
                   </Typography>
                   <Typography variant="body1">
-                    Parent's Phone: {studentData.parentPhone}
+                    Parent's Phone: {student.profile.PContact}
                   </Typography>
                   <Typography variant="body1">
                     Classes Attending:
                     <ul>
-                      {studentData.classes.map((className, index) => (
-                        <li key={index}>{className}</li>
+                    {student.classes.map((className, index) => (
+                        <li key={index}>{className.className}</li>
                       ))}
+                    
+
                     </ul>
                   </Typography>
                 </Grid>

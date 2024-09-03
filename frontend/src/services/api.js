@@ -4,11 +4,9 @@ axios.defaults.withCredentials = true;
 
 axios.interceptors.response.use(
   response => {
-    console.log("It's successful?");
     return response;
   },
   error => {
-    console.log("Response intercepted again");
     if (error.response && error.response.status === 401) {
       window.location.href = '/login';
     }
@@ -151,6 +149,26 @@ export const fetchClasses = async () => {
     throw error;
   }
 };
+
+export const fetchStudentData = async (studentID) => {
+  try {
+    const response = await axios.get(`http://localhost:5000/student-dashboard/fetchStudentData/${studentID}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error getting student Data", error);
+    throw error;
+  }
+}
+
+export const fetchStudentProfile = async (studentID) => {
+  try {
+    const response = await axios.get(`http://localhost:5000/student-dashboard/fetchStudentProfile/${studentID}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error getting student Profile", error);
+    throw error;
+  }
+}
 
 export const fetchTeachers = async () => {
   try {
