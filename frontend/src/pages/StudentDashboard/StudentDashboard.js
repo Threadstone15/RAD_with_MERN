@@ -3,7 +3,7 @@ import { Card, CardContent, CardActions, Typography, Button, Table, TableBody, T
 import StudentSidebar from '../StudentDashboard/StudentSidebar';
 import { fetchHash, startPayment } from './paymentService';
 import AttendanceGraph from './AttendanceGraph';
-import { fetchClasses_id, fetchStudentData } from '../../services/api'; // Import the function to fetch classes
+import { fetchStudentData } from '../../services/api'; // Import the function to fetch classes
 import { useNavigate } from 'react-router-dom';
 
 const StudentPage = () => {
@@ -14,7 +14,6 @@ const StudentPage = () => {
     navigate('/login');
   }
 
-  
   const [loading, setLoading] = useState(false);
   const [student, setStudent] = useState({
     profile: {Name: '',},
@@ -22,14 +21,18 @@ const StudentPage = () => {
     registeredClasses: [],
   });
 
+
+
   useEffect(() => {
     const fetchStudentDetails = async () => {
+      console.log("Fetching student details for studentID:", studentID);
       try {
         if (studentID) {
           const response = await fetchStudentData(studentID);
+          console.log("Response from fetchStudentData:", response);
           if (response) {
             setStudent(response);
-            console.log(student);
+            console.log("Student state updated:", student);
           }
         }
       } catch (error) {
@@ -50,25 +53,42 @@ const StudentPage = () => {
   }, []);
 
   const handlePayment = async (course) => {
+    console.log("handlePayment called with course:", course);
+    
+    const { Name, email, phone, Address } = student.profile;
+  
+    if (!Name || !email || !phone || !Address) {
+      console.error('Student profile is missing required fields:', student.profile);
+      return;
+    }
+  
     const studentDetails = {
-      name: student.name,
-      email: student.email,
-      phone: student.phone,
-      address: student.address,
-      city: student.city,
-      country: student.country,
+      id: student._id,
+      name: Name,
+      email: email,
+      phone: phone,
+      address: Address,
     };
-
+  
+    console.log("Student details:", studentDetails);
+  
     setLoading(true);
     try {
-      const hash = await fetchHash(`Order${course.id}`, course.amount, 'LKR');
+      console.log("Fetching hash for payment");
+      const hash = await fetchHash(`Order${course._id}`, course.fee, 'LKR');
+      console.log("Hash fetched:", hash);
+      console.log("Starting payment for course:", course);
       await startPayment(course, studentDetails, hash);
+      console.log("Payment completed successfully");
     } catch (error) {
       console.error('Payment failed:', error);
     } finally {
       setLoading(false);
+      console.log("Loading state reset to false");
     }
   };
+  
+
 
   const totalAmountPaid = student.classIds.reduce((total, course) => total + course.amount, 0);
 
