@@ -14,7 +14,6 @@ const StudentPage = () => {
   }
   
   const [loading, setLoading] = useState(false);
-  const [classes, setClasses] = useState([]);
   const [student, setStudent] = useState({
     profile: {Name: '',},
     classIds: [],
