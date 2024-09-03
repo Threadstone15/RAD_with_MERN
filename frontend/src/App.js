@@ -4,6 +4,7 @@ import Home from './components/Home';
 import Login from './components/Login';
 import ManagerDashboard from './pages/ManagerDashboard/ManagerDashboard';
 import StudentDashboard from './pages/StudentDashboard/StudentDashboard';
+import TutorDashboard from './pages/TutorDashboard/TutorDashboard'
 import './App.css';
 import About from './components/About';
 import Contact from './components/Contact'
@@ -14,6 +15,9 @@ import Payments from './pages/ManagerDashboard/Payment';
 import BouncingDotsLoader from './BouncingDotsLoader';
 
 import StudentProfile from './pages/StudentDashboard/StudentProfile'
+import TutorProfile from './pages/TutorDashboard/TutorProfile';
+
+import TutorPayment from './pages/TutorDashboard/TutorPayment'
 
 function RouteLoader({ children }) {
   const [loading, setLoading] = useState(false);
@@ -50,6 +54,10 @@ function App() {
 
         <Route path="/student-dashboard/" element={<StudentDashboard />} />
         <Route path="/student-dashboard/profile" element={<StudentProfile />} />
+
+        <Route path="/teacher-dashboard" element={<TutorDashboard />} /> 
+        <Route path="/teacher-dashboard/payments" element={<TutorPayment />} />
+        <Route path="/teacher-dashboard/profile" element={<TutorProfile />} />
         
         <Route path="/manager-dashboard" element={<ManagerDashboard />} /> 
 

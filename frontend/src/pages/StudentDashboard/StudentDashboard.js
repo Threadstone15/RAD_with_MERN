@@ -6,6 +6,7 @@ import AttendanceGraph from './AttendanceGraph';
 import { fetchClasses_id } from '../../services/api'; // Import the function to fetch classes
 
 const StudentPage = () => {
+  
   const [loading, setLoading] = useState(false);
   const [classes, setClasses] = useState([]);
   const [student, setStudent] = useState({

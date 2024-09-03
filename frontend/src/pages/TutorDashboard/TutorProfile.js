@@ -1,4 +1,4 @@
-import React , {useState} from "react";
+import React, { useState } from "react";
 import {
   Box,
   Button,
@@ -8,23 +8,21 @@ import {
   Typography,
   Grid,
 } from "@mui/material";
-import StudentSidebar from "../StudentDashboard/StudentSidebar"; // Import Sidebar
-import ChangePasswordPopup from "../../popups/ChangePassword";
+import TutorSidebar from "./TutorSidebar"; // Import Sidebar
+import ChangePasswordPopup from "../../popups/ChangePassword"; // Import ChangePasswordPopup component
 
 const drawerWidth = 240; // Assuming the width of the sidebar is 240px
 
-const studentData = {
+const tutorData = {
   name: "John Doe",
-  dob: "2005-01-15",
+  dob: "1980-03-10",
   address: "123 Main St",
   phone: "123-456-7890",
-  parentName: "Jane Doe",
-  parentPhone: "987-654-3210",
-  classes: ["Math", "Science", "English"],
+  email: "john.doe@example.com",
+  subjects: ["Math", "Physics", "Chemistry"],
 };
 
-const Profile = () => {
-
+const TutorProfile = () => {
   const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
 
   const handleOpenChangePassword = () => {
@@ -34,9 +32,10 @@ const Profile = () => {
   const handleCloseChangePassword = () => {
     setIsChangePasswordOpen(false);
   };
+
   return (
     <div>
-      <StudentSidebar />
+      <TutorSidebar />
       <Box
         component="main"
         sx={{
@@ -51,7 +50,7 @@ const Profile = () => {
       >
         <Container>
           <Typography variant="h4" gutterBottom align="center">
-            Student Profile
+            Tutor Profile
           </Typography>
 
           <Card
@@ -66,29 +65,26 @@ const Profile = () => {
             <CardContent>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
-                  <Typography variant="h6">Name: {studentData.name}</Typography>
+                  <Typography variant="h6">Name: {tutorData.name}</Typography>
                   <Typography variant="body1">
-                    Date of Birth: {studentData.dob}
+                    Date of Birth: {tutorData.dob}
                   </Typography>
                   <Typography variant="body1">
-                    Address: {studentData.address}
+                    Address: {tutorData.address}
                   </Typography>
                   <Typography variant="body1">
-                    Phone: {studentData.phone}
+                    Phone: {tutorData.phone}
+                  </Typography>
+                  <Typography variant="body1">
+                    Email: {tutorData.email}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <Typography variant="body1">
-                    Parent's Name: {studentData.parentName}
-                  </Typography>
-                  <Typography variant="body1">
-                    Parent's Phone: {studentData.parentPhone}
-                  </Typography>
-                  <Typography variant="body1">
-                    Classes Attending:
+                    Subjects Taught:
                     <ul>
-                      {studentData.classes.map((className, index) => (
-                        <li key={index}>{className}</li>
+                      {tutorData.subjects.map((subject, index) => (
+                        <li key={index}>{subject}</li>
                       ))}
                     </ul>
                   </Typography>
@@ -101,19 +97,20 @@ const Profile = () => {
             variant="contained"
             color="secondary"
             sx={{ mt: 2 }}
-            onClick={handleOpenChangePassword} // Add change password functionality here
+            onClick={handleOpenChangePassword} // Open the change password popup
           >
             Change Password
           </Button>
         </Container>
-        <ChangePasswordPopup
-  open={isChangePasswordOpen}
-  handleClose={handleCloseChangePassword}
-/>
 
+        {/* Change Password Popup */}
+        <ChangePasswordPopup
+          open={isChangePasswordOpen}
+          handleClose={handleCloseChangePassword}
+        />
       </Box>
     </div>
   );
 };
 
-export default Profile;
+export default TutorProfile;
