@@ -358,11 +358,9 @@ router.get("/classes", async (req, res) => {
 });
 router.get("/classes-with-teachers", async (req, res) => {
   try {
-    console.log("Helloooooooooooooo")
     const classes = await Class.find()
       .populate("TeacherID")
       .exec();
-    console.log(classes[7]);
     res.json(classes);
   } catch (error) {
     console.error("Error fetching class details:", error);
