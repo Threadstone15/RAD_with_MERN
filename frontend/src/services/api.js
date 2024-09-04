@@ -172,6 +172,17 @@ export const fetchStudentProfile = async (studentID) => {
   }
 }
 
+
+export const fetchStudentAttendance = async (studentID) => {
+  try {
+    const response = await axios.get(`http://localhost:5000/student-dashboard/fetchStudentAttendance/${studentID}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error getting student Attendance", error);
+    throw error;
+  }
+}
+
 export const fetchTeachers = async () => {
   try {
     const response = await axios.get("http://localhost:5000/manager-dashboard/fetchTeachers");

@@ -1,17 +1,40 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Typography, Grid } from '@mui/material';
+import { fetchStudentAttendance } from '../../services/api';
+import { useNavigate } from 'react-router-dom';
 
 const ClassGraph = () => {
+  
+  const navigate = useNavigate();
+  const studentID = localStorage.getItem('studentID');
+  if(!studentID) {
+    navigate('/login');
+  }
+  
+
   const [animated, setAnimated] = useState(false);
+  const [classData, setAttendanceData] = useState([]);
 
-  const classData = [
-    { name: 'Math 101', value: 75 },
-    { name: 'Physics 201', value: 85 },
-    { name: 'Chemistry 301', value: 65 },
-    { name: 'Biology 101', value: 90 },
-  ];
 
-  useEffect(() => {
+ 
+
+  useEffect( () => {
+    const fetchAttendance = async () => {
+      console.log("Fetching student Attendance for studentID:", studentID);
+      try {
+        if (studentID) {
+          const response = await fetchStudentAttendance(studentID);
+          console.log("Response from fetchStudentAttendance:", response);
+          if (response) {
+            setAttendanceData (response);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching Attendance:', error);
+      }
+    }
+    fetchAttendance();
+
     setAnimated(true); // Trigger the animation when the component mounts
   }, []);
 
