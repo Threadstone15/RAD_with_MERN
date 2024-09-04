@@ -1,30 +1,61 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Grid, TextField, MenuItem } from '@mui/material';
-import TutorSidebar from "./TutorSidebar"; // Import Sidebar
+import TutorSidebar from "./TutorSidebar";
+import axios from 'axios';
+ // Import Sidebar
 
 const TutorPage = () => {
-  const [classes, setClasses] = useState([]);
   const [payments, setPayments] = useState([]);
+  const [classTimetable, setClassTimetable] = useState([]);
+  const [stats, setStats] = useState({});
+    const [classes, setClasses] = useState([]); 
 
   const [selectedMonth, setSelectedMonth] = useState('');
   const [selectedStudent, setSelectedStudent] = useState('');
   const [selectedClass, setSelectedClass] = useState('');
 
+  const currentDay = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(new Date());
+
   useEffect(() => {
-    // Simulating API calls with dummy data
-    const dummyClasses = [
-      { schedule: { days: ['Monday', 'Wednesday'], time: '10:00 AM - 12:00 PM' }, className: 'Math 101', classID: 'C1' },
-      { schedule: { days: ['Tuesday', 'Thursday'], time: '2:00 PM - 4:00 PM' }, className: 'Physics 201', classID: 'C2' },
-    ]
 
     const dummyPayments = [
       { date: '2024-08-01', student: 'John Doe', amount: 15000, class: 'Math 101' },
       { date: '2024-08-05', student: 'Jane Smith', amount: 15000, class: 'Physics 201' },
-      // Add more dummy data as needed
+  
     ];
-
-    setClasses(dummyClasses);
     setPayments(dummyPayments);
+
+    const fetchData = async () => {
+      try {
+        const classResponse = await axios.get('http://localhost:5000/teacher-dashboard/classes-with-teachers');
+        console.log('Class Response Data:', classResponse.data); // Log the response
+    
+        const ManagerStatistics = await axios.get("http://localhost:5000/teacher-dashboard/");
+        setStats(ManagerStatistics.data);
+    
+        const classData = classResponse.data;
+    
+        const formattedTimetable = classData.map((classEntry) => {
+          return classEntry.schedule.days.map((day) => ({
+            day,
+            time: classEntry.schedule.time,
+            subject: classEntry.className,
+            teacher: classEntry.teacherId?.profile?.name || 'Unknown',
+          }));
+        }).flat();
+    
+        console.log('Formatted Timetable:', formattedTimetable); // Log the formatted timetable
+    
+        setClassTimetable(formattedTimetable);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+    
+
+    fetchData();
+
+
   }, []);
 
   const handleMonthChange = (event) => {
@@ -58,47 +89,57 @@ const TutorPage = () => {
       
 
           {/* Right side: Class Timetable */}
-          <Grid item xs={12} sm={6} md={8}>
-            <Card style={{ marginBottom: '20px', height: '450px' }}>
-              <CardContent>
-                <Typography variant="h5" gutterBottom>
-                  Class Timetable
-                </Typography>
-                <TableContainer component={Paper} style={{ maxHeight: '350px' }}>
-                  <Table stickyHeader aria-label="class timetable">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Day</TableCell>
-                        <TableCell align="center">Time</TableCell>
-                        <TableCell align="center">Subject</TableCell>
-                        <TableCell align="center">Class</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {classes.map((entry, index) => (
-                        <TableRow
-                          key={index}
-                          sx={{
-                            backgroundColor: 'rgba(0, 123, 255, 0.1)',
-                            '&:hover': {
-                              backgroundColor: 'rgba(0, 123, 255, 0.2)',
-                            },
-                          }}
-                        >
-                          <TableCell component="th" scope="row">
-                            {entry.schedule?.days?.join(', ') || 'N/A'}
-                          </TableCell>
-                          <TableCell align="center">{entry.schedule?.time || 'N/A'}</TableCell>
-                          <TableCell align="center">{entry.className || 'N/A'}</TableCell>
-                          <TableCell align="center">{entry.classID || 'N/A'}</TableCell>
+          <Grid item xs={12}>
+              <Card
+                sx={{
+                  width: '100%',
+                  boxShadow: 3,
+                  transition: 'transform 0.3s ease-in-out',
+                  '&:hover': {
+                    transform: 'scale(1.02)',
+                    boxShadow: 6
+                  }
+                }}
+              >
+                <CardContent>
+                  <Typography variant="h6" gutterBottom>
+                    Class Timetable
+                  </Typography>
+                  <TableContainer component={Paper}>
+                    <Table aria-label="class timetable">
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Day</TableCell>
+                          <TableCell align="center">Time</TableCell>
+                          <TableCell align="center">Subject</TableCell>
+                          <TableCell align="center">Teacher</TableCell>
                         </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </CardContent>
-            </Card>
-          </Grid>
+                      </TableHead>
+                      <TableBody>
+                        {classTimetable.map((entry, index) => (
+                          <TableRow
+                            key={index}
+                            sx={{
+                              backgroundColor: entry.day === currentDay ? 'rgba(0, 123, 255, 0.1)' : 'inherit',
+                              '&:hover': {
+                                backgroundColor: entry.day === currentDay ? 'rgba(0, 123, 255, 0.2)' : 'rgba(0, 0, 0, 0.04)',
+                              },
+                            }}
+                          >
+                            <TableCell component="th" scope="row">
+                              {entry.day}
+                            </TableCell>
+                            <TableCell align="center">{entry.time}</TableCell>
+                            <TableCell align="center">{entry.subject}</TableCell>
+                            <TableCell align="center">{entry.teacher}</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </CardContent>
+              </Card>
+            </Grid>
 
           {/* Filter Options */}
           <Grid item xs={12}>

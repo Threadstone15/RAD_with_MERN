@@ -95,6 +95,7 @@ const UpdateClassForm = ({ open, onClose, classData, onUpdate }) => {
             left: '50%',
             transform: 'translate(-50%, -50%)',
             width: 400,
+            maxHeight: '80vh',
             bgcolor: 'background.paper',
             borderRadius: 2,
             boxShadow: 24,
