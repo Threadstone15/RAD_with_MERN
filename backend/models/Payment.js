@@ -2,7 +2,11 @@ const mongoose = require("mongoose");
 
 const PaymentSchema = new mongoose.Schema({
   studentID: {
-    type: String,
+    type: String,  // Assuming the studentID is a string (like a unique student identifier)
+    required: true,
+  },
+  classID: {
+    type: String,  // Added this field to track which class the payment is for
     required: true,
   },
   amount: {
@@ -14,26 +18,10 @@ const PaymentSchema = new mongoose.Schema({
     required: true,
   },
   month: {
-    type: String,
+    type: String,  // This field stores the month for which the payment is made (e.g., "September 2024")
     required: true,
   },
-  status: {
-    type: String,
-    enum: ["paid", "pending"],
-    required: true,
-  },
-  method: {
-    type: String,
-    required: true,
-  },
-  order_id: {
-    type: String,
-    required: true,
-  },
-  currency: {
-    type: String,
-    required: true,
-  },
+
 });
 
 const Payment = mongoose.model("Payment", PaymentSchema);

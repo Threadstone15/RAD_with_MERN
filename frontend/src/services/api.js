@@ -160,6 +160,8 @@ export const fetchStudentData = async (studentID) => {
   }
 }
 
+
+
 export const fetchStudentProfile = async (studentID) => {
   try {
     const response = await axios.get(`http://localhost:5000/student-dashboard/fetchStudentProfile/${studentID}`);

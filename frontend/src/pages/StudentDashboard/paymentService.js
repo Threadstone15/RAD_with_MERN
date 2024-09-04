@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-// Function to fetch the hash for payment
 export const fetchHash = async (order_id, amount, currency) => {
   try {
     const response = await axios.post('http://localhost:5000/api/generate-hash', {
@@ -19,15 +18,19 @@ export const fetchHash = async (order_id, amount, currency) => {
 
 // Function to initiate the PayHere payment
 export const startPayment = async (course, student, hash) => {
+  console.log('Payment initiated with course:', course);
+  console.log('Payment initiated with student:', student);
+  console.log('Payment initiated with hash:', hash);
+
   const payment = {
     sandbox: true,
     merchant_id: "1227926",
     return_url: 'http://localhost:5000/return',
     cancel_url: 'http://localhost:5000/cancel',
-    notify_url: 'https://33bd-2407-c00-e006-11ae-b07d-1b31-1026-290d.ngrok-free.app/api/payhere/notify',
-    order_id: `Order${course.id}`,
-    items: course.name,   
-    amount: course.amount,
+    notify_url: 'https://localhost:5000/api/payhere/notify',
+    order_id: `Order${course._id}`,
+    items: course.className,
+    amount: course.fee,
     currency: 'LKR',
     hash: hash,
     first_name: student.name.split(' ')[0],
@@ -35,12 +38,64 @@ export const startPayment = async (course, student, hash) => {
     email: student.email,
     phone: student.phone,
     address: student.address,
-    city: student.city,
-    country: student.country,
+    city: student.city || 'N/A',
+    country: student.country || 'N/A',
   };
 
   try {
     if (window.payhere) {
+      console.log('Starting payment');
+
+      // Listen for the payment completion event
+      window.payhere.onCompleted = async function onCompleted(orderId) {
+        console.log(`Payment completed successfully for order ID: ${orderId}`);
+
+        // Prepare the data to send to the backend
+        const paymentData = {
+          studentID: student.id,
+          classID: course._id,
+          amount: course.fee,
+          date: new Date().toISOString(),
+          month: new Date().getMonth() + 1, // Current date and time
+        };
+
+        console.log('Sending payment notification to backend:', paymentData);
+
+        try {
+          const response = await fetch('http://localhost:5000/api/notify_app', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(paymentData),
+          });
+
+          if (response.ok) {
+            console.log('Payment notification sent to backend successfully');
+          } else {
+            console.error('Failed to send payment notification to backend');
+            console.error('Response status:', response.status);
+            console.error('Response body:', await response.text());
+          }
+        } catch (error) {
+          console.error('Error sending payment notification to backend:', error);
+        }
+
+        // Optionally, you can redirect to a success page or handle the success case further
+      };
+
+      // Listen for the payment dismissed event
+      window.payhere.onDismissed = function onDismissed() {
+        console.log('Payment dismissed by user.');
+        // Handle the case when the payment popup is closed without completing the payment
+      };
+
+      // Listen for errors
+      window.payhere.onError = function onError(error) {
+        console.error('Payment error occurred:', error);
+        // Handle the error appropriately
+      };
+
       window.payhere.startPayment(payment);
     } else {
       console.error("PayHere script not loaded");
@@ -49,4 +104,7 @@ export const startPayment = async (course, student, hash) => {
     console.error('Error initiating payment:', error);
   }
 };
+
+
+
 

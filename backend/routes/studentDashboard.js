@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require('mongoose');
 const Student = require("../models/Student");
+const Class = require("../models/Class");
 const AuthMiddleware = require("../middleware/AuthMiddleware");
 const roleMiddleware = require("../middleware/roleMiddleware");
 
@@ -14,20 +15,24 @@ router.get('/fetchStudentData/:studentID', async (req, res) => {
         const {studentID } = req.params;
         const studentObjectId = new mongoose.Types.ObjectId(studentID);
 
-        // Find the student by ObjectId and populate their classIds
+        console.log(`Fetching student with ID: ${studentObjectId}`);
+
         const student = await Student.findById(studentObjectId).populate("classIds");
 
         if (!student) {
             console.log(`Student with ID: ${studentID} not found in database`);
             return res.status(404).json({ error: 'Student not found' });
         }
-        console.log(student);
+
+        console.log("Student found:", student);
         res.json(student);
     } catch (error) {
-
+        console.error("Error fetching student:", error);
     }
     
 })
+
+
 
 router.get('/fetchStudentProfile/:studentID', async (req, res) => {
     console.log("Got a request to fetchStudentProfile");
