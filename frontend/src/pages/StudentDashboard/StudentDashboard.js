@@ -25,14 +25,11 @@ const StudentPage = () => {
 
   useEffect(() => {
     const fetchStudentDetails = async () => {
-      console.log("Fetching student details for studentID:", studentID);
       try {
         if (studentID) {
           const response = await fetchStudentData(studentID);
-          console.log("Response from fetchStudentData:", response);
           if (response) {
             setStudent(response);
-            console.log("Student state updated:", student);
           }
         }
       } catch (error) {

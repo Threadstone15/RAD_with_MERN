@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../services/api';
-import { TextField, Button, Container, Typography, Paper, Box } from '@mui/material';
-import './Login.css'; // Import custom CSS file
+import { TextField, Button, Typography, Box, Modal, Paper, Link, Checkbox, FormControlLabel, Grid } from '@mui/material';
+import './Login.css';
+import Logo from '../assets/logo.png';
 
-const Login = () => {
+const Login = ({ open, onClose }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -13,27 +14,22 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Clear any existing user-specific data from local storage
-      localStorage.removeItem('studentID');
-      localStorage.removeItem('teacherID');
-      localStorage.removeItem('manager');
-      localStorage.removeItem('authToken');
-  
+      localStorage.clear();
+
       const response = await login({ email, password });
-  
+
       if (response.userType === 'student') {
         localStorage.setItem('studentID', response.userID);
       } else if (response.userType === 'teacher') {
         localStorage.setItem('teacherID', response.userID);
       } else if (response.userType === 'manager') {
-        localStorage.setItem('manager', response.userID); 
+        localStorage.setItem('manager', response.userID);
       }
-  
-      // Save the token in localStorage (if returned by your API)
+
       if (response.token) {
         localStorage.setItem('authToken', response.token);
       }
-  
+
       if (response.redirectUrl) {
         navigate(response.redirectUrl);
       } else {
@@ -44,17 +40,19 @@ const Login = () => {
       setErrorMessage('Login failed: Invalid credentials or server error');
     }
   };
-  
-  
-  
 
   return (
-    <Container component="main" maxWidth="xs" className="login-container">
-      <Paper elevation={3} className="login-paper">
-        <Typography component="h1" variant="h5">
-          Login
-        </Typography>
-        <Box component="form" onSubmit={handleSubmit} className="login-form">
+    <Modal
+      open={open}
+      onClose={onClose}
+      aria-labelledby="login-modal-title"
+      aria-describedby="login-modal-description"
+    >
+      <Paper elevation={6} sx={{ p: 4, maxWidth: 500, mx: 'auto', my: '20vh', borderRadius: 2 }}>
+        <Box component="form" onSubmit={handleSubmit}>
+          <Typography component="h1" variant="h5" id="login-modal-title" align="center" gutterBottom>
+            Login
+          </Typography>
           <TextField
             variant="outlined"
             margin="normal"
@@ -76,8 +74,17 @@ const Login = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+          <Box display="flex" justifyContent="space-between" alignItems="center">
+            <FormControlLabel
+              control={<Checkbox color="primary" />}
+              label="Remember me"
+            />
+            <Link href="#" variant="body2">
+              Forgot password?
+            </Link>
+          </Box>
           {errorMessage && (
-            <Typography color="error" variant="body2" className="login-error">
+            <Typography color="error" variant="body2" sx={{ mt: 1 }}>
               {errorMessage}
             </Typography>
           )}
@@ -86,13 +93,22 @@ const Login = () => {
             fullWidth
             variant="contained"
             color="primary"
-            className="login-button"
+            sx={{ mt: 2 }}
           >
             Login
           </Button>
         </Box>
+        {/* Right Section: Image/Illustration */}
+        <Grid item xs={12} sx={{ textAlign: 'center', mt: 2 }}>
+          <Typography variant="h6">Success Higher Education Institute</Typography>
+          <Typography variant="body2">
+            Your Higher Education Partner - Your Pathmaker
+          </Typography>
+          {/* Replace with your illustration */}
+          <img src={Logo} alt="Logo" width={60} height={60} style={{ marginRight: 16 }} />
+        </Grid>
       </Paper>
-    </Container>
+    </Modal>
   );
 };
 

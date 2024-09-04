@@ -106,18 +106,20 @@ const UpdateStudentForm = ({ open, onClose, studentData, onUpdate }) => {
         <Box
           component="form"
           sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
             width: 400,
-            bgcolor: "background.paper",
+            maxHeight: '80vh',
+            bgcolor: 'background.paper',
             borderRadius: 2,
             boxShadow: 24,
             p: 4,
-            overflowY: "auto",
-            display: "flex",
-            flexDirection: "column",
+            overflowY: 'auto',
+            display: 'flex',
+            flexDirection: 'column',
+            margin: 0,
           }}
           onSubmit={handleSubmit}
         >
