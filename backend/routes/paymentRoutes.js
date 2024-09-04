@@ -41,65 +41,35 @@ router.post('/generate-hash', (req, res) => {
 });
 
 // Notify URL route to handle payment status updates from PayHere
-router.post('/payhere/notify', async (req, res) => {
-    console.log('Received payment notification:', req.body);
+router.post('/notify_app', async (req, res) => {
+    const { studentID, classID, amount, date } = req.body;
 
-    const {
-        merchant_id,
-        order_id,
-        payhere_amount,
-        payhere_currency,
-        status_code,
-        md5sig,
-        method,
-        custom_1: studentID, // This will still be received but not validated
-        custom_2: month
-    } = req.body;
+    console.log('Received payment completion data:', req.body);
 
-    // Check for missing required fields
-    if (!merchant_id || !order_id || !payhere_amount || !payhere_currency || !status_code || !md5sig) {
-        console.error('Missing required fields in notification:', req.body);
-        return res.status(400).send('Missing required fields');
-    }
-
-    // Generate local md5sig for verification
-    const local_md5sig = crypto.createHash('md5')
-        .update(
-            merchant_id +
-            order_id +
-            payhere_amount +
-            payhere_currency +
-            status_code +
-            crypto.createHash('md5').update(MERCHANT_SECRET).digest('hex').toUpperCase()
-        )
-        .digest('hex')
-        .toUpperCase();
-
-    if (local_md5sig === md5sig && status_code === '2') {
-        try {
-            // Save the payment record to the database without validating studentID
-            const paymentRecord = new Payment({
-                studentID: 100001,
-                amount: parseFloat(payhere_amount),
-                date: new Date(),
-                month: month,
-                status: 'paid',
-                method: method,
-                order_id: order_id,
-                currency: payhere_currency,
-            });
-
-            await paymentRecord.save();
-            console.log(`Payment for order ${order_id} saved and updated successfully.`);
-            console.log('Payment saved:', paymentRecord);
-            res.status(200).send('Payment notification received, processed, and saved successfully.');
-        } catch (error) {
-            console.error('Error saving payment:', error);
-            res.status(500).send('Internal server error');
+    try {
+        // Validate the incoming data
+        if (!studentID || !classID || !amount || !date) {
+            return res.status(400).send('Missing required fields');
         }
-    } else {
-        console.error('Payment verification failed or payment not successful');
-        res.status(400).send('Invalid payment notification');
+
+
+        // Create a new payment record
+        const newPayment = new Payment({
+            studentID: studentID,
+            classID: classID,
+            amount: parseFloat(amount),
+            date: new Date(date), // Convert the date string to a Date object
+            month: new Date(date).getMonth() + 1,
+        });
+
+        // Save the payment record to the database
+        await newPayment.save();
+
+        console.log(`Payment for student ${studentID} and class ${classID} saved successfully.`);
+        res.status(200).send('Payment notification processed and saved successfully.');
+    } catch (error) {
+        console.error('Error processing payment notification:', error);
+        res.status(500).send('Internal server error');
     }
 });
 

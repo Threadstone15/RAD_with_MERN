@@ -1,16 +1,28 @@
-import React from 'react';
+import React,{useState} from 'react';
 import { Drawer, List, ListItem, ListItemText, ListItemIcon, Box, Typography, Divider, Button } from '@mui/material';
 import { Link, useLocation } from 'react-router-dom';
 import HomeIcon from '@mui/icons-material/Home';
 import PeopleIcon from '@mui/icons-material/People';
 import ClassIcon from '@mui/icons-material/Class';
 import LogoutIcon from '@mui/icons-material/Logout';
+import LogoutDialog from '../../popups/LogoutConfirmation'; 
 
 const Sidebar = () => {
   const location = useLocation();
+  const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
 
-  const handleLogout = () => {
+  const handleOpenLogoutDialog = () => {
+    setIsLogoutDialogOpen(true);
+  };
+
+  const handleCloseLogoutDialog = () => {
+    setIsLogoutDialogOpen(false);
+  };
+
+  const handleConfirmLogout = () => {
+    // Logic for logging out (e.g., clearing user session)
     window.location.href = '/';
+    setIsLogoutDialogOpen(false);
   };
 
   return (
@@ -63,7 +75,7 @@ const Sidebar = () => {
             color="inherit"
             fullWidth
             startIcon={<LogoutIcon />}
-            onClick={handleLogout}
+            onClick={handleOpenLogoutDialog}
             sx={{
               backgroundColor: '#dc3545',
               color: '#fff',
@@ -72,8 +84,12 @@ const Sidebar = () => {
           >
             Logout
           </Button>
-        
       </Box>
+      <LogoutDialog
+        open={isLogoutDialogOpen}
+        onClose={handleCloseLogoutDialog}
+        onConfirm={handleConfirmLogout}
+      />
     </Drawer>
   );
 };

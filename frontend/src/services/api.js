@@ -160,12 +160,35 @@ export const fetchStudentData = async (studentID) => {
   }
 }
 
+export const fetchTutorData = async (tutorID) => {
+  try {
+    const response = await axios.get(`http://localhost:5000/tutor-dashboard/fetchTutorData/${tutorID}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error getting tutor Data", error);
+    throw error;
+  }
+}
+
+
+
 export const fetchStudentProfile = async (studentID) => {
   try {
     const response = await axios.get(`http://localhost:5000/student-dashboard/fetchStudentProfile/${studentID}`);
     return response.data;
   } catch (error) {
     console.error("Error getting student Profile", error);
+    throw error;
+  }
+}
+
+
+export const fetchStudentAttendance = async (studentID) => {
+  try {
+    const response = await axios.get(`http://localhost:5000/student-dashboard/fetchStudentAttendance/${studentID}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error getting student Attendance", error);
     throw error;
   }
 }
