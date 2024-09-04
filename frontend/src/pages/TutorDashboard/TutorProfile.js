@@ -9,7 +9,7 @@ import {
   Grid,
 } from "@mui/material";
 import TutorSidebar from "./TutorSidebar"; // Import Sidebar
-import ChangePasswordPopup from "../../popups/ChangePassword"; // Import ChangePasswordPopup component
+import ChangePasswordPopup from "../../popups/ChangePasswordTeacher"; // Import ChangePasswordPopup component
 
 const drawerWidth = 240; // Assuming the width of the sidebar is 240px
 

@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const Student = require("../models/Student");
 const Class = require("../models/Class");
 const Attendance = require("../models/Attendance");
+const bcrypt = require('bcrypt');
 
 const AuthMiddleware = require("../middleware/AuthMiddleware");
 const roleMiddleware = require("../middleware/roleMiddleware");
@@ -54,15 +55,41 @@ router.get('/fetchStudentProfile/:studentID', async (req, res) => {
             console.log(`Student with ID: ${studentID} not found in database`);
             return res.status(404).json({ error: 'Student not found' });
         }
-        console.log(student);
         res.json({
             'profile': student.profile,
             'classes': student.classIds
         });
     } catch (error) {
-
+        console.error('Server error fetching Student Profile:', error);
+        res.status(500).json({ error: 'Server error' });
     }
 
+})
+
+router.post('/changeStudentPassword', async(req, res) => {
+    console.log("Got a request to changeStudentPassword");
+    try {
+        console.log(req.body);
+        const {studentID, currentPassword, newPassword} = req.body;
+        const student = await Student.findById(studentID);
+    
+            if (!student) {
+                console.log(`Student with ID: ${studentID} not found in database`);
+                return res.status(404).json({ error: 'Student not found' });
+            }
+            
+        if (!(await student.comparePassword(currentPassword))) {
+            return res.status(401).json({ error: 'Invalid credentials' });
+          }
+          console.log(newPassword);
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        student.password = hashedPassword;
+        student.save();
+        res.status(200).json({message: "Password changed Successfully"});
+    } catch (error) {
+        console.error('Server error changing Student password:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
 })
 
 
