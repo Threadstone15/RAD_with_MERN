@@ -160,6 +160,16 @@ export const fetchStudentData = async (studentID) => {
   }
 }
 
+export const fetchTutorData = async (tutorID) => {
+  try {
+    const response = await axios.get(`http://localhost:5000/tutor-dashboard/fetchTutorData/${tutorID}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error getting tutor Data", error);
+    throw error;
+  }
+}
+
 
 
 export const fetchStudentProfile = async (studentID) => {

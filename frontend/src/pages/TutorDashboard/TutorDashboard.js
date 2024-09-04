@@ -1,8 +1,45 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Grid, TextField, MenuItem } from '@mui/material';
 import TutorSidebar from "./TutorSidebar"; // Import Sidebar
+import { fetchTutorData } from '../../services/api'; 
+import { useNavigate } from 'react-router-dom';
 
 const TutorPage = () => {
+
+  const navigate = useNavigate();
+  const tutorID = localStorage.getItem('teacherID');
+  if(!tutorID) {
+    navigate('/login');
+  }
+
+  const [tutor, setTutor] = useState({
+    profile: {Name: '',},
+    classIds: [],
+    registeredClasses: [],
+  });
+
+  useEffect(() => {
+    const fetchTutorDetails = async () => {
+      console.log("Fetching tutor details for tutorID:", tutorID);
+      try {
+        if (tutorID) {
+          const response = await fetchTutorData(tutorID);
+          console.log("Response from fetchTeacherData:", response);
+          if (response) {
+            setTutor(response);
+            console.log("Student state updated:", tutor);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching classes:', error);
+      }
+    };
+
+    fetchTutorDetails();
+
+    
+  }, []);
+
   const [classes, setClasses] = useState([]);
   const [payments, setPayments] = useState([]);
 

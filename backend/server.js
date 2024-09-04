@@ -6,11 +6,10 @@ const cors = require('cors');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 const app = express();
 
-
-// Import routes
 const authRoutes = require('./routes/auth');
 const managerRoutes = require('./routes/managerDashboard');
 const studentRoutes = require('./routes/studentDashboard');
+const tutorRoutes = require('./routes/tutorDashboard');
 const paymentRoutes = require('./routes/paymentRoutes')
 
 
@@ -28,6 +27,7 @@ app.use(cookieParser());
 // Routes
 app.use('/manager-dashboard', managerRoutes);
 app.use('/student-dashboard', studentRoutes);
+app.use('/tutor-dashboard', tutorRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api', paymentRoutes); // Use the payment routes
 
