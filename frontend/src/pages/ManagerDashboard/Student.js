@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect ,useRef} from "react";
 import {
   Box,
   Button,
@@ -7,9 +7,11 @@ import {
   Card,
   CardContent,
   Table,
+  TableContainer,
   TableHead,
   TableBody,
   TableRow,
+  Paper,
   TableCell,a
 } from "@mui/material";
 import Sidebar from "../../components/Sidebar";
@@ -52,6 +54,34 @@ const Students = () => {
     fetchStudents();
   }, []);
 
+const [isDragging, setIsDragging] = useState(false);
+const [startX, setStartX] = useState(0);
+const [scrollLeft, setScrollLeft] = useState(0);
+const tableContainerRef = useRef(null);
+
+  const handleMouseDown = (e) => {
+    setIsDragging(true);
+    setStartX(e.pageX - tableContainerRef.current.offsetLeft);
+    setScrollLeft(tableContainerRef.current.scrollLeft);
+  };
+  
+  const handleMouseLeave = () => {
+    setIsDragging(false);
+  };
+  
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+  
+  const handleMouseMove = (e) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const x = e.pageX - tableContainerRef.current.offsetLeft;
+    const walk = (x - startX) * 1.5; // Multiply for faster scroll
+    tableContainerRef.current.scrollLeft = scrollLeft - walk;
+  };
+  
+
   return (
     <div>
       <Sidebar />
@@ -85,7 +115,9 @@ const Students = () => {
               <Typography variant="h6" gutterBottom>
                 Students List
               </Typography>
-              <Table>
+              <TableContainer component={Paper} sx={{ overflowX: "auto" }} ref={tableContainerRef} onMouseDown={handleMouseDown} 
+                onMouseUp={handleMouseUp} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} style={{cursor: isDragging ? "grabbing" : "grab"}}>
+              <Table aria-label="students table" sx={{ minWidth: 1200 }}>
                 <TableHead>
                   <TableRow>
                     <TableCell>ID</TableCell>
@@ -121,6 +153,7 @@ const Students = () => {
                   ))}
                 </TableBody>
               </Table>
+              </TableContainer>
             </CardContent>
           </Card>
 
