@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const Student = require("../models/Student");
 const Class = require("../models/Class");
 const Attendance = require("../models/Attendance");
+
 const AuthMiddleware = require("../middleware/AuthMiddleware");
 const roleMiddleware = require("../middleware/roleMiddleware");
 
