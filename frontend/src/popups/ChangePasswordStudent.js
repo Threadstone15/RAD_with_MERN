@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Grid } from '@mui/material';
+import { changeStudentPassword } from '../services/api';
+import { useNavigate } from 'react-router-dom';
+
 
 const ChangePasswordPopup = ({ open, handleClose }) => {
   const [currentPassword, setCurrentPassword] = useState('');
@@ -7,13 +10,26 @@ const ChangePasswordPopup = ({ open, handleClose }) => {
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
   const [error, setError] = useState('');
 
-  const handleChangePassword = () => {
+  const navigate = useNavigate();
+  const studentID = localStorage.getItem('studentID');
+  if(!studentID) {
+    navigate('/login');
+  }
+
+  const handleChangePassword = async () => {
     if (newPassword !== confirmNewPassword) {
       setError('New password and confirm password do not match');
       return;
     }
-
-    // Logic for password change API call
+    try {
+      const response = await changeStudentPassword({
+        studentID,
+        currentPassword,
+        newPassword,
+      })
+    } catch (error){
+      console.error("Couldn't change password");
+    }
 
     // On success, close the popup
     handleClose();

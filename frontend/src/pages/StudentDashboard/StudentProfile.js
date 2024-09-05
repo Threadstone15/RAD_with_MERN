@@ -9,7 +9,7 @@ import {
   Grid,
 } from "@mui/material";
 import StudentSidebar from "../StudentDashboard/StudentSidebar"; // Import Sidebar
-import ChangePasswordPopup from "../../popups/ChangePassword";
+import ChangePasswordPopup from "../../popups/ChangePasswordStudent";
 import { fetchStudentProfile } from "../../services/api";
 import { useNavigate } from "react-router-dom";
 

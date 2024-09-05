@@ -20,7 +20,6 @@ export const login = async ({ email, password }) => {
     email,
     password,
   });
-  console.log(response);
   return response.data;
 };
 
@@ -178,6 +177,25 @@ export const fetchStudentProfile = async (studentID) => {
     return response.data;
   } catch (error) {
     console.error("Error getting student Profile", error);
+    throw error;
+  }
+}
+export const changeStudentPassword = async ({studentID, currentPassword, newPassword}) => {
+  try {
+    const response = await axios.post(`http://localhost:5000/student-dashboard/changeStudentPassword/`, {studentID, currentPassword, newPassword});
+    return response.data;
+  } catch (error) {
+    console.error("Error changing student password", error);
+    throw error;
+  }
+}
+
+export const changeTeacherPassword = async ({studentID, currentPassword, newPassword}) => {
+  try {
+    const response = await axios.post(`http://localhost:5000/teacher-dashboard/changeTeacherPassword/`, {studentID, currentPassword, newPassword});
+    return response.data;
+  } catch (error) {
+    console.error("Error changing student password", error);
     throw error;
   }
 }
