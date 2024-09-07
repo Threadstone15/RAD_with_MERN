@@ -1,131 +1,98 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
-const Teacher = require('../models/Teacher'); // Adjust the path as needed
+const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
+const Teacher = require("../models/Teacher"); // Import your Teacher model
+const connectDB = require("./db"); // Your DB connection file
 
-const MONGO_URI = 'mongodb+srv://admin:admin106@tutionmanagement.tmvutgf.mongodb.net/TutionManagement?retryWrites=true&w=majority&appName=TutionManagement';
-
-// Test data
 const teachers = [
   {
-    TeacherID: '100001',
-    name: 'John Smith',
-    email: 'john.smith@example.com',
-    phone: '555-123-7890',
-    address: '123 Main St, Cityville',
-    password: 'teacherPass123',
-    subjects: 'Mathematics, Physics',
+    name: "Saman Perera",
+    email: "saman.perera@gmail.com",
+    phone: "0771234567",
+    address: "Colombo",
+    subjects: ["Mathematics", "Physics"],
   },
   {
-    TeacherID: '100002',
-    name: 'Emily Davis',
-    email: 'emily.davis@example.com',
-    phone: '555-987-6543',
-    address: '456 Elm St, Townsville',
-    password: 'anotherPass456',
-    subjects: 'English, History',
+    name: "Nimal Wickramasinghe",
+    email: "nimal.wickramasinghe@gmail.com",
+    phone: "0772234567",
+    address: "Kandy",
+    subjects: ["Biology", "Chemistry"],
   },
   {
-    TeacherID: '100011',
-    name: 'Manager Smith',
-    email: 'manager@tuition.com',
-    phone: '555-987-6543',
-    address: '456 Elm St, Townsville',
-    password: 'password123',
-    subjects: 'English, History',
+    name: "Kumari Silva",
+    email: "kumari.silva@gmail.com",
+    phone: "0773234567",
+    address: "Galle",
+    subjects: ["History", "Sinhala"],
   },
   {
-    TeacherID: '100003',
-    name: 'Michael Johnson',
-    email: 'michael.johnson@example.com',
-    phone: '555-654-3210',
-    address: '789 Pine St, Villageton',
-    password: 'michaelPass789',
-    subjects: 'Chemistry, Biology',
+    name: "Upali Jayasundara",
+    email: "upali.jayasundara@gmail.com",
+    phone: "0774234567",
+    address: "Matara",
+    subjects: ["Mathematics", "IT"],
   },
   {
-    TeacherID: '100004',
-    name: 'Jessica Lee',
-    email: 'jessica.lee@example.com',
-    phone: '555-789-4561',
-    address: '101 Maple Ave, Suburbia',
-    password: 'jessicaPass321',
-    subjects: 'Geography, Social Studies',
+    name: "Indika Rathnayake",
+    email: "indika.rathnayake@gmail.com",
+    phone: "0775234567",
+    address: "Jaffna",
+    subjects: ["English", "Science"],
   },
   {
-    TeacherID: '100005',
-    name: 'David Brown',
-    email: 'david.brown@example.com',
-    phone: '555-321-9876',
-    address: '102 Cedar St, Metropolis',
-    password: 'davidPass654',
-    subjects: 'Physics, Computer Science',
+    name: "Ruwan Dissanayake",
+    email: "ruwan.dissanayake@gmail.com",
+    phone: "0776234567",
+    address: "Negombo",
+    subjects: ["Art", "Music"],
   },
   {
-    TeacherID: '100006',
-    name: 'Laura Wilson',
-    email: 'laura.wilson@example.com',
-    phone: '555-654-7890',
-    address: '103 Oak St, Urbanville',
-    password: 'lauraPass456',
-    subjects: 'English, Literature',
+    name: "Sunil Fernando",
+    email: "sunil.fernando@gmail.com",
+    phone: "0777234567",
+    address: "Kurunegala",
+    subjects: ["Economics", "Business Studies"],
   },
   {
-    TeacherID: '100007',
-    name: 'Robert Martinez',
-    email: 'robert.martinez@example.com',
-    phone: '555-789-1234',
-    address: '104 Birch St, Citytown',
-    password: 'robertPass123',
-    subjects: 'Mathematics, Statistics',
+    name: "Mala Senanayake",
+    email: "mala.senanayake@gmail.com",
+    phone: "0778234567",
+    address: "Anuradhapura",
+    subjects: ["Geography", "Sinhala"],
   },
   {
-    TeacherID: '100008',
-    name: 'Patricia Anderson',
-    email: 'patricia.anderson@example.com',
-    phone: '555-123-6547',
-    address: '105 Walnut St, Uptown',
-    password: 'patriciaPass789',
-    subjects: 'History, Political Science',
+    name: "Lakshmi Ekanayake",
+    email: "lakshmi.ekanayake@gmail.com",
+    phone: "0779234567",
+    address: "Ratnapura",
+    subjects: ["Science", "Mathematics"],
   },
   {
-    TeacherID: '100009',
-    name: 'Christopher Clark',
-    email: 'christopher.clark@example.com',
-    phone: '555-987-3210',
-    address: '106 Spruce St, Downtown',
-    password: 'chrisPass321',
-    subjects: 'Economics, Business Studies',
-  },
-  {
-    TeacherID: '100010',
-    name: 'Sarah Lewis',
-    email: 'sarah.lewis@example.com',
-    phone: '555-456-7891',
-    address: '107 Poplar St, Riverside',
-    password: 'sarahPass654',
-    subjects: 'Art, Music',
+    name: "Amal Abeywickrama",
+    email: "amal.abeywickrama@gmail.com",
+    phone: "0776234987",
+    address: "Badulla",
+    subjects: ["Tamil", "English"],
   },
 ];
 
-async function seedTeachers() {
+async function addTeachers() {
   try {
-    // Connect to MongoDB
-    await mongoose.connect(MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    await connectDB(); // Connect to the database
 
-    // Clear the collection
-    await Teacher.deleteMany({});
+    let teacherIdStart = 100001;
 
-    // Insert test data
-    for (const teacher of teachers) {
-      // Hash the password
-      const hashedPassword = await bcrypt.hash(teacher.password, 10);
-      
-      // Create a new teacher instance
+    for (let teacher of teachers) {
+      // Hash the password using the phone number
+      const password = "TCHR_" + teacher.phone;
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      // Convert subjects array to a single string, e.g., "Mathematics, Physics"
+      const subjectsAsString = teacher.subjects.join(", ");
+
+      // Create a new teacher entry
       const newTeacher = new Teacher({
-        TeacherID: teacher.TeacherID,
+        TeacherID: teacherIdStart.toString(),
         password: hashedPassword,
         profile: {
           name: teacher.name,
@@ -133,21 +100,22 @@ async function seedTeachers() {
           phone: teacher.phone,
           address: teacher.address,
         },
-        subjects: teacher.subjects,
-        // classIds can be added here if needed, otherwise leave it empty
+        subjects: subjectsAsString, // Save subjects as a string
+        classIds: [], // Add relevant class IDs if necessary
       });
 
-      // Save to the database
+      // Save the teacher to the database
       await newTeacher.save();
+      console.log(`Added teacher ${teacher.name} with ID: ${teacherIdStart}`);
+
+      teacherIdStart++;
     }
 
-    console.log('Teacher data inserted successfully.');
+    console.log("All teachers added successfully!");
+    await mongoose.disconnect(); // Close the database connection
   } catch (error) {
-    console.error('Error inserting teacher data:', error);
-  } finally {
-    // Close the connection
-    mongoose.connection.close();
+    console.error("Error adding teachers:", error);
   }
 }
 
-seedTeachers();
+addTeachers();

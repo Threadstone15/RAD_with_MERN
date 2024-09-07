@@ -1,23 +1,25 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const { createProxyMiddleware } = require('http-proxy-middleware');
-const app = express();
+const connectDB = require('./controllers/db');  // Import the database connection file
 
+// Routes
 const authRoutes = require('./routes/auth');
 const managerRoutes = require('./routes/managerDashboard');
 const studentRoutes = require('./routes/studentDashboard');
 const tutorRoutes = require('./routes/tutorDashboard');
-const paymentRoutes = require('./routes/paymentRoutes')
+const paymentRoutes = require('./routes/paymentRoutes');
 
+const app = express();
 
-const corsOptions ={
-  origin:'http://localhost:3000', 
-  credentials:true,            //access-control-allow-credentials:true
-  optionSuccessStatus:200
-}
+// CORS options
+const corsOptions = {
+  origin: 'http://localhost:3000',
+  credentials: true, // Access-control-allow-credentials:true
+  optionSuccessStatus: 200,
+};
 
 // Middleware
 app.use(bodyParser.json());
@@ -32,27 +34,19 @@ app.use('/api/auth', authRoutes);
 app.use('/api', paymentRoutes); // Use the payment routes
 
 // Proxy PayHere requests
-app.use('/payhere', createProxyMiddleware({
-  target: 'https://sandbox.payhere.lk',
-  changeOrigin: true,
-  pathRewrite: {
-    '^/payhere': '', // Remove '/payhere' prefix when forwarding request
-  },
-  onProxyRes: (proxyRes, req, res) => {
-    // Add any custom headers or logging here if needed
-  },
-}));
+app.use(
+  '/payhere',
+  createProxyMiddleware({
+    target: 'https://sandbox.payhere.lk',
+    changeOrigin: true,
+    pathRewrite: {
+      '^/payhere': '', // Remove '/payhere' prefix when forwarding request
+    },
+  })
+);
 
-// MongoDB Connection
-const dbUrl = 'mongodb+srv://admin:admin106@tutionmanagement.tmvutgf.mongodb.net/TutionManagement?retryWrites=true&w=majority&appName=TutionManagement';
-
-mongoose.connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true });
-
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', () => {
-  console.log('Connected to MongoDB');
-});
+// Connect to the database
+connectDB();
 
 // Start the Server
 const PORT = process.env.PORT || 5000;
