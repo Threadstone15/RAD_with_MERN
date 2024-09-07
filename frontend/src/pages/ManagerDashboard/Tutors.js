@@ -11,6 +11,8 @@ import {
   TableBody,
   TableRow,
   TableCell,
+  TextField,
+  MenuItem,
 } from "@mui/material";
 import AddTutorForm from "../../popups/AddTutorForm";
 import TutorDetails from "../../popups/TutorDetails";
@@ -24,6 +26,9 @@ const Tutors = () => {
   const [selectedTutor, setSelectedTutor] = useState(null);
   const [tutors, setTutors] = useState([]);
   const [detailsOpen, setDetailsOpen] = useState(false);
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [subjectFilter, setSubjectFilter] = useState(""); 
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -52,6 +57,12 @@ const Tutors = () => {
     fetchTutors();
   }, []);
 
+  const filteredTutors = tutors.filter(
+    (tutor) =>
+      tutor.profile.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      (subjectFilter === "" || tutor.subjects.includes(subjectFilter))
+  );
+
   return (
     <div>
       <Sidebar />
@@ -71,14 +82,46 @@ const Tutors = () => {
           <Typography variant="h4" gutterBottom align="center">
             Tutors Management
           </Typography>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleAddTutor}
-            sx={{ mb: 3 }}
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              mb: 3,
+              width: "100%",
+            }}
           >
-            Add Tutor
-          </Button>
+            <Box sx={{ display: "flex", gap: 1, flexGrow: 1 }}>
+              <TextField
+                label="Search by Name"
+                variant="outlined"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                sx={{ flexGrow: 2, height: "56px" }} // Match button height
+              />
+              <TextField
+                select
+                label="Filter by Subject"
+                value={subjectFilter}
+                onChange={(e) => setSubjectFilter(e.target.value)}
+                sx={{ flexGrow: 1, height: "56px" }} // Match button height
+              >
+                <MenuItem value="">All</MenuItem>
+                <MenuItem value="Math">Math</MenuItem>
+                <MenuItem value="Science">Science</MenuItem>
+                <MenuItem value="English">English</MenuItem>
+              </TextField>
+            </Box>
+
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleAddTutor}
+              sx={{ ml: 1, height: "56px", width: "15%" }} // Same height as input fields
+            >
+              Add Tutor
+            </Button>
+          </Box>
 
           <Card sx={{ width: "100%", mb: 3 }}>
             <CardContent>
@@ -98,7 +141,7 @@ const Tutors = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {tutors.map((row) => (
+                  {filteredTutors.map((row) => (
                     <TableRow
                       key={row.TeacherID}
                       onClick={() => handleRowClick(row)}
