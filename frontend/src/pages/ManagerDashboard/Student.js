@@ -12,7 +12,7 @@ import {
   TableBody,
   TableRow,
   Paper,
-  TableCell,a
+  TableCell,TextField,MenuItem
 } from "@mui/material";
 import Sidebar from "../../components/Sidebar";
 import AddStudentForm from "../../popups/AddStudentForm";
@@ -26,6 +26,8 @@ const Students = () => {
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [students, setStudents] = useState([]);
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [mediumFilter, setMediumFilter] = useState("");
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -81,6 +83,16 @@ const tableContainerRef = useRef(null);
     tableContainerRef.current.scrollLeft = scrollLeft - walk;
   };
   
+  const filteredStudents = students.filter((student) => {
+    const matchesSearch = student.profile.Name.toLowerCase().includes(
+      searchTerm.toLowerCase()
+    );
+    const matchesMedium =
+      mediumFilter === "" || student.profile.Medium === mediumFilter;
+  
+    return matchesSearch && matchesMedium;
+  });
+  
 
   return (
     <div>
@@ -101,14 +113,43 @@ const tableContainerRef = useRef(null);
           <Typography variant="h4" gutterBottom align="center">
             Student Management
           </Typography>
+          <Box 
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              mb: 3,
+              width: "100%",
+            }}>
+               <Box sx={{ display: "flex", gap: 1, width: "70%" }}>
+               <TextField
+            label="Search by Name"
+            variant="outlined"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            sx={{ flexGrow: 2 , height:"56px" }}
+          />
+          <TextField
+            select
+            label="Filter by Medium"
+            value={mediumFilter}
+            onChange={(e) => setMediumFilter(e.target.value)}
+            sx={{ flexGrow: 1 }}
+          >
+            <MenuItem value="">All</MenuItem>
+            <MenuItem value="English">English</MenuItem>
+            <MenuItem value="Sinhala">Sinhala</MenuItem>
+          </TextField>
+        </Box>
           <Button
             variant="contained"
             color="primary"
             onClick={handleAddStudent}
-            sx={{ mb: 3 }}
+            sx={{ ml:1,width:"15%",height:"56px" }}
           >
             Add Student
           </Button>
+          </Box>
 
           <Card sx={{ width: "100%", mb: 3 }}>
             <CardContent>
@@ -133,7 +174,7 @@ const tableContainerRef = useRef(null);
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {students.map((row) => (
+                  {filteredStudents.map((row) => (
                     <TableRow
                       key={row.StudentID}
                       onClick={() => handleRowClick(row)}
