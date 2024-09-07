@@ -11,6 +11,8 @@ import {
   TableBody,
   TableRow,
   TableCell,
+  TextField,
+  MenuItem,
 } from "@mui/material";
 import Sidebar from "../../components/Sidebar";
 import AddClassForm from "../../popups/AddClassForm"; // Import the AddClassForm component
@@ -24,6 +26,13 @@ const Classes = () => {
   const [selectedClass, setSelectedClass] = useState(null);
   const [classes, setClasses] = useState([]);
   const [detailsOpen, setDetailsOpen] = useState(false);
+
+  const [searchTerm, setSearchTerm] = useState(""); // For search bar
+  const [teacherFilter, setTeacherFilter] = useState(""); // For teacher filter
+  const [classFilter, setClassFilter] = useState(""); //
+
+  const [classOptions, setClassOptions] = useState([]);
+  const [teacherOptions, setTeacherOptions] = useState([]);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -44,6 +53,11 @@ const Classes = () => {
         const response = await axios.get('http://localhost:5000/manager-dashboard/classes-with-teachers');
         setClasses(response.data);
         console.log(response.data);
+
+        const uniqueClassNames = [...new Set(response.data.map((classData) => classData.className))];
+        setClassOptions(uniqueClassNames);
+        const uniqueTeachers = [...new Set(response.data.map((classData) => classData.TeacherID?.profile?.name).filter(name => name) )];
+        setTeacherOptions(uniqueTeachers);
       } catch (error) {
         console.error('Error fetching classes:', error);
       }
@@ -51,6 +65,13 @@ const Classes = () => {
 
     fetchClasses();
   }, []);
+
+  const filteredClasses = classes.filter(
+    (classData) =>
+      classData.className.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      (teacherFilter === "" || classData.TeacherID?.profile?.name.includes(teacherFilter)) &&
+      (classFilter === "" || classData.className.includes(classFilter))
+);
 
   return (
     <div>
@@ -71,14 +92,70 @@ const Classes = () => {
           <Typography variant="h4" gutterBottom align="center">
             Classes Management
           </Typography>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleAddClass}
-            sx={{ mb: 3 }}
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 2,
+              mb: 3,
+              width: "100%",
+              alignItems: "flex-start",
+            }}
           >
-            Add Class
-          </Button>
+            <TextField
+              label="Search by Class Name"
+              variant="outlined"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              sx={{ width: "100%", height: "56px" }} // Match button height
+            />
+            <Box
+              sx={{
+                display: "flex",
+                gap: 2,
+                width: "100%",
+                alignItems: "center",
+              }}
+            >
+              <TextField
+                select
+                label="Filter by Teacher"
+                value={teacherFilter}
+                onChange={(e) => setTeacherFilter(e.target.value)}
+                sx={{ flexGrow: 1, height: "56px" }} // Match button height
+              >
+                <MenuItem value="">All</MenuItem>
+                {teacherOptions.map((teacherName) => (
+                  <MenuItem key={teacherName} value={teacherName}>
+                    {teacherName}
+                  </MenuItem>
+                ))}
+
+              </TextField>
+              <TextField
+                select
+                label="Filter by Class"
+                value={classFilter}
+                onChange={(e) => setClassFilter(e.target.value)}
+                sx={{ flexGrow: 1, height: "56px" }} // Match button height
+              >
+                <MenuItem value="">All</MenuItem>
+                {classOptions.map((className) => (
+                  <MenuItem key={className} value={className}>
+                    {className}
+                  </MenuItem>
+                ))}
+              </TextField>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleAddClass}
+                sx={{ height: "56px", width: "15%" }} // Match height of input fields
+              >
+                Add Class
+              </Button>
+            </Box>
+          </Box>
 
           <Card sx={{ width: "100%", mb: 3 }}>
             <CardContent>
@@ -97,7 +174,7 @@ const Classes = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {classes.map((row) => (
+                  {filteredClasses.map((row) => (
                     <TableRow
                       key={row.classId}
                       onClick={() => handleRowClick(row)}
