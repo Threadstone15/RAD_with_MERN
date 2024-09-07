@@ -74,15 +74,6 @@ const Login = ({ open, onClose }) => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <Box display="flex" justifyContent="space-between" alignItems="center">
-            <FormControlLabel
-              control={<Checkbox color="primary" />}
-              label="Remember me"
-            />
-            <Link href="#" variant="body2">
-              Forgot password?
-            </Link>
-          </Box>
           {errorMessage && (
             <Typography color="error" variant="body2" sx={{ mt: 1 }}>
               {errorMessage}
