@@ -10,11 +10,11 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Snackbar, // Import Snackbar for alert messages
-  Alert, // Import Alert for styling the Snackbar
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { addTeacher } from "../services/api"; // Adjust the import path to where your API functions are located
+import { addTeacher } from "../services/api";
 
 const AddTutorForm = ({ open, onClose, tutorData, onConfirmClose }) => {
   const [formData, setFormData] = useState({
@@ -26,8 +26,8 @@ const AddTutorForm = ({ open, onClose, tutorData, onConfirmClose }) => {
   });
 
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(""); // State to store error message
-  const [showSnackbar, setShowSnackbar] = useState(false); // State to control Snackbar visibility
+  const [errorMessage, setErrorMessage] = useState("");
+  const [showSnackbar, setShowSnackbar] = useState(false);
 
   useEffect(() => {
     if (tutorData) {
@@ -57,27 +57,26 @@ const AddTutorForm = ({ open, onClose, tutorData, onConfirmClose }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      // Prepare the data object to match backend schema requirements
-      const response = await addTeacher({
-        name: formData.name, // This maps to profile.name
-        email: formData.email, // This maps to profile.email
-        phone: formData.telephone, // Ensure this field is correctly mapped
-        address: formData.address, // This maps to profile.address
-        subjects: formData.subjects, // This maps directly to subjects
+      await addTeacher({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.telephone,
+        address: formData.address,
+        subjects: formData.subjects,
       });
 
-      console.log("Teacher added successfully:", response);
-      onClose(); // Close form or handle post-submission action
+      setShowSnackbar(true); // Display success message if needed
+      onClose();
     } catch (error) {
       console.error("Error adding teacher:", error.message);
-      setErrorMessage(error.message); // Set the error message
-      setShowSnackbar(true); // Show the Snackbar with the error message
+      setErrorMessage(error.response?.data?.error || "An error occurred");
+      setShowSnackbar(true);
     }
   };
 
   const handleClose = () => {
     if (Object.values(formData).some((value) => value !== "")) {
-      setShowConfirmDialog(true); // Show confirmation dialog if there are unsaved changes
+      setShowConfirmDialog(true);
     } else {
       onClose();
     }
@@ -100,7 +99,7 @@ const AddTutorForm = ({ open, onClose, tutorData, onConfirmClose }) => {
   };
 
   const handleSnackbarClose = () => {
-    setShowSnackbar(false); // Hide the Snackbar
+    setShowSnackbar(false);
   };
 
   return (
@@ -124,7 +123,6 @@ const AddTutorForm = ({ open, onClose, tutorData, onConfirmClose }) => {
             margin: 0,
           }}
         >
-          {/* Close Button */}
           <Box
             sx={{
               display: "flex",
@@ -139,7 +137,6 @@ const AddTutorForm = ({ open, onClose, tutorData, onConfirmClose }) => {
             </IconButton>
           </Box>
 
-          {/* Content Container */}
           <Box sx={{ mt: 5, mb: 2 }}>
             <Typography
               variant="h6"
@@ -208,7 +205,6 @@ const AddTutorForm = ({ open, onClose, tutorData, onConfirmClose }) => {
         </Box>
       </Modal>
 
-      {/* Confirmation Dialog */}
       <Dialog open={showConfirmDialog} onClose={handleCancelClose}>
         <DialogTitle>Unsaved Changes</DialogTitle>
         <DialogContent>
@@ -226,14 +222,13 @@ const AddTutorForm = ({ open, onClose, tutorData, onConfirmClose }) => {
         </DialogActions>
       </Dialog>
 
-      {/* Error Snackbar */}
       <Snackbar
         open={showSnackbar}
         autoHideDuration={6000}
         onClose={handleSnackbarClose}
       >
-        <Alert onClose={handleSnackbarClose} severity="error">
-          {errorMessage}
+        <Alert onClose={handleSnackbarClose} severity={errorMessage ? "error" : "success"}>
+          {errorMessage || "Operation successful"}
         </Alert>
       </Snackbar>
     </>

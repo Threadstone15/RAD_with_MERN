@@ -45,12 +45,18 @@ export const updateStudent = async (userData) => {
 }
 
 export const addTeacher = async (userData) => {
-  const response = await axios.post(
-    "http://localhost:5000/manager-dashboard/addTeacher",
-    userData
-  );
-  return response.data;
+  try {
+    const response = await axios.post(
+      "http://localhost:5000/manager-dashboard/addTeacher",
+      userData
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error adding teacher:", error.response?.data?.error || error.message);
+    throw error; 
+  }
 };
+
 
 
 

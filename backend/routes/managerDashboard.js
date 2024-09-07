@@ -387,23 +387,30 @@ router.post("/updateTeacher", async (req, res) => {
 //Manager Dashboard ADD Routes
 
 router.post("/addTeacher", async (req, res) => {
+  console.log("Got a request to add a new teacher");
   try {
     const teacher = req.body;
 
-    // Checking if the email is already registered
+    console.log("Teacher data:", teacher);
+
     let user = await Teacher.findOne({ "profile.email": teacher.email });
     if (user) {
+      console.log("Teacher with email already exists");
       return res
+        .status(400)
         .json({ error: "This email is already registered as a Teacher" });
     }
     user = await Student.findOne({ "profile.email": teacher.email });
     if (user) {
+      console.log("Student with email already exists");
       return res
+        .status(400)
         .json({ error: "This email is already registered as a Student" });
     }
 
     const password = "TCHR_" + teacher.phone;
     const hashedPassword = await bcrypt.hash(password, 10);
+
     let teacherId;
     let unique = false;
 
@@ -425,24 +432,23 @@ router.post("/addTeacher", async (req, res) => {
       },
       password: hashedPassword,
       subjects: teacher.subjects,
-      classIds: teacher.classIds, // Assuming you pass an array of class IDs from the frontend
+      classIds: teacher.classIds,
     });
 
     await newTeacher.save();
 
     // Send email with account details
     const transporter = nodemailer.createTransport({
-      service: "Gmail", // or another email service
+      service: "Gmail",
       auth: {
-        user: "udeepagallege@gmail.com", // your email
-        pass: "onnhmfmbmkqpsuom", // your email password
+        user: "udeepagallege@gmail.com",
+        pass: "onnhmfmbmkqpsuom",
       },
       timeout: 60000,
-
     });
 
     const mailOptions = {
-      from: "udeepagallege@gmail.com", // or your email
+      from: "udeepagallege@gmail.com",
       to: teacher.email,
       subject: "Your Teacher Account Details",
       text: `Hello ${teacher.name},
@@ -455,23 +461,18 @@ Password: ${password}
 Please keep this information safe.
 
 Best regards,
-Your School`,
+The Team`,
     };
 
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.log("Error sending email:", error);
-      } else {
-        console.log("Email sent successfully:", info.response);
-      }
-    });
+    await transporter.sendMail(mailOptions);
 
-    res.status(201).json(newTeacher);
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ error: "Error creating Teacher" });
+    res.status(201).json({ message: "Teacher added successfully" });
+  } catch (error) {
+    console.error("Error adding teacher:", error.message);
+    res.status(500).json({ error: "An error occurred while adding the teacher" });
   }
 });
+
 
 
 //Manager Dashboard UPDATE Routes
