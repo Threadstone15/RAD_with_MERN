@@ -53,12 +53,6 @@ const Sidebar = () => {
           </ListItemIcon>
           <ListItemText primary="Home" />
         </ListItem>
-        <ListItem button component={Link} to="/teacher-dashboard/payments">
-          <ListItemIcon sx={{ color: '#fff' }}>
-            <PeopleIcon />
-          </ListItemIcon>
-          <ListItemText primary="Payments" />
-        </ListItem>
         <ListItem button component={Link} to="/teacher-dashboard/profile">
           <ListItemIcon sx={{ color: '#fff' }}>
             <ClassIcon />
