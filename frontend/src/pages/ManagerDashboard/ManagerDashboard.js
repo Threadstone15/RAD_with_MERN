@@ -131,52 +131,6 @@ const ManagerDashboard = () => {
                 </Card>
               </ButtonBase>
             </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <ButtonBase
-                sx={{ width: '100%' }}
-                onClick={() => handleCardClick('/unpaid-students')}
-              >
-                <Card 
-                  sx={{ 
-                    width: '100%', 
-                    boxShadow: 3,
-                    transition: 'transform 0.3s ease-in-out',
-                    '&:hover': {
-                      transform: 'scale(1.05)',
-                      boxShadow: 6
-                    }
-                  }}
-                >
-                  <CardContent>
-                    <Typography variant="h6">Unpaid Students</Typography>
-                    <Typography variant="h4">{stats.notPaid}</Typography>
-                  </CardContent>
-                </Card>
-              </ButtonBase>
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <ButtonBase
-                sx={{ width: '100%' }}
-                onClick={() => handleCardClick('/fees-generated')}
-              >
-                <Card 
-                  sx={{ 
-                    width: '100%', 
-                    boxShadow: 3,
-                    transition: 'transform 0.3s ease-in-out',
-                    '&:hover': {
-                      transform: 'scale(1.05)',
-                      boxShadow: 6
-                    }
-                  }}
-                >
-                  <CardContent>
-                    <Typography variant="h6">Fees Generated</Typography>
-                    <Typography variant="h4">{stats.monthlyIncome}</Typography>
-                  </CardContent>
-                </Card>
-              </ButtonBase>
-            </Grid>
             <Grid item xs={12}>
               <Card
                 sx={{
