@@ -121,34 +121,37 @@ const tableContainerRef = useRef(null);
               mb: 3,
               width: "100%",
             }}>
-               <Box sx={{ display: "flex", gap: 1, width: "70%" }}>
-               <TextField
-            label="Search by Name"
-            variant="outlined"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            sx={{ flexGrow: 2 , height:"56px" }}
-          />
+            <Box sx={{ display: "flex", gap: 1, flexGrow: 1}}>
+              <TextField
+              label="Search by Name"
+              variant="outlined"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              sx={{ flexGrow: 2 , height:"56px" }}
+              />
+
           <TextField
             select
             label="Filter by Medium"
             value={mediumFilter}
             onChange={(e) => setMediumFilter(e.target.value)}
-            sx={{ flexGrow: 1 }}
+            sx={{ flexGrow: 1 , height: "56px"}}
           >
             <MenuItem value="">All</MenuItem>
             <MenuItem value="English">English</MenuItem>
             <MenuItem value="Sinhala">Sinhala</MenuItem>
           </TextField>
         </Box>
+
           <Button
             variant="contained"
             color="primary"
             onClick={handleAddStudent}
-            sx={{ ml:1,width:"15%",height:"56px" }}
+            sx={{ ml:1, width:"15%",height:"56px" }}
           >
+
             Add Student
-          </Button>
+            </Button>
           </Box>
 
           <Card sx={{ width: "100%", mb: 3 }}>
