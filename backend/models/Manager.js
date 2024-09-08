@@ -31,10 +31,10 @@ const ManagerSchema = new mongoose.Schema({
         },
       },
 }, {
-  collection: 'managers' // Explicitly set the collection name to 'managers'
+  collection: 'managers' 
 });
 
-// Compare password method
+
 ManagerSchema.methods.comparePassword = async function(candidatePassword) {
   return bcrypt.compare(candidatePassword, this.password);
 };
