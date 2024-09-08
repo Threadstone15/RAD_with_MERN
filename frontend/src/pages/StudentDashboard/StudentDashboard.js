@@ -193,7 +193,7 @@ const StudentPage = () => {
                         {entry.className || "N/A"}
                       </TableCell>
                       <TableCell align="center">
-                        {("LKR " + entry.fee).replace(/\B(?=(\d{3})+(?!\d))/g, ",") || "N/A"}
+                        {("LKR " + entry.fee) || "N/A"}
                       </TableCell>
                     </TableRow>
                   ))}
