@@ -184,6 +184,18 @@ export const fetchStudentData = async (studentID) => {
   }
 }
 
+export const fetchPaymentData = async (studentID) => {
+  console.log("Fetching payment data for student ID:", studentID);
+  try {
+    const response = await axios.get(`http://localhost:5000/student-dashboard/fetchPaymentData/${studentID}`);
+    console.log("Response from fetchPaymentData:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error getting payment Data", error);
+    throw error;
+  }
+}
+
 export const fetchTutorData = async (tutorID) => {
   try {
     const response = await axios.get(`http://localhost:5000/tutor-dashboard/fetchTutorData/${tutorID}`);

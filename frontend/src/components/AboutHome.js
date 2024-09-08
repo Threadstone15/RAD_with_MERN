@@ -8,7 +8,6 @@ import {
   CardContent,
   CardMedia,
 } from "@mui/material";
-import Navbar from "./Navbar";
 import lakindu from "./images/lakindu.jpg";
 import udeepa from "./images/udeepa.jpg";
 import pehan from "./images/pehan.jpg";
@@ -44,7 +43,6 @@ const teamMembers = [
 const About = () => {
   return (
     <div>
-      <Navbar />
       <Container maxWidth="lg">
         <Box my={4} textAlign="center">
           <Typography variant="h2" component="h1" gutterBottom>

@@ -1,27 +1,38 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardActions, Typography, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Grid } from '@mui/material';
-import StudentSidebar from '../StudentDashboard/StudentSidebar';
-import { fetchHash, startPayment } from './paymentService';
-import AttendanceGraph from './AttendanceGraph';
-import { fetchStudentData } from '../../services/api'; // Import the function to fetch classes
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import {
+  Card,
+  CardContent,
+  CardActions,
+  Typography,
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Grid,
+} from "@mui/material";
+import StudentSidebar from "../StudentDashboard/StudentSidebar";
+import { fetchHash, startPayment } from "./paymentService";
+import AttendanceGraph from "./AttendanceGraph";
+import { fetchStudentData } from "../../services/api"; // Import the function to fetch classes
+import { useNavigate } from "react-router-dom";
 
 const StudentPage = () => {
-
   const navigate = useNavigate();
-  const studentID = localStorage.getItem('studentID');
-  if(!studentID) {
-    navigate('/login');
+  const studentID = localStorage.getItem("studentID");
+  if (!studentID) {
+    navigate("/login");
   }
 
   const [loading, setLoading] = useState(false);
   const [student, setStudent] = useState({
-    profile: {Name: '',},
+    profile: { Name: "" },
     classIds: [],
     registeredClasses: [],
   });
-
-
 
   useEffect(() => {
     const fetchStudentDetails = async () => {
@@ -33,13 +44,13 @@ const StudentPage = () => {
           }
         }
       } catch (error) {
-        console.error('Error fetching classes:', error);
+        console.error("Error fetching classes:", error);
       }
     };
 
     fetchStudentDetails();
 
-    const script = document.createElement('script');
+    const script = document.createElement("script");
     script.src = "https://www.payhere.lk/lib/payhere.js";
     script.async = true;
     document.body.appendChild(script);
@@ -51,14 +62,17 @@ const StudentPage = () => {
 
   const handlePayment = async (course) => {
     console.log("handlePayment called with course:", course);
-    
+
     const { Name, email, phone, Address } = student.profile;
-  
+
     if (!Name || !email || !phone || !Address) {
-      console.error('Student profile is missing required fields:', student.profile);
+      console.error(
+        "Student profile is missing required fields:",
+        student.profile
+      );
       return;
     }
-  
+
     const studentDetails = {
       id: student._id,
       name: Name,
@@ -66,33 +80,34 @@ const StudentPage = () => {
       phone: phone,
       address: Address,
     };
-  
+
     console.log("Student details:", studentDetails);
-  
+
     setLoading(true);
     try {
       console.log("Fetching hash for payment");
-      const hash = await fetchHash(`Order${course._id}`, course.fee, 'LKR');
+      const hash = await fetchHash(`Order${course._id}`, course.fee, "LKR");
       console.log("Hash fetched:", hash);
       console.log("Starting payment for course:", course);
       await startPayment(course, studentDetails, hash);
       console.log("Payment completed successfully");
     } catch (error) {
-      console.error('Payment failed:', error);
+      console.error("Payment failed:", error);
     } finally {
       setLoading(false);
       console.log("Loading state reset to false");
     }
   };
-  
 
-
-  const totalAmountPaid = student.classIds.reduce((total, course) => total + course.amount, 0);
+  const totalAmountPaid = student.classIds.reduce(
+    (total, course) => total + course.amount,
+    0
+  );
 
   return (
-    <div style={{ display: 'flex' }}>
+    <div style={{ display: "flex" }}>
       <StudentSidebar />
-      <div style={{ flexGrow: 1, padding: '20px' }}>
+      <div style={{ flexGrow: 1, padding: "20px" }}>
         <Typography variant="h4" gutterBottom>
           Welcome, {student.profile.Name}
         </Typography>
@@ -100,20 +115,24 @@ const StudentPage = () => {
         <Grid container spacing={2}>
           {/* Left side: Your Courses */}
           <Grid item xs={12} sm={6}>
-            <Card style={{ marginBottom: '20px', height: '450px' }}>
-              <CardContent style={{ overflowY: 'auto', height: '100%' }}>
+            <Card style={{ marginBottom: "20px", height: "450px" }}>
+              <CardContent style={{ overflowY: "auto", height: "100%" }}>
                 <Typography variant="h5" gutterBottom>
                   Your Courses
                 </Typography>
-                {student.classIds.map(course => (
-                  <Card key={course.classId} style={{ marginBottom: '10px' }}>
+                {student.classIds.map((course) => (
+                  <Card key={course.classId} style={{ marginBottom: "10px" }}>
                     <CardContent>
                       <Typography variant="h6">{course.className}</Typography>
                       <Typography variant="body2">LKR {course.fee}</Typography>
                     </CardContent>
                     <CardActions>
-                      <Button onClick={() => handlePayment(course)} disabled={loading} variant="contained">
-                        {loading ? 'Processing...' : 'Pay Now'}
+                      <Button
+                        onClick={() => handlePayment(course)}
+                        disabled={loading}
+                        variant="contained"
+                      >
+                        {loading ? "Processing..." : "Pay Now"}
                       </Button>
                     </CardActions>
                   </Card>
@@ -124,18 +143,7 @@ const StudentPage = () => {
 
           {/* Right side: Total Amount Paid and Attendance */}
           <Grid item xs={12} sm={6}>
-            <Card style={{ marginBottom: '20px' }}>
-              <CardContent>
-                <Typography variant="h5" gutterBottom>
-                  Total Amount Paid
-                </Typography>
-                <Typography variant="h6">
-                  LKR {totalAmountPaid}
-                </Typography>
-              </CardContent>
-            </Card>
-
-            <Card style={{ marginBottom: '20px', height: '250px' }}>
+            <Card style={{ marginBottom: "20px", height: "250px" }}>
               <CardContent>
                 <Typography variant="h5" gutterBottom>
                   Attendance
@@ -167,18 +175,24 @@ const StudentPage = () => {
                     <TableRow
                       key={index}
                       sx={{
-                        backgroundColor: 'rgba(0, 123, 255, 0.1)',
-                        '&:hover': {
-                          backgroundColor:  'rgba(0, 123, 255, 0.2)',
+                        backgroundColor: "rgba(0, 123, 255, 0.1)",
+                        "&:hover": {
+                          backgroundColor: "rgba(0, 123, 255, 0.2)",
                         },
                       }}
                     >
                       <TableCell component="th" scope="row">
-                        {entry.schedule?.days?.join(', ') || 'N/A'}
+                        {entry.schedule?.days?.join(", ") || "N/A"}
                       </TableCell>
-                      <TableCell align="center">{entry.schedule?.time || 'N/A'}</TableCell>
-                      <TableCell align="center">{entry.className || 'N/A'}</TableCell>
-                      <TableCell align="center">{entry.TeacherID || 'N/A'}</TableCell>
+                      <TableCell align="center">
+                        {entry.schedule?.time || "N/A"}
+                      </TableCell>
+                      <TableCell align="center">
+                        {entry.className || "N/A"}
+                      </TableCell>
+                      <TableCell align="center">
+                        {entry.TeacherID || "N/A"}
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
