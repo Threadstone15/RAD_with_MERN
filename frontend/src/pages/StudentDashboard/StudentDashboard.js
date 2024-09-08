@@ -36,15 +36,17 @@ const StudentPage = () => {
 
   useEffect(() => {
     const fetchStudentDetails = async () => {
+      console.log("Fetching student details for student ID:", studentID);
       try {
         if (studentID) {
           const response = await fetchStudentData(studentID);
+          console.log("Response from fetchStudentData:", response);
           if (response) {
             setStudent(response);
           }
         }
       } catch (error) {
-        console.error("Error fetching classes:", error);
+        console.error("Error fetching student details:", error);
       }
     };
 
@@ -167,7 +169,7 @@ const StudentPage = () => {
                     <TableCell>Day</TableCell>
                     <TableCell align="center">Time</TableCell>
                     <TableCell align="center">Subject</TableCell>
-                    <TableCell align="center">Teacher</TableCell>
+                    <TableCell align="center">Fee</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -191,7 +193,7 @@ const StudentPage = () => {
                         {entry.className || "N/A"}
                       </TableCell>
                       <TableCell align="center">
-                        {entry.TeacherID || "N/A"}
+                        {("LKR " + entry.fee).replace(/\B(?=(\d{3})+(?!\d))/g, ",") || "N/A"}
                       </TableCell>
                     </TableRow>
                   ))}
