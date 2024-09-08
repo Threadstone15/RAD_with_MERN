@@ -663,9 +663,6 @@ router.put('/updateClass/:_id', async (req, res) => {
   const { _id } = req.params;
   const { className, fee, TeacherID, scheduleDays, scheduleTime } = req.body;
 
-  console.log(`Received request to update class with ID: ${_id}`);
-  console.log(`Request body: ${JSON.stringify(req.body)}`);
-
   try {
     const updatedClass = await Class.findOneAndUpdate(
       { _id: _id },
@@ -673,19 +670,17 @@ router.put('/updateClass/:_id', async (req, res) => {
         className,
         fee,
         TeacherID,
-        scheduleDays,
-        scheduleTime,
+        schedule: {
+          days: scheduleDays,
+          time: scheduleTime,
+        },
       },
       { new: true }
     );
 
     if (!updatedClass) {
-      console.log(`Class with ID: ${_id} not found`);
       return res.status(404).json({ message: 'Class not found' });
     }
-
-    console.log(`Updated class with ID: ${_id}`);
-    console.log(`Updated class: ${JSON.stringify(updatedClass)}`);
 
     res.status(200).json(updatedClass);
   } catch (error) {
