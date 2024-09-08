@@ -20,6 +20,7 @@ import Classes from "./pages/ManagerDashboard/Classes";
 import Payments from "./pages/ManagerDashboard/Payment";
 import BouncingDotsLoader from "./BouncingDotsLoader";
 
+
 import StudentProfile from "./pages/StudentDashboard/StudentProfile";
 import TutorProfile from "./pages/TutorDashboard/TutorProfile";
 
@@ -71,6 +72,7 @@ function App() {
           <Route path="/teacher-dashboard/profile" element={<TutorProfile />} />
           <Route path="/manager-dashboard" element={<ManagerDashboard />} />
         </Routes>
+
       </RouteLoader>
     </Router>
   );

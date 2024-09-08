@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Container,
   Typography,
@@ -7,10 +6,55 @@ import {
   Button,
   Card,
   CardContent,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import Navbar from "./Navbar";
+import { sendFeedback } from "../services/api";
+import { useState } from "react";
+
+
+
 
 const Contact = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+  const [errorMessage, setErrorMessage] = useState("");
+  const [showSnackbar, setShowSnackbar] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSnackbarClose = () => {
+    setShowSnackbar(false);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await sendFeedback(formData);
+      console.log("This got executed");
+      setShowSnackbar(true); // Display success message if needed
+      setFormData({
+        name: "",
+        email: "",
+        message: "",
+      });
+    } catch (error) {
+      console.error("Error submitting Feedback form");
+      setErrorMessage(error.response?.data?.error || "An error occurred");
+      setShowSnackbar(true);
+    }
+  }
+
   return (
     <div>
       <Navbar />
@@ -24,7 +68,6 @@ const Contact = () => {
             below or through our contact details.
           </Typography>
         </Box>
-
         {/* Form Section */}
         <Box display="flex" justifyContent="center" mb={4}>
           <Card style={{ maxWidth: 600, width: "100%" }}>

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Drawer, List, ListItem, ListItemText, ListItemIcon, Box, Typography, Divider, Button } from '@mui/material';
 import { Link } from 'react-router-dom';
 import HomeIcon from '@mui/icons-material/Home';
-import PeopleIcon from '@mui/icons-material/People';
 import ClassIcon from '@mui/icons-material/Class';
 import LogoutIcon from '@mui/icons-material/Logout';
 import LogoutDialog from '../../popups/LogoutConfirmation'; // Import LogoutDialog

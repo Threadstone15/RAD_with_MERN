@@ -83,6 +83,12 @@ const Sidebar = () => {
           </ListItemIcon>
           <ListItemText primary="Payments" />
         </ListItem>
+        <ListItem button component={Link} to="/manager-dashboard/feedback">
+          <ListItemIcon sx={{ color: '#fff' }}>
+            <PaymentIcon />
+          </ListItemIcon>
+          <ListItemText primary="Feedback" />
+        </ListItem>
       </List>
 
       <Divider sx={{ backgroundColor: '#555' }} />

@@ -2,7 +2,9 @@ const express = require('express');
 const crypto = require('crypto');
 const mongoose = require('mongoose');
 const Payment = require('../models/Payment'); // Import the Payment model
+const Feedback = require('../models/Feedback');
 const router = express.Router();
+
 
 const MERCHANT_ID = '1227926'; // Replace with your actual Merchant ID
 const MERCHANT_SECRET = 'MzIxNDM0NTYxNTIzMDQ1MzM5MjIyMTQzMDY3MjIyMzY5NzI0NTU4'; // Replace with your actual Merchant Secret
@@ -72,5 +74,17 @@ router.post('/notify_app', async (req, res) => {
         res.status(500).send('Internal server error');
     }
 });
+router.post('/sendFeedback', async(req, res)=> {
+    try {
+        console.log("Got a feedback");
+        const {name, email, message} = req.body;
+        const newFeedback = Feedback({name, email, message});
+        newFeedback.save();
+        res.status(200).json({message: "Feedback send successfully"});
+    } catch(error) {
+        console.log(error);
+        res.status(500).json({error: "Error sending feedback"});
+    }
+})
 
 module.exports = router;
