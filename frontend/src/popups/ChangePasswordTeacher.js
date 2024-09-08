@@ -9,13 +9,11 @@ const ChangePasswordPopup = ({ open, handleClose }) => {
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
   const [error, setError] = useState('');
 
-
   const navigate = useNavigate();
-  const teacherID = localStorage.getItem('teacherID');
-  if(!teacherID) {
-    navigate('/');
+  const studentID = localStorage.getItem('teacherID');
+  if(!studentID) {
+    navigate('/login');
   }
-
 
   const handleChangePassword = async () => {
     if (newPassword !== confirmNewPassword) {
@@ -24,18 +22,17 @@ const ChangePasswordPopup = ({ open, handleClose }) => {
     }
     try {
       const response = await changeTeacherPassword({
-        teacherID,
+        studentID,
         currentPassword,
         newPassword,
       })
-      handleClose("Successfully changed password", "success");
     } catch (error){
       console.error("Couldn't change password");
-    handleClose("Error changing password", "error");
     }
 
 
     // On success, close the popup
+    handleClose();
   };
 
   return (
