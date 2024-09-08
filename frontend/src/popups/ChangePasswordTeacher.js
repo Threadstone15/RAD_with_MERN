@@ -33,9 +33,6 @@ const ChangePasswordPopup = ({ open, handleClose }) => {
       console.error("Couldn't change password");
     handleClose("Error changing password", "error");
     }
-
-
-    // On success, close the popup
   };
 
   return (
