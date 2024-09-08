@@ -5,8 +5,6 @@ import {
   Button,
   Modal,
   Typography,
-  Snackbar,
-  Alert,
   FormControl,
   InputLabel,
   Select,
@@ -30,9 +28,7 @@ const UpdateStudentForm = ({ open, onClose, studentData, onUpdate }) => {
   });
 
   const [classes, setClasses] = useState([]);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+
 
   useEffect(() => {
     const getClasses = async () => {
@@ -85,21 +81,13 @@ const UpdateStudentForm = ({ open, onClose, studentData, onUpdate }) => {
     try {
       console.log(formData);
       await updateStudent(formData);
-      setSnackbarMessage("Student updated successfully!");
-      setSnackbarSeverity("success");
       onUpdate(); // Notify parent component of the update
       onClose(); // Close the form modal
     } catch (error) {
       console.error("Error updating student:", error);
-      setSnackbarMessage("Failed to update student. Please try again.");
-      setSnackbarSeverity("error");
     }
-    setSnackbarOpen(true);
   };
 
-  const handleSnackbarClose = () => {
-    setSnackbarOpen(false);
-  };
 
   return (
     <>
@@ -248,19 +236,6 @@ const UpdateStudentForm = ({ open, onClose, studentData, onUpdate }) => {
         </Box>
       </Modal>
 
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={handleSnackbarClose}
-      >
-        <Alert
-          onClose={handleSnackbarClose}
-          severity={snackbarSeverity}
-          sx={{ width: "100%" }}
-        >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
     </>
   );
 };
