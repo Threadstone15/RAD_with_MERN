@@ -202,7 +202,7 @@ export const fetchPaymentData = async (studentID) => {
 export const fetchTeacherPaymentData = async (tutorID) => {
   console.log("Fetching payment data for teacher ID:", tutorID);
   try {
-    const response = await axios.get(`http://localhost:5000/tutor-dashboard/fetchTutorPaymentData/${tutorID}`);
+    const response = await axios.get(`http://localhost:5000/teacher-dashboard/fetchTutorPaymentData/${tutorID}`);
     console.log("Response from fetchPaymentData:", response.data);
     return response.data;
   } catch (error) {
@@ -213,7 +213,7 @@ export const fetchTeacherPaymentData = async (tutorID) => {
 
 export const fetchTutorData = async (tutorID) => {
   try {
-    const response = await axios.get(`http://localhost:5000/tutor-dashboard/fetchTutorData/${tutorID}`);
+    const response = await axios.get(`http://localhost:5000/teacher-dashboard/fetchTutorData/${tutorID}`);
     return response.data;
   } catch (error) {
     console.error("Error getting tutor Data", error);
@@ -242,12 +242,12 @@ export const changeStudentPassword = async ({studentID, currentPassword, newPass
   }
 }
 
-export const changeTeacherPassword = async ({studentID, currentPassword, newPassword}) => {
+export const changeTeacherPassword = async ({teacherID, currentPassword, newPassword}) => {
   try {
-    const response = await axios.post(`http://localhost:5000/teacher-dashboard/changeTeacherPassword/`, {studentID, currentPassword, newPassword});
+    const response = await axios.post(`http://localhost:5000/teacher-dashboard/changeTeacherPassword/`, {teacherID, currentPassword, newPassword});
     return response.data;
   } catch (error) {
-    console.error("Error changing student password", error);
+    console.error("Error changing teacher password", error);
     throw error;
   }
 }

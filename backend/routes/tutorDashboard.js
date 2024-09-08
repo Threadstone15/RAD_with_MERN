@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const mongoose = require('mongoose');
-const Tutor = require("../models/Teacher");
+const Teacher = require("../models/Teacher");
 const Payment = require("../models/Payment");
 const Class = require("../models/Class");
+const bcrypt = require('bcrypt');
 
 const AuthMiddleware = require("../middleware/AuthMiddleware");
 const roleMiddleware = require("../middleware/roleMiddleware");
@@ -15,7 +16,7 @@ router.post('/changeTeacherPassword', async(req, res) => {
     try {
         console.log(req.body);
         const {teacherID, currentPassword, newPassword} = req.body;
-        const teacher = await Teacher.findById(studentID);
+        const teacher = await Teacher.findById(teacherID);
     
             if (!teacher) {
                 console.log(`Teacher with ID: ${teacherID} not found in database`);
@@ -25,7 +26,7 @@ router.post('/changeTeacherPassword', async(req, res) => {
         if (!(await teacher.comparePassword(currentPassword))) {
             return res.status(401).json({ error: 'Invalid credentials' });
           }
-          console.log(newPassword);
+  
         const hashedPassword = await bcrypt.hash(newPassword, 10);
         teacher.password = hashedPassword;
         teacher.save();
@@ -44,7 +45,7 @@ router.get('/fetchTutorData/:tutorID', async (req, res) => {
 
         console.log(`Fetching tutor with ID: ${tutorObjectId}`);
 
-        const tutor = await Tutor.findById(tutorObjectId).populate("classIds");
+        const tutor = await Teacher.findById(tutorObjectId).populate("classIds");
 
         if (!tutor) {
             console.log(`Tutor with ID: ${tutorID} not found in database`);
@@ -79,7 +80,7 @@ router.get("/classes-with-teachers", async (req, res) => {
       console.log(`Fetching tutor data for tutorID: ${tutorID}`);
   
       // Fetch the tutor's details to get the associated class IDs
-      const tutor = await Tutor.findById(tutorID).populate('classIds').exec();
+      const tutor = await Teacher.findById(tutorID).populate('classIds').exec();
   
       if (!tutor) {
         console.log(`Tutor with ID: ${tutorID} not found in database`);
