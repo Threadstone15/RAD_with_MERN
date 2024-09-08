@@ -122,8 +122,17 @@ export const deleteClass = async (ClassID) => {
 
 export const ManagerStatistics = async () => {
   const response = await axios.get("http://localhost:5000/manager-dashboard/");
-  console.log(response.data);
   return response.data;
+};
+
+
+export const getFeedback = async () => {
+  try {
+    const response = await axios.get("http://localhost:5000/manager-dashboard/feedback");
+    return response.data;
+  } catch(error) {
+    console.error(`Error getting Feedback: ${error.message}`);
+  }
 };
 
 export const StudentStatistics = async () => {

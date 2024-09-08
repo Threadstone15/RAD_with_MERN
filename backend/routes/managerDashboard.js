@@ -15,6 +15,7 @@ router.use(AuthMiddleware);
 router.use(roleMiddleware(["manager"]));
 
 const Payment = require("../models/Payment"); // Adjust the path as needed
+const Feedback = require("../models/Feedback");
 
 async function getPaymentStatisticsForCurrentMonth(totalStudents) {
   try {
@@ -342,7 +343,17 @@ router.get("/students", async (req, res) => {
     const students = await Student.find(); 
     res.json(students);
   } catch (error) {
-    console.error("Error fetching teachers:", error);
+    console.error("Error fetching Students:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.get("/feedback", async (req, res) => {
+  try {
+    const feedbacks = await Feedback.find(); 
+    res.json(feedbacks);
+  } catch (error) {
+    console.error("Error fetching feedbacks:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
