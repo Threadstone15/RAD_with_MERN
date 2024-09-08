@@ -29,7 +29,7 @@ app.use(cookieParser());
 // Routes
 app.use('/manager-dashboard', managerRoutes);
 app.use('/student-dashboard', studentRoutes);
-app.use('/tutor-dashboard', tutorRoutes);
+app.use('/teacher-dashboard', tutorRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api', paymentRoutes); // Use the payment routes
 
