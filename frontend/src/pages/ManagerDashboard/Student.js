@@ -28,9 +28,13 @@ const Students = () => {
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [mediumFilter, setMediumFilter] = useState("");
+  const [refresh, setRefresh] = useState(false);
 
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setOpen(false);
+    setRefresh((prev)=> !prev);
+  };
 
   const handleRowClick = (student) => {
     setSelectedStudent(student);
@@ -45,16 +49,16 @@ const Students = () => {
   useEffect(() => {
     const fetchStudents = async () => {
       try {
+        console.log("Fetching data")
         const response = await axios.get('http://localhost:5000/manager-dashboard/students');
         setStudents(response.data);
-        console.log(response.data);
       } catch (error) {
         console.error('Error fetching students:', error);
       }
     };
   
     fetchStudents();
-  }, []);
+  }, [refresh]);
 
 const [isDragging, setIsDragging] = useState(false);
 const [startX, setStartX] = useState(0);
@@ -209,7 +213,10 @@ const tableContainerRef = useRef(null);
           {detailsOpen && (
             <StudentDetails
               open={detailsOpen}
-              onClose={() => setDetailsOpen(false)}
+              onClose={() => {
+                setRefresh((prev)=>!prev);
+                setOpen(false);
+                setDetailsOpen(false)}}
               studentData={selectedStudent}
             />
           )}

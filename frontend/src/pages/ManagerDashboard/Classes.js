@@ -59,7 +59,6 @@ const Classes = () => {
       try {
         const response = await axios.get('http://localhost:5000/manager-dashboard/classes-with-teachers');
         setClasses(response.data);
-        console.log(response.data);
 
         const uniqueClassNames = [...new Set(response.data.map((classData) => classData.className))];
         setClassOptions(uniqueClassNames);

@@ -43,6 +43,7 @@ const StudentDetails = ({ open, onClose, studentData, onDelete, onUpdate }) => {
   };
 
   const handleCloseUpdateStudent = () => {
+    onClose();
     setShowAddStudentForm(false); // Close AddStudentForm modal
   };
 

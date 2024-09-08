@@ -530,7 +530,20 @@ router.put("/Student_update/:id", async (req, res) => {
     // Update the teacher details
     const updatedStudent = await Student.findOneAndUpdate(
       { studentID: studentId },
-      req.body,
+      {
+        profile: {
+          Name: req.body.name,
+          email: req.body.email,
+          DOB: req.body.DOB,
+          phone: req.body.phone,
+          Medium: req.body.medium,
+          School: req.body.school,
+          Address: req.body.address,
+          PName: req.body.parentsName,
+          PContact: req.body.parentsContact,
+        },
+        classIds: req.body.classIds
+      },
       { new: true, runValidators: true } // Return the updated document and run validators
     );
     
