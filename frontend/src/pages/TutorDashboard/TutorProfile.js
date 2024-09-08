@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -8,22 +8,59 @@ import {
   Typography,
   Grid,
 } from "@mui/material";
+import { useNavigate } from 'react-router-dom'; // Add useNavigate to handle redirection
 import TutorSidebar from "./TutorSidebar"; // Import Sidebar
-import ChangePasswordPopup from "../../popups/ChangePasswordTeacher"; // Import ChangePasswordPopup component
+import ChangePasswordPopup from "../../popups/ChangePasswordTeacher";
+import { fetchTutorData } from "../../services/api";
 
 const drawerWidth = 240; // Assuming the width of the sidebar is 240px
 
-const tutorData = {
-  name: "John Doe",
-  dob: "1980-03-10",
-  address: "123 Main St",
-  phone: "123-456-7890",
-  email: "john.doe@example.com",
-  subjects: ["Math", "Physics", "Chemistry"],
-};
-
 const TutorProfile = () => {
+  const [tutorData, setTutor] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    dob: "",
+    address: "",
+    subjects: [], // Ensure subjects is initialized as an array
+  });
+
   const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
+  const tutorID = localStorage.getItem('teacherID'); // Get the tutorID from localStorage
+  const navigate = useNavigate(); // Declare navigate for redirection
+
+  // Redirect to login if tutorID is not found
+  useEffect(() => {
+    if (!tutorID) {
+      navigate("/login"); // Redirect to login page if no tutorID
+    }
+  }, [tutorID, navigate]);
+  console.log(tutorID);
+
+  // Fetch tutor details
+  useEffect(() => {
+    const fetchTutorDetails = async () => {
+      console.log("Fetching tutor details for tutorID:", tutorID);
+      try {
+        if (tutorID) {
+          const response = await fetchTutorData(tutorID);
+          console.log("Response from fetchTutorData:", response);
+          if (response) {
+            // Ensure that subjects is an array
+            setTutor({
+              ...response,
+              subjects: Array.isArray(response.subjects) ? response.subjects : [], // Handle non-array subjects
+            });
+            console.log("Tutor state updated:", response);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching tutor details:", error);
+      }
+    };
+
+    fetchTutorDetails();
+  }, [tutorID]);
 
   const handleOpenChangePassword = () => {
     setIsChangePasswordOpen(true);
@@ -83,9 +120,14 @@ const TutorProfile = () => {
                   <Typography variant="body1">
                     Subjects Taught:
                     <ul>
-                      {tutorData.subjects.map((subject, index) => (
-                        <li key={index}>{subject}</li>
-                      ))}
+                      {/* Check if subjects is an array before mapping */}
+                      {Array.isArray(tutorData.subjects) && tutorData.subjects.length > 0 ? (
+                        tutorData.subjects.map((subject, index) => (
+                          <li key={index}>{subject}</li>
+                        ))
+                      ) : (
+                        <li>No subjects assigned</li> // Handle no subjects case
+                      )}
                     </ul>
                   </Typography>
                 </Grid>
