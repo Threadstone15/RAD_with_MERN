@@ -12,29 +12,64 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Paper,
+  Paper,Snackbar,Alert
 } from "@mui/material";
 import Sidebar from "../../components/Sidebar";
 import { getFeedback } from "../../services/api";
+import FeedbackDetails from "../../popups/FeedbackDetails";
 
 const drawerWidth = 240;
 
 const Feedback = () => {
+  const [feedbacks, setFeedbacks] = useState([]);
   const [Feedback, setFeedback] = useState([]);
+  const [selectedFeedback, setSelectedFeedback] = useState(null);
+  const [openDetails, setOpenDetails] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+
+  const fetchData = async () => {
+    try {
+      const feedbacks = await getFeedback();
+      console.log(feedbacks);
+      setFeedback(feedbacks);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const feedbacks = await getFeedback();
-        console.log(feedbacks);
-        setFeedback(feedbacks);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
     fetchData();
   }, []);
+
+  const handleOpenDetails = (feedback) => {
+    setSelectedFeedback(feedback);
+    setOpenDetails(true);
+  };
+
+  const handleCloseDetails = () => {
+    setOpenDetails(false);
+    setSelectedFeedback(null);
+  };
+
+  const handleFeedbackDelete = async (deletedId) => {
+    try {
+      setFeedbacks(feedbacks.filter(feedback => feedback._id !== deletedId));
+      setSnackbarMessage("Feedback deleted successfully.");
+      setSnackbarSeverity("success");
+      await fetchData() ;
+    } catch (error) {
+      console.error("Error deleting feedback:", error);
+      setSnackbarMessage("Failed to delete feedback.");
+      setSnackbarSeverity("error");
+    }
+    setSnackbarOpen(true);
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
 
   return (
     <div>
@@ -89,7 +124,11 @@ const Feedback = () => {
                       </TableHead>
                       <TableBody>
                         {Feedback.map((entry, index) => (
-                          <TableRow key={index} sx={{ cursor: "pointer" }}>
+                          <TableRow
+                          key={entry._id}
+                          sx={{ cursor: "pointer" }}
+                          onClick={() => handleOpenDetails(entry)}
+                        >
                             <TableCell component="th" scope="row">
                               {entry.name}
                             </TableCell>
@@ -109,6 +148,27 @@ const Feedback = () => {
           </Grid>
         </Container>
       </Box>
+      {selectedFeedback && (
+        <FeedbackDetails
+          open={openDetails}
+          onClose={handleCloseDetails}
+          feedbackData={selectedFeedback}
+          onFeedbackDelete={handleFeedbackDelete}
+        />
+      )}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity={snackbarSeverity}
+          sx={{ width: '100%' }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

@@ -282,3 +282,14 @@ export const fetchAllPaymentsData = async () => {
     throw error;
   }
 };
+
+
+export const deleteFeedback = async (feedbackId) => {
+  try {
+    const response = await axios.delete(`http://localhost:5000/manager-dashboard/deleteFeedback/${feedbackId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting feedback:", error);
+    throw error;
+  }
+};
