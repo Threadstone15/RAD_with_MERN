@@ -9,31 +9,35 @@ import {
   CardMedia,
 } from "@mui/material";
 import Navbar from "./Navbar";
+import lakindu from "./images/lakindu.jpg";
+import udeepa from "./images/udeepa.jpg";
+import pehan from "./images/pehan.jpg";
+import navod from "./images/navod.jpg";
 
 const teamMembers = [
   {
     name: "Udeepa Gallage",
-    position: "CEO & Founder",
-    image: "https://via.placeholder.com/150",
+    position: "Teacher - Mathematics",
+    image: udeepa,
     bio: "Udeepa has over 20 years of experience in education and is passionate about empowering the next generation.",
   },
   {
     name: "Emil Navod",
-    position: "Head of Teaching",
-    image: "https://via.placeholder.com/150",
+    position: "Teacher - Science",
+    image: navod,
     bio: "Navod is dedicated to innovative teaching methods and ensuring every student reaches their potential.",
   },
   {
     name: "Pehan Ransika",
-    position: "Operations Manager",
-    image: "https://via.placeholder.com/150",
-    bio: "Pehan oversees the day-to-day operations, ensuring that the institute runs smoothly and effectively.",
+    position: "Teacher - English",
+    image: pehan,
+    bio: "Pehan teachers English. 10 years experience of teaching in Ananda College",
   },
   {
     name: "Lakindu Withanage",
-    position: "Manager",
-    image: "https://via.placeholder.com/150",
-    bio: "Lakindu Oversees the operations.",
+    position: "Teaching Assistant",
+    image: lakindu,
+    bio: "Lakindu assist the other teachers.",
   },
 ];
 
