@@ -7,8 +7,6 @@ import {
   Container,
   Typography,
   Grid,
-  Snackbar,
-  Alert
 } from "@mui/material";
 import { useNavigate } from 'react-router-dom'; // Add useNavigate to handle redirection
 import TutorSidebar from "./TutorSidebar"; // Import Sidebar
@@ -19,43 +17,41 @@ const drawerWidth = 240; // Assuming the width of the sidebar is 240px
 
 const TutorProfile = () => {
   const [tutorData, setTutor] = useState({
-    profile: {
-      name: "",
-      email: "",
-      phone: "",
-      address: "",
-    },
+    name: "",
+    email: "",
+    phone: "",
+    dob: "",
+    address: "",
     subjects: [], // Ensure subjects is initialized as an array
   });
 
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
   const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
-  const teacherID = localStorage.getItem('teacherID'); // Get the tutorID from localStorage
+  const tutorID = localStorage.getItem('teacherID'); // Get the tutorID from localStorage
   const navigate = useNavigate(); // Declare navigate for redirection
 
   // Redirect to login if tutorID is not found
   useEffect(() => {
-    if (!teacherID) {
-      navigate("/"); // Redirect to login page if no tutorID
+    if (!tutorID) {
+      navigate("/login"); // Redirect to login page if no tutorID
     }
-  }, [teacherID, navigate]);
-
+  }, [tutorID, navigate]);
+  console.log(tutorID);
 
   // Fetch tutor details
   useEffect(() => {
     const fetchTutorDetails = async () => {
+      console.log("Fetching tutor details for tutorID:", tutorID);
       try {
-        if (teacherID) {
-          const response = await fetchTutorData(teacherID);
+        if (tutorID) {
+          const response = await fetchTutorData(tutorID);
           console.log("Response from fetchTutorData:", response);
           if (response) {
             // Ensure that subjects is an array
             setTutor({
               ...response,
-              subjects: Array.isArray(response.classIds) ? response.classIds : [], // Handle non-array subjects
+              subjects: Array.isArray(response.subjects) ? response.subjects : [], // Handle non-array subjects
             });
+            console.log("Tutor state updated:", response);
           }
         }
       } catch (error) {
@@ -64,21 +60,14 @@ const TutorProfile = () => {
     };
 
     fetchTutorDetails();
-  }, [teacherID]);
+  }, [tutorID]);
 
   const handleOpenChangePassword = () => {
     setIsChangePasswordOpen(true);
   };
-  const handleSnackbarClose = () => {
-    setSnackbarOpen(false);
-  };
 
-
-  const handleCloseChangePassword = (message, severity) => {
+  const handleCloseChangePassword = () => {
     setIsChangePasswordOpen(false);
-    setSnackbarMessage(message);
-    setSnackbarSeverity(severity);
-    setSnackbarOpen(true);
   };
 
   return (
@@ -113,29 +102,32 @@ const TutorProfile = () => {
             <CardContent>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
-                  <Typography variant="h6">Name: {tutorData.profile.name}</Typography>
+                  <Typography variant="h6">Name: {tutorData.name}</Typography>
                   <Typography variant="body1">
-                    Address: {tutorData.profile.address}
+                    Date of Birth: {tutorData.dob}
                   </Typography>
                   <Typography variant="body1">
-                    Phone: {tutorData.profile.phone}
+                    Address: {tutorData.address}
                   </Typography>
                   <Typography variant="body1">
-                    Email: {tutorData.profile.email}
+                    Phone: {tutorData.phone}
+                  </Typography>
+                  <Typography variant="body1">
+                    Email: {tutorData.email}
                   </Typography>
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <Typography variant="body1">
-                    Classes Taught:
+                    Subjects Taught:
                     <ul>
-                      {
-                        Array.isArray(tutorData.subjects) && tutorData.subjects.length > 0 ? (
-                          tutorData.subjects.map((subject, index) => (
-                            <li key={index}>{subject.className}</li>
-                          ))
-                        ) : (
-                          <li>No subjects assigned</li> // Handle no subjects case
-                        )}
+                      {/* Check if subjects is an array before mapping */}
+                      {Array.isArray(tutorData.subjects) && tutorData.subjects.length > 0 ? (
+                        tutorData.subjects.map((subject, index) => (
+                          <li key={index}>{subject}</li>
+                        ))
+                      ) : (
+                        <li>No subjects assigned</li> // Handle no subjects case
+                      )}
                     </ul>
                   </Typography>
                 </Grid>
@@ -158,20 +150,6 @@ const TutorProfile = () => {
           open={isChangePasswordOpen}
           handleClose={handleCloseChangePassword}
         />
-
-        <Snackbar
-          open={snackbarOpen}
-          autoHideDuration={6000}
-          onClose={handleSnackbarClose}
-        >
-          <Alert
-            onClose={handleSnackbarClose}
-            severity={snackbarSeverity}
-            sx={{ width: '100%' }}
-          >
-            {snackbarMessage}
-          </Alert>
-        </Snackbar>
       </Box>
     </div>
   );
