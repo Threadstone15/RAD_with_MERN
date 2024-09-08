@@ -230,9 +230,9 @@ export const changeStudentPassword = async ({studentID, currentPassword, newPass
   }
 }
 
-export const changeTeacherPassword = async ({studentID, currentPassword, newPassword}) => {
+export const changeTeacherPassword = async ({teacherID, currentPassword, newPassword}) => {
   try {
-    const response = await axios.post(`http://localhost:5000/teacher-dashboard/changeTeacherPassword/`, {studentID, currentPassword, newPassword});
+    const response = await axios.post(`http://localhost:5000/tutor-dashboard/changeTeacherPassword/`, {teacherID, currentPassword, newPassword});
     return response.data;
   } catch (error) {
     console.error("Error changing student password", error);
