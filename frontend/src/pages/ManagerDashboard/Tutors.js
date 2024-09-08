@@ -13,6 +13,8 @@ import {
   TableCell,
   TextField,
   MenuItem,
+  Snackbar,
+  Alert
 } from "@mui/material";
 import AddTutorForm from "../../popups/AddTutorForm";
 import TutorDetails from "../../popups/TutorDetails";
@@ -26,12 +28,20 @@ const Tutors = () => {
   const [selectedTutor, setSelectedTutor] = useState(null);
   const [tutors, setTutors] = useState([]);
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const [refresh, setRefresh] = useState(false);
+  
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
   const [searchTerm, setSearchTerm] = useState("");
   const [subjectFilter, setSubjectFilter] = useState("");
 
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () =>{
+    setOpen(false);
+    setRefresh((prev) => !prev);
+  } 
 
   const handleRowClick = (tutor) => {
     setSelectedTutor(tutor);
@@ -42,7 +52,9 @@ const Tutors = () => {
     setSelectedTutor(null);
     handleOpen();
   };
-
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
   useEffect(() => {
     const fetchTutors = async () => {
       try {
@@ -57,7 +69,7 @@ const Tutors = () => {
     };
 
     fetchTutors();
-  }, []);
+  }, [refresh]);
 
   const filteredTutors = tutors.filter(
     (tutor) =>
@@ -162,6 +174,19 @@ const Tutors = () => {
               </Table>
             </CardContent>
           </Card>
+          <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity={snackbarSeverity}
+          sx={{ width: '100%' }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
 
           <AddTutorForm
             open={open}
@@ -171,7 +196,13 @@ const Tutors = () => {
           {detailsOpen && (
             <TutorDetails
               open={detailsOpen}
-              onClose={() => setDetailsOpen(false)}
+              onDelete={(message, severity) => {
+                setSnackbarMessage(message);
+                setSnackbarSeverity(severity);
+                setSnackbarOpen(true);
+                setDetailsOpen(false);
+                setRefresh((prev)=> !prev);
+              }}
               tutorData={selectedTutor}
             />
           )}

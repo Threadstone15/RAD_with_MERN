@@ -28,6 +28,8 @@ const AddTutorForm = ({ open, onClose, tutorData, onConfirmClose }) => {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [showSnackbar, setShowSnackbar] = useState(false);
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+
 
   useEffect(() => {
     if (tutorData) {
@@ -64,14 +66,15 @@ const AddTutorForm = ({ open, onClose, tutorData, onConfirmClose }) => {
         address: formData.address,
         subjects: formData.subjects,
       });
-
-      setShowSnackbar(true); // Display success message if needed
+      setErrorMessage("Teacher added successfully");
+      setSnackbarSeverity("success");
       onClose();
     } catch (error) {
       console.error("Error adding teacher:", error.message);
       setErrorMessage(error.response?.data?.error || "An error occurred");
-      setShowSnackbar(true);
+      setSnackbarSeverity("error");
     }
+    setShowSnackbar(true);
   };
 
   const handleClose = () => {
@@ -227,9 +230,13 @@ const AddTutorForm = ({ open, onClose, tutorData, onConfirmClose }) => {
         autoHideDuration={6000}
         onClose={handleSnackbarClose}
       >
-        <Alert onClose={handleSnackbarClose} severity={errorMessage ? "error" : "success"}>
-          {errorMessage || "Operation successful"}
-        </Alert>
+      <Alert
+        onClose={handleSnackbarClose}
+        severity={snackbarSeverity}
+        sx={{ width: '100%' }}
+      >
+        {errorMessage}
+      </Alert>
       </Snackbar>
     </>
   );
