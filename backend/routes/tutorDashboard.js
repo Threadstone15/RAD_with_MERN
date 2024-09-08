@@ -71,6 +71,37 @@ router.get("/classes-with-teachers", async (req, res) => {
     }
   });
 
+  router.get('/fetchTutorPaymentData/:tutorID', async (req, res) => {
+    console.log("Got a request to fetchTutorPaymentData");
+    try {
+      const { tutorID } = req.params;
+  
+      console.log(`Fetching tutor data for tutorID: ${tutorID}`);
+  
+      // Fetch the tutor's details to get the associated class IDs
+      const tutor = await Tutor.findById(tutorID).populate('classIds').exec();
+  
+      if (!tutor) {
+        console.log(`Tutor with ID: ${tutorID} not found in database`);
+        return res.status(404).json({ message: 'Tutor not found' });
+      }
+  
+      console.log("Tutor found:", tutor);
+  
+      // Find all payments related to the classes associated with the tutor
+      const payments = await Payment.find({ classID: { $in: tutor.classIds.map(cls => cls._id) } })
+        .populate('classID')
+        .exec();
+  
+      console.log("Payments found:", payments);
+  
+      // Return the payments data
+      res.json(payments);
+    } catch (error) {
+      console.error("Error fetching teacher payment data:", error);
+      res.status(500).json({ message: "Error fetching payment data" });
+    }
+  });
 
 
 

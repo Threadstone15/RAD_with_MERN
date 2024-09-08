@@ -41,7 +41,6 @@ const TutorPage = () => {
   }, [tutorID]);
 
   const [classes, setClasses] = useState([]);
-  const [payments, setPayments] = useState([]);
   const [classTimetable, setClassTimetable] = useState([]);
   const [selectedMonth, setSelectedMonth] = useState('');
   const [selectedStudent, setSelectedStudent] = useState('');
@@ -51,12 +50,6 @@ const TutorPage = () => {
   const currentDay = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(new Date());
 
   useEffect(() => {
-
-    const dummyPayments = [
-      { date: '2024-08-01', student: 'John Doe', amount: 15000, class: 'Math 101' },
-      { date: '2024-08-05', student: 'Jane Smith', amount: 15000, class: 'Physics 201' },
-    ];
-    setPayments(dummyPayments);
 
     const fetchData = async () => {
       try {
@@ -102,14 +95,6 @@ const TutorPage = () => {
   const handleTeacherChange = (event) => {
     setSelectedTeacher(event.target.value); // Update the teacher filter
   };
-
-  const filteredPayments = payments.filter(payment => {
-    return (
-      (!selectedMonth || payment.date.startsWith(selectedMonth)) &&
-      (!selectedStudent || payment.student === selectedStudent) &&
-      (!selectedClass || payment.class === selectedClass)
-    );
-  });
 
   // Filter the timetable based on the selected teacher
   const filteredTimetable = classTimetable.filter((entry) => {
@@ -197,91 +182,6 @@ const TutorPage = () => {
             </CardContent>
           </Card>
         </Grid>
-
-        {/* Filter Options */}
-        <Grid item xs={12}>
-          <Card style={{ marginBottom: '20px' }}>
-            <CardContent>
-              <Typography variant="h5" gutterBottom>
-                Filter Payments
-              </Typography>
-              <Grid container spacing={2} style={{ marginBottom: '20px' }}>
-                <Grid item xs={12} sm={4}>
-                  <TextField
-                    select
-                    label="Month"
-                    value={selectedMonth}
-                    onChange={handleMonthChange}
-                    fullWidth
-                  >
-                    <MenuItem value="">All Months</MenuItem>
-                    <MenuItem value="2024-08">August 2024</MenuItem>
-                    <MenuItem value="2024-09">September 2024</MenuItem>
-                  </TextField>
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                  <TextField
-                    select
-                    label="Student"
-                    value={selectedStudent}
-                    onChange={handleStudentChange}
-                    fullWidth
-                  >
-                    <MenuItem value="">All Students</MenuItem>
-                    {payments.map((payment, index) => (
-                      <MenuItem key={index} value={payment.student}>
-                        {payment.student}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                  <TextField
-                    select
-                    label="Class"
-                    value={selectedClass}
-                    onChange={handleClassChange}
-                    fullWidth
-                  >
-                    <MenuItem value="">All Classes</MenuItem>
-                    {classes.map((entry, index) => (
-                      <MenuItem key={index} value={entry.className}>
-                        {entry.className}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </Grid>
-              </Grid>
-
-              {/* Payment Table */}
-              <TableContainer component={Paper}>
-                <Table aria-label="payments table">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Date</TableCell>
-                      <TableCell align="center">Student</TableCell>
-                      <TableCell align="center">Class</TableCell>
-                      <TableCell align="center">Amount (LKR)</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {filteredPayments.map((payment, index) => (
-                      <TableRow key={index}>
-                        <TableCell component="th" scope="row">
-                          {payment.date}
-                        </TableCell>
-                        <TableCell align="center">{payment.student}</TableCell>
-                        <TableCell align="center">{payment.class}</TableCell>
-                        <TableCell align="center">{payment.amount}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </CardContent>
-          </Card>
-        </Grid>
-
       </div>
     </div>
   );
