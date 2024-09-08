@@ -59,6 +59,18 @@ router.get('/fetchTutorData/:tutorID', async (req, res) => {
     
 })
 
+router.get("/classes-with-teachers", async (req, res) => {
+    try {
+      const classes = await Class.find()
+        .populate("TeacherID")
+        .exec();
+      res.json(classes);
+    } catch (error) {
+      console.error("Error fetching class details:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  });
+
 
 
 
