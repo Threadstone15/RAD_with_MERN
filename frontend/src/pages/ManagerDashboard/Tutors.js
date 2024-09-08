@@ -14,7 +14,7 @@ import {
   TextField,
   MenuItem,
   Snackbar,
-  Alert
+  Alert,
 } from "@mui/material";
 import AddTutorForm from "../../popups/AddTutorForm";
 import TutorDetails from "../../popups/TutorDetails";
@@ -29,7 +29,7 @@ const Tutors = () => {
   const [tutors, setTutors] = useState([]);
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [refresh, setRefresh] = useState(false);
-  
+
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
@@ -38,10 +38,10 @@ const Tutors = () => {
   const [subjectFilter, setSubjectFilter] = useState("");
 
   const handleOpen = () => setOpen(true);
-  const handleClose = () =>{
+  const handleClose = () => {
     setOpen(false);
     setRefresh((prev) => !prev);
-  } 
+  };
 
   const handleRowClick = (tutor) => {
     setSelectedTutor(tutor);
@@ -111,14 +111,14 @@ const Tutors = () => {
                 variant="outlined"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                sx={{ flexGrow: 2, height: "56px" }} // Match button height
+                sx={{ flexGrow: 2, height: "56px" }}
               />
               <TextField
                 select
                 label="Filter by Subject"
                 value={subjectFilter}
                 onChange={(e) => setSubjectFilter(e.target.value)}
-                sx={{ flexGrow: 1, height: "56px" }} // Match button height
+                sx={{ flexGrow: 1, height: "56px" }}
               >
                 <MenuItem value="">All</MenuItem>
                 <MenuItem value="Math">Math</MenuItem>
@@ -131,7 +131,7 @@ const Tutors = () => {
               variant="contained"
               color="primary"
               onClick={handleAddTutor}
-              sx={{ ml: 1, height: "56px", width: "15%" }} // Same height as input fields
+              sx={{ ml: 1, height: "56px", width: "15%" }}
             >
               Add Tutor
             </Button>
@@ -175,18 +175,18 @@ const Tutors = () => {
             </CardContent>
           </Card>
           <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={handleSnackbarClose}
-      >
-        <Alert
-          onClose={handleSnackbarClose}
-          severity={snackbarSeverity}
-          sx={{ width: '100%' }}
-        >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
+            open={snackbarOpen}
+            autoHideDuration={6000}
+            onClose={handleSnackbarClose}
+          >
+            <Alert
+              onClose={handleSnackbarClose}
+              severity={snackbarSeverity}
+              sx={{ width: "100%" }}
+            >
+              {snackbarMessage}
+            </Alert>
+          </Snackbar>
 
           <AddTutorForm
             open={open}
@@ -201,7 +201,7 @@ const Tutors = () => {
                 setSnackbarSeverity(severity);
                 setSnackbarOpen(true);
                 setDetailsOpen(false);
-                setRefresh((prev)=> !prev);
+                setRefresh((prev) => !prev);
               }}
               tutorData={selectedTutor}
             />

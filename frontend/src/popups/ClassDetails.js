@@ -31,7 +31,7 @@ const ClassDetails = ({ open, onClose, classData, onUpdate }) => {
       console.error("Couldn't delete class:", error.message);
     }
     setShowConfirmDialog(false);
-    onClose(); // Close the details modal
+    onClose();
   };
 
   const handleCancelDelete = () => {
@@ -39,18 +39,17 @@ const ClassDetails = ({ open, onClose, classData, onUpdate }) => {
   };
 
   const handleUpdateClick = () => {
-    setShowUpdateClassForm(true); // Open UpdateClassForm modal
+    setShowUpdateClassForm(true);
   };
 
   const handleCloseUpdateClass = () => {
-    setShowUpdateClassForm(false); // Close UpdateClassForm modal
+    setShowUpdateClassForm(false);
   };
 
   const handleUpdateSuccess = () => {
     console.log("Class updated successfully!");
-    setShowUpdateClassForm(false); // Close UpdateClassForm modal
+    setShowUpdateClassForm(false);
     onUpdate(); // Call the onUpdate function passed as prop
-
   };
 
   return (
@@ -100,11 +99,16 @@ const ClassDetails = ({ open, onClose, classData, onUpdate }) => {
                   <strong>Name:</strong> {classData.className}
                 </Typography>
                 <Typography variant="body1">
-                  <strong>Schedule Days:</strong> {classData.schedule.days.join(", ")}
+                  <strong>Schedule Days:</strong>{" "}
+                  {classData.schedule.days.join(", ")}
                 </Typography>
-                {/* Add more fields as needed */}
+
                 <Box
-                  sx={{ display: "flex", justifyContent: "space-between", mt: 3 }}
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    mt: 3,
+                  }}
                 >
                   <Button
                     variant="contained"
@@ -130,7 +134,6 @@ const ClassDetails = ({ open, onClose, classData, onUpdate }) => {
         </Box>
       </Modal>
 
-      {/* Confirmation Dialog */}
       <Dialog open={showConfirmDialog} onClose={handleCancelDelete}>
         <DialogTitle>Confirm Delete</DialogTitle>
         <DialogContent>
@@ -146,7 +149,6 @@ const ClassDetails = ({ open, onClose, classData, onUpdate }) => {
         </DialogActions>
       </Dialog>
 
-      {/* Update Class Form Modal */}
       <UpdateClassForm
         open={showUpdateClassForm}
         onClose={handleCloseUpdateClass}

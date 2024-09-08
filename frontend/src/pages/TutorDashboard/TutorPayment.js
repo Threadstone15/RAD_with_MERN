@@ -19,7 +19,7 @@ import {
 } from "@mui/material";
 import Sidebar from "./TutorSidebar";
 
-const drawerWidth = 240; // Assuming the width of the sidebar is 240px
+const drawerWidth = 240;
 
 const TutorPayment = () => {
   const [payments, setPayments] = useState([]);
@@ -60,7 +60,6 @@ const TutorPayment = () => {
   ];
 
   useEffect(() => {
-    // Simulate data fetching
     setPayments(dummyData);
   }, []);
 
@@ -80,9 +79,10 @@ const TutorPayment = () => {
     setSelectedClass(event.target.value);
   };
 
-  const filteredPayments = payments.filter(payment => {
+  const filteredPayments = payments.filter((payment) => {
     return (
-      (searchTerm === "" || payment.studentName.toLowerCase().includes(searchTerm.toLowerCase())) &&
+      (searchTerm === "" ||
+        payment.studentName.toLowerCase().includes(searchTerm.toLowerCase())) &&
       (selectedMonth === "" || payment.month === selectedMonth) &&
       (selectedStudent === "" || payment.studentName === selectedStudent) &&
       (selectedClass === "" || payment.class === selectedClass)

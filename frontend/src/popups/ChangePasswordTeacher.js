@@ -1,23 +1,32 @@
-import React, { useState } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Grid } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import { changeTeacherPassword } from '../services/api';
+import React, { useState } from "react";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  TextField,
+  Grid,
+} from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { changeTeacherPassword } from "../services/api";
 
 const ChangePasswordPopup = ({ open, handleClose }) => {
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmNewPassword, setConfirmNewPassword] = useState('');
-  const [error, setError] = useState('');
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
+  const [error, setError] = useState("");
 
   const navigate = useNavigate();
-  const studentID = localStorage.getItem('studentID');
-  if(!studentID) {
-    navigate('/login');
+  const studentID = localStorage.getItem("studentID");
+  if (!studentID) {
+    navigate("/login");
   }
 
   const handleChangePassword = async () => {
     if (newPassword !== confirmNewPassword) {
-      setError('New password and confirm password do not match');
+      setError("New password and confirm password do not match");
       return;
     }
     try {
@@ -25,11 +34,10 @@ const ChangePasswordPopup = ({ open, handleClose }) => {
         studentID,
         currentPassword,
         newPassword,
-      })
-    } catch (error){
+      });
+    } catch (error) {
       console.error("Couldn't change password");
     }
-
 
     // On success, close the popup
     handleClose();
@@ -68,7 +76,7 @@ const ChangePasswordPopup = ({ open, handleClose }) => {
               fullWidth
               value={confirmNewPassword}
               onChange={(e) => setConfirmNewPassword(e.target.value)}
-              error={error !== ''}
+              error={error !== ""}
               helperText={error}
             />
           </Grid>

@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
-const Class = require('../models/Class'); // Adjust the path to your Class model file
+const Class = require("../models/Class");
 
-const MONGO_URI = 'mongodb+srv://admin:admin106@tutionmanagement.tmvutgf.mongodb.net/TutionManagement?retryWrites=true&w=majority&appName=TutionManagement';
+const MONGO_URI =
+  "mongodb+srv://admin:admin106@tutionmanagement.tmvutgf.mongodb.net/TutionManagement?retryWrites=true&w=majority&appName=TutionManagement";
 
 // Generate random 6-digit IDs
 const generateRandomId = () => {
@@ -21,7 +22,9 @@ const seedClasses = async () => {
 
     // Generate random student IDs and fetch existing teacher IDs
     const studentIds = Array.from({ length: 50 }, generateRandomId);
-    const teacherIds = await mongoose.connection.db.collection('teachers').distinct('_id'); // Ensure teacher IDs are fetched correctly
+    const teacherIds = await mongoose.connection.db
+      .collection("teachers")
+      .distinct("_id"); // Ensure teacher IDs are fetched correctly
 
     // Define class entries
     const classes = [
@@ -80,9 +83,9 @@ const seedClasses = async () => {
     // Insert class entries into the database
     await Class.insertMany(classes);
 
-    console.log('Classes seeded successfully.');
+    console.log("Classes seeded successfully.");
   } catch (error) {
-    console.error('Error seeding classes:', error);
+    console.error("Error seeding classes:", error);
   } finally {
     // Close the connection
     mongoose.connection.close();

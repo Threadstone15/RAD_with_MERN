@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 
 const TeacherSchema = new mongoose.Schema({
   TeacherID: {
@@ -12,7 +12,8 @@ const TeacherSchema = new mongoose.Schema({
     required: true,
   },
   profile: {
-    name: { // Keep name as a single string
+    name: {
+      // Keep name as a single string
       type: String,
       required: true,
     },
@@ -43,7 +44,7 @@ const TeacherSchema = new mongoose.Schema({
 });
 
 // Compare password method
-TeacherSchema.methods.comparePassword = async function(candidatePassword) {
+TeacherSchema.methods.comparePassword = async function (candidatePassword) {
   return bcrypt.compare(candidatePassword, this.password);
 };
 

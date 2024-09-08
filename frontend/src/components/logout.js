@@ -1,6 +1,6 @@
 export const handleLogout = () => {
-    // Clear all local storage data
-    localStorage.clear();
+  // Clear all local storage data
+  localStorage.clear();
 
-    window.location.href = '/';
+  window.location.href = "/";
 };

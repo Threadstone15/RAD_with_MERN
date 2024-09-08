@@ -8,7 +8,7 @@ const AuthMiddleware = require("../middleware/AuthMiddleware");
 const roleMiddleware = require("../middleware/roleMiddleware");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
-const QRCode = require('qrcode');
+const QRCode = require("qrcode");
 
 // Apply middleware to all routes under /manager-dashboard
 router.use(AuthMiddleware);
@@ -43,7 +43,6 @@ async function getPaymentStatisticsForCurrentMonth(totalStudents) {
         },
       },
     ]);
-    
 
     const totalAmountPaid =
       paymentResult.length > 0 ? paymentResult[0].totalAmount : 0;
@@ -75,7 +74,8 @@ router.get("/", async (req, res) => {
     console.log("Got an http request to /manager-dashboard/");
     const StudentCount = await Student.countDocuments();
     const TeacherCount = await Teacher.countDocuments();
-    const { monthlyIncome, notPaid } = await getPaymentStatisticsForCurrentMonth(StudentCount);
+    const { monthlyIncome, notPaid } =
+      await getPaymentStatisticsForCurrentMonth(StudentCount);
     res.json({
       StudentCount: StudentCount,
       TeacherCount: TeacherCount,
@@ -90,7 +90,6 @@ router.get("/", async (req, res) => {
 const generateRandomId = () => {
   return Math.floor(100000 + Math.random() * 900000);
 };
-
 
 router.post("/Student", async (req, res) => {
   try {
@@ -186,9 +185,9 @@ router.post("/Student", async (req, res) => {
              <p>Best regards,<br>Your School</p>`,
       attachments: [
         {
-          filename: 'studentID-' + studentId + '.png',
+          filename: "studentID-" + studentId + ".png",
           content: qrCodeBuffer,
-          contentType: 'image/png',
+          contentType: "image/png",
         },
       ],
     };
@@ -208,10 +207,8 @@ router.post("/Student", async (req, res) => {
   }
 });
 
-
-
 // Utility function to introduce a delay
-const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 router.post("/mark-attendance", async (req, res) => {
   try {
@@ -221,7 +218,9 @@ router.post("/mark-attendance", async (req, res) => {
 
     if (!studentID || !classId) {
       console.error("Student ID and Class ID are required");
-      return res.status(400).json({ error: "Student ID and Class ID are required" });
+      return res
+        .status(400)
+        .json({ error: "Student ID and Class ID are required" });
     }
 
     const student = await Student.findOne({ studentID });
@@ -235,7 +234,9 @@ router.post("/mark-attendance", async (req, res) => {
     const isEnrolled = student.classIds.includes(classId);
     if (!isEnrolled) {
       console.error("Student is not enrolled in this class:", classId);
-      return res.status(400).json({ error: "Student is not enrolled in this class" });
+      return res
+        .status(400)
+        .json({ error: "Student is not enrolled in this class" });
     }
 
     console.log("Student is enrolled in the class:", classId);
@@ -249,8 +250,10 @@ router.post("/mark-attendance", async (req, res) => {
     console.log("Class found:", classExists);
 
     const twoMinutesAgo = new Date(Date.now() - 2 * 60 * 1000);
-    console.log("Waiting for 1 second before saving to ensure recent attendance is not overwritten...");
-    await delay(1000); 
+    console.log(
+      "Waiting for 1 second before saving to ensure recent attendance is not overwritten..."
+    );
+    await delay(1000);
     console.log("Saving attendance record...");
 
     const recentAttendance = await Attendance.findOne({
@@ -260,9 +263,13 @@ router.post("/mark-attendance", async (req, res) => {
     });
 
     if (recentAttendance) {
-      console.error("Attendance already marked within the last 2 minutes for this class:", classId);
+      console.error(
+        "Attendance already marked within the last 2 minutes for this class:",
+        classId
+      );
       return res.status(400).json({
-        error: "Attendance already marked within the last 2 minutes for this class",
+        error:
+          "Attendance already marked within the last 2 minutes for this class",
       });
     }
 
@@ -278,7 +285,7 @@ router.post("/mark-attendance", async (req, res) => {
     const savedAttendance = await Attendance.findOne({
       studentID,
       classId,
-      date: newAttendance.date, 
+      date: newAttendance.date,
     });
 
     if (savedAttendance) {
@@ -299,9 +306,6 @@ router.post("/mark-attendance", async (req, res) => {
     res.status(500).json({ error: "Error marking attendance", details: err });
   }
 });
-
-
-
 
 router.post("/AddStudentToClass", async (req, res) => {
   try {
@@ -330,7 +334,7 @@ router.post("/AddStudentToClass", async (req, res) => {
 
 router.get("/teachers", async (req, res) => {
   try {
-    const teachers = await Teacher.find(); 
+    const teachers = await Teacher.find();
     res.json(teachers);
   } catch (error) {
     console.error("Error fetching teachers:", error);
@@ -340,7 +344,7 @@ router.get("/teachers", async (req, res) => {
 
 router.get("/students", async (req, res) => {
   try {
-    const students = await Student.find(); 
+    const students = await Student.find();
     res.json(students);
   } catch (error) {
     console.error("Error fetching Students:", error);
@@ -350,7 +354,7 @@ router.get("/students", async (req, res) => {
 
 router.get("/feedback", async (req, res) => {
   try {
-    const feedbacks = await Feedback.find(); 
+    const feedbacks = await Feedback.find();
     res.json(feedbacks);
   } catch (error) {
     console.error("Error fetching feedbacks:", error);
@@ -360,7 +364,7 @@ router.get("/feedback", async (req, res) => {
 
 router.get("/classes", async (req, res) => {
   try {
-    const classes = await Class.find(); 
+    const classes = await Class.find();
     res.json(classes);
   } catch (error) {
     console.error("Error fetching teachers:", error);
@@ -369,9 +373,7 @@ router.get("/classes", async (req, res) => {
 });
 router.get("/classes-with-teachers", async (req, res) => {
   try {
-    const classes = await Class.find()
-      .populate("TeacherID")
-      .exec();
+    const classes = await Class.find().populate("TeacherID").exec();
     res.json(classes);
   } catch (error) {
     console.error("Error fetching class details:", error);
@@ -393,7 +395,6 @@ router.post("/updateTeacher", async (req, res) => {
     console.log("couldn't update teacher");
   }
 });
-
 
 //Manager Dashboard ADD Routes
 
@@ -480,11 +481,11 @@ The Team`,
     res.status(201).json({ message: "Teacher added successfully" });
   } catch (error) {
     console.error("Error adding teacher:", error.message);
-    res.status(500).json({ error: "An error occurred while adding the teacher" });
+    res
+      .status(500)
+      .json({ error: "An error occurred while adding the teacher" });
   }
 });
-
-
 
 //Manager Dashboard UPDATE Routes
 
@@ -492,12 +493,12 @@ router.put("/Teacher_update/:id", async (req, res) => {
   try {
     const teacherId = req.params.id;
     console.log("Trying to update teacher with ID:", teacherId);
-    
+
     // Ensure the request body contains the necessary fields
     if (!req.body) {
       return res.status(400).json({ error: "Request body is missing" });
     }
-    
+
     // Update the teacher details
     const updatedTeacher = await Teacher.findOneAndUpdate(
       { TeacherID: teacherId },
@@ -508,11 +509,11 @@ router.put("/Teacher_update/:id", async (req, res) => {
           phone: req.body.phone,
           address: req.body.address,
         },
-        subjects: req.body.subjects
+        subjects: req.body.subjects,
       },
       { new: true, runValidators: true } // Return the updated document and run validators
     );
-    
+
     if (!updatedTeacher) {
       return res.status(404).json({ error: "Teacher not found" });
     }
@@ -529,12 +530,12 @@ router.put("/Student_update/:id", async (req, res) => {
   try {
     const studentId = req.params.id;
     console.log("Trying to update student with ID:", studentId);
-    
+
     // Ensure the request body contains the necessary fields
     if (!req.body) {
       return res.status(400).json({ error: "Request body is missing" });
     }
-    
+
     // Update the teacher details
     const updatedStudent = await Student.findOneAndUpdate(
       { studentID: studentId },
@@ -550,11 +551,11 @@ router.put("/Student_update/:id", async (req, res) => {
           PName: req.body.parentsName,
           PContact: req.body.parentsContact,
         },
-        classIds: req.body.classIds
+        classIds: req.body.classIds,
       },
       { new: true, runValidators: true } // Return the updated document and run validators
     );
-    
+
     if (!updatedStudent) {
       return res.status(404).json({ error: "Student not found" });
     }
@@ -571,10 +572,10 @@ router.post("/deleteTeacher", async (req, res) => {
     const Something = await Teacher.findOneAndDelete({
       TeacherID: req.body.TeacherID,
     });
-    res.status(200).json({message: "Successfully Deleted teacher"});
+    res.status(200).json({ message: "Successfully Deleted teacher" });
   } catch (err) {
     console.log("couldn't delete teacher");
-    res.status(500).json({error: "Error Deleting teacher"});
+    res.status(500).json({ error: "Error Deleting teacher" });
   }
 });
 
@@ -583,17 +584,16 @@ router.post("/deleteStudent", async (req, res) => {
     const Something = await Student.findOneAndDelete({
       studentID: req.body.studentID,
     });
-    res.status(200).json({message: "Successfully Deleted student"})
+    res.status(200).json({ message: "Successfully Deleted student" });
   } catch (err) {
     console.log("couldn't delete student");
-    res.status(500).json({error: "Error Deleting teacher"});
-
+    res.status(500).json({ error: "Error Deleting teacher" });
   }
 });
 
 router.get("/fetchClasses", async (req, res) => {
   try {
-    const classes = await Class.find(); 
+    const classes = await Class.find();
     res.json(classes);
   } catch (error) {
     console.error("Error fetching classes:", error);
@@ -603,7 +603,7 @@ router.get("/fetchClasses", async (req, res) => {
 
 router.get("/fetchTeachers", async (req, res) => {
   try {
-    const teachers = await Teacher.find(); 
+    const teachers = await Teacher.find();
     res.json(teachers);
   } catch (error) {
     console.error("Error fetching teachers:", error);
@@ -611,19 +611,28 @@ router.get("/fetchTeachers", async (req, res) => {
   }
 });
 
-router.post('/addClass', async (req, res) => {
+router.post("/addClass", async (req, res) => {
   try {
-    const { className, classId, fee, TeacherID, scheduleDays, scheduleTime } = req.body;
+    const { className, classId, fee, TeacherID, scheduleDays, scheduleTime } =
+      req.body;
 
-    console.log('Adding new class: ', className, classId, fee, TeacherID, scheduleDays, scheduleTime);
+    console.log(
+      "Adding new class: ",
+      className,
+      classId,
+      fee,
+      TeacherID,
+      scheduleDays,
+      scheduleTime
+    );
 
     const teacherExists = await Teacher.findById(TeacherID);
     if (!teacherExists) {
-      console.log('Teacher not found');
-      return res.status(404).json({ error: 'Teacher not found' });
+      console.log("Teacher not found");
+      return res.status(404).json({ error: "Teacher not found" });
     }
 
-    console.log('Teacher found, creating new class');
+    console.log("Teacher found, creating new class");
     const newClass = new Class({
       className,
       classId,
@@ -635,22 +644,24 @@ router.post('/addClass', async (req, res) => {
       },
     });
 
-    console.log('Saving new class');
+    console.log("Saving new class");
     await newClass.save();
 
-    console.log('Adding class to teacher');
+    console.log("Adding class to teacher");
     teacherExists.classIds.push(newClass._id);
     await teacherExists.save();
 
-    console.log('Class added successfully');
-    res.status(201).json({ message: 'Class added successfully', class: newClass });
+    console.log("Class added successfully");
+    res
+      .status(201)
+      .json({ message: "Class added successfully", class: newClass });
   } catch (error) {
-    console.error('Error adding class:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Error adding class:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
-router.delete('/deleteClass/:ClassID', async (req, res) => {
+router.delete("/deleteClass/:ClassID", async (req, res) => {
   try {
     const { ClassID } = req.params;
 
@@ -659,7 +670,7 @@ router.delete('/deleteClass/:ClassID', async (req, res) => {
     const classToDelete = await Class.findById(ClassID);
     if (!classToDelete) {
       console.log(`Class with ClassID: ${ClassID} not found`);
-      return res.status(404).json({ error: 'Class not found' });
+      return res.status(404).json({ error: "Class not found" });
     }
 
     console.log(`Class with ClassID: ${ClassID} found, updating teacher`);
@@ -675,14 +686,14 @@ router.delete('/deleteClass/:ClassID', async (req, res) => {
 
     console.log(`Class deleted successfully`);
 
-    res.status(200).json({ message: 'Class deleted successfully' });
+    res.status(200).json({ message: "Class deleted successfully" });
   } catch (error) {
-    console.error('Error deleting class:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Error deleting class:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
-router.put('/updateClass/:_id', async (req, res) => {
+router.put("/updateClass/:_id", async (req, res) => {
   const { _id } = req.params;
   const { className, fee, TeacherID, scheduleDays, scheduleTime } = req.body;
 
@@ -702,39 +713,35 @@ router.put('/updateClass/:_id', async (req, res) => {
     );
 
     if (!updatedClass) {
-      return res.status(404).json({ message: 'Class not found' });
+      return res.status(404).json({ message: "Class not found" });
     }
 
     res.status(200).json(updatedClass);
   } catch (error) {
     console.error(`Failed to update class: ${error.message}`);
     console.error(`Error stack: ${error.stack}`);
-    res.status(500).json({ message: `Failed to update class: ${error.message}` });
+    res
+      .status(500)
+      .json({ message: `Failed to update class: ${error.message}` });
   }
 });
 
-router.get('/fetchAllPayments', async (req, res) => {
-
+router.get("/fetchAllPayments", async (req, res) => {
   try {
-    console.log('Received request to fetch all payment data');
+    console.log("Received request to fetch all payment data");
     // Fetch all payments
     const payments = await Payment.find({})
-    .populate('classID','className')
-    .populate('studentID','profile.Name');
+      .populate("classID", "className")
+      .populate("studentID", "profile.Name");
 
     console.log(`Fetched payments: ${payments}`);
 
     // Return the payments as JSON
     res.json(payments);
   } catch (error) {
-    console.error('Server error fetching all payments:', error);
-    res.status(500).json({ error: 'Server error' });
+    console.error("Server error fetching all payments:", error);
+    res.status(500).json({ error: "Server error" });
   }
 });
-
-
-
-
-
 
 module.exports = router;

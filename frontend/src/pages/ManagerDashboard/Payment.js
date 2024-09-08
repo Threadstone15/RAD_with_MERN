@@ -17,15 +17,24 @@ import {
   Select,
 } from "@mui/material";
 import Sidebar from "../../components/Sidebar";
-import { fetchAllPaymentsData } from "../../services/api"; // Adjust the import based on your actual API service
+import { fetchAllPaymentsData } from "../../services/api";
 
-const drawerWidth = 240; // Assuming the width of the sidebar is 240px
+const drawerWidth = 240;
 
 const monthNames = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December"
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
-
 
 const Payments = () => {
   const [payments, setPayments] = useState([]);
@@ -40,21 +49,27 @@ const Payments = () => {
     const fetchPayments = async () => {
       try {
         console.log("Fetching all payments");
-        const response = await fetchAllPaymentsData(); // Call the API to fetch all payments
+        const response = await fetchAllPaymentsData();
         console.log("Response from fetchAllPaymentsData:", response);
-    
+
         // Process the payments data
-        const convertedPayments = response.map(payment => ({
+        const convertedPayments = response.map((payment) => ({
           ...payment,
-          className: payment.classID ? payment.classID.className : 'N/A', // Extract class name
-          studentName: payment.studentID && payment.studentID.profile ? payment.studentID.profile.Name : 'N/A', // Extract student name
-          formattedDate: new Date(payment.date).toLocaleDateString() // Format the date
+          className: payment.classID ? payment.classID.className : "N/A",
+          studentName:
+            payment.studentID && payment.studentID.profile
+              ? payment.studentID.profile.Name
+              : "N/A",
+          formattedDate: new Date(payment.date).toLocaleDateString(),
         }));
-    
-        // Extract unique values for filtering
-        const months = [...new Set(convertedPayments.map(payment => payment.month))];
-        const classes = [...new Set(convertedPayments.map(payment => payment.className))];
-    
+
+        const months = [
+          ...new Set(convertedPayments.map((payment) => payment.month)),
+        ];
+        const classes = [
+          ...new Set(convertedPayments.map((payment) => payment.className)),
+        ];
+
         setPayments(convertedPayments);
         setUniqueMonths(months);
         setUniqueClasses(classes);
@@ -62,7 +77,6 @@ const Payments = () => {
         console.error("Error fetching payments:", error);
       }
     };
-    
 
     fetchPayments();
   }, []);
@@ -83,9 +97,11 @@ const Payments = () => {
     setSelectedStudent(event.target.value);
   };
 
-  const filteredPayments = payments.filter(payment => {
+  const filteredPayments = payments.filter((payment) => {
     return (
-      (searchTerm === "" || payment.studentName.toLowerCase().includes(searchTerm.toLowerCase()) || payment.tutorName.toLowerCase().includes(searchTerm.toLowerCase())) &&
+      (searchTerm === "" ||
+        payment.studentName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        payment.tutorName.toLowerCase().includes(searchTerm.toLowerCase())) &&
       (selectedMonth === "" || payment.month === selectedMonth) &&
       (selectedTutor === "" || payment.tutorName === selectedTutor) &&
       (selectedStudent === "" || payment.studentName === selectedStudent)
@@ -179,7 +195,7 @@ const Payments = () => {
                   {filteredPayments.map((payment) => (
                     <TableRow>
                       <TableCell>{payment.formattedDate}</TableCell>
-                      <TableCell>{payment.className}</TableCell> {/* Displaying className */}
+                      <TableCell>{payment.className}</TableCell>
                       <TableCell>{payment.amount}</TableCell>
                       <TableCell>{payment.studentName}</TableCell>
                     </TableRow>

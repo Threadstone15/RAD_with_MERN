@@ -14,9 +14,6 @@ import Navbar from "./Navbar";
 import { sendFeedback } from "../services/api";
 import { useState } from "react";
 
-
-
-
 const Contact = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -43,7 +40,7 @@ const Contact = () => {
     try {
       await sendFeedback(formData);
       console.log("This got executed");
-      setShowSnackbar(true); // Display success message if needed
+      setShowSnackbar(true);
       setFormData({
         name: "",
         email: "",
@@ -54,7 +51,7 @@ const Contact = () => {
       setErrorMessage(error.response?.data?.error || "An error occurred");
       setShowSnackbar(true);
     }
-  }
+  };
 
   return (
     <div>
@@ -128,7 +125,10 @@ const Contact = () => {
           autoHideDuration={6000}
           onClose={handleSnackbarClose}
         >
-          <Alert onClose={handleSnackbarClose} severity={errorMessage ? "error" : "success"}>
+          <Alert
+            onClose={handleSnackbarClose}
+            severity={errorMessage ? "error" : "success"}
+          >
             {errorMessage || "Feedback given successful"}
           </Alert>
         </Snackbar>
@@ -140,8 +140,7 @@ const Contact = () => {
                 Our Contact Details
               </Typography>
               <Typography variant="body1" color="textSecondary" paragraph>
-                <strong>Address:</strong> 123 Success Street, Colombo, Sri
-                Lanka
+                <strong>Address:</strong> 123 Success Street, Colombo, Sri Lanka
               </Typography>
               <Typography variant="body1" color="textSecondary" paragraph>
                 <strong>Phone:</strong> +94 77 123 4567
@@ -152,7 +151,6 @@ const Contact = () => {
             </CardContent>
           </Card>
         </Box>
-
       </Container>
     </div>
   );

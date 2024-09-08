@@ -10,7 +10,7 @@ import {
   DialogContent,
   DialogTitle,
   Snackbar,
-  Alert
+  Alert,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import UpdateTutorForm from "./UpdateTutorForm";
@@ -31,7 +31,7 @@ const TutorDetails = ({ open, onClose, tutorData, onDelete, onUpdate }) => {
       onDelete("Tutor Deleted successfully!", "success"); // Close the details modal
     } catch (error) {
       console.error("Couldn't delete teacher:", error.message);
-      onDelete("Failed to delete tutor. Please try again.", "error")
+      onDelete("Failed to delete tutor. Please try again.", "error");
     }
   };
 
@@ -138,7 +138,7 @@ const TutorDetails = ({ open, onClose, tutorData, onDelete, onUpdate }) => {
           </Box>
         </Box>
       </Modal>
- 
+
       {/* Confirmation Dialog */}
       <Dialog open={showConfirmDialog} onClose={handleCancelDelete}>
         <DialogTitle>Confirm Delete</DialogTitle>

@@ -1,25 +1,40 @@
-import React, { useState, useEffect } from 'react';
-import { Box, TextField, Button, Typography, Modal, IconButton, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import { addClass, fetchTeachers } from '../services/api'; // Ensure the fetchTeachers function is correctly imported
+import React, { useState, useEffect } from "react";
+import {
+  Box,
+  TextField,
+  Button,
+  Typography,
+  Modal,
+  IconButton,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import { addClass, fetchTeachers } from "../services/api";
 
 const AddClassForm = ({ open, onClose }) => {
   const [formData, setFormData] = useState({
-    className: '',
-    classId: '',
-    fee: '',
-    TeacherID: '',
+    className: "",
+    classId: "",
+    fee: "",
+    TeacherID: "",
     scheduleDays: [],
-    scheduleTime: '',
+    scheduleTime: "",
   });
-  const [teachers, setTeachers] = useState([]); // State to hold teachers data
+  const [teachers, setTeachers] = useState([]);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
   useEffect(() => {
     const getTeachers = async () => {
       try {
         const response = await fetchTeachers();
-        setTeachers(response.data); // Assuming response.data is an array of teachers
+        setTeachers(response.data);
       } catch (error) {
         console.error("Failed to fetch teachers:", error);
       }
@@ -39,31 +54,38 @@ const AddClassForm = ({ open, onClose }) => {
 
   const handleScheduleDaysChange = (e) => {
     const { value } = e.target;
-    setFormData((prev) => ({ ...prev, scheduleDays: value.split(',').map(day => day.trim()) }));
+    setFormData((prev) => ({
+      ...prev,
+      scheduleDays: value.split(",").map((day) => day.trim()),
+    }));
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
       await addClass(formData);
-      // Handle success (e.g., show a success message or refresh the list)
+
       setFormData({
-        className: '',
-        classId: '',
-        fee: '',
-        TeacherID: '',
+        className: "",
+        classId: "",
+        fee: "",
+        TeacherID: "",
         scheduleDays: [],
-        scheduleTime: '',
+        scheduleTime: "",
       });
     } catch (error) {
-      console.error('Add Class failed:', error);
+      console.error("Add Class failed:", error);
     }
     onClose();
   };
 
   const handleClose = () => {
-    if (Object.values(formData).some(value => value !== '' && value.length !== 0)) {
-      setShowConfirmDialog(true); // Show confirmation dialog if there are unsaved changes
+    if (
+      Object.values(formData).some(
+        (value) => value !== "" && value.length !== 0
+      )
+    ) {
+      setShowConfirmDialog(true);
     } else {
       onClose();
     }
@@ -83,27 +105,27 @@ const AddClassForm = ({ open, onClose }) => {
       <Modal open={open} onClose={handleClose}>
         <Box
           sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
             width: 400,
-            maxHeight: '80vh',
-            bgcolor: 'background.paper',
+            maxHeight: "80vh",
+            bgcolor: "background.paper",
             borderRadius: 2,
             boxShadow: 24,
             p: 4,
-            overflowY: 'auto',
-            display: 'flex',
-            flexDirection: 'column',
+            overflowY: "auto",
+            display: "flex",
+            flexDirection: "column",
             margin: 0,
           }}
         >
           <Box
             sx={{
-              display: 'flex',
-              justifyContent: 'flex-end',
-              position: 'absolute',
+              display: "flex",
+              justifyContent: "flex-end",
+              position: "absolute",
               top: 10,
               right: 10,
             }}
@@ -163,7 +185,7 @@ const AddClassForm = ({ open, onClose }) => {
               <TextField
                 label="Schedule Days (comma separated)"
                 name="scheduleDays"
-                value={formData.scheduleDays.join(', ')}
+                value={formData.scheduleDays.join(", ")}
                 onChange={handleScheduleDaysChange}
                 fullWidth
                 margin="normal"
@@ -178,7 +200,12 @@ const AddClassForm = ({ open, onClose }) => {
                 margin="normal"
                 required
               />
-              <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                sx={{ mt: 2 }}
+              >
                 Submit
               </Button>
             </form>
@@ -189,7 +216,9 @@ const AddClassForm = ({ open, onClose }) => {
       <Dialog open={showConfirmDialog} onClose={handleCancelClose}>
         <DialogTitle>Unsaved Changes</DialogTitle>
         <DialogContent>
-          <Typography>Are you sure you want to close without saving changes?</Typography>
+          <Typography>
+            Are you sure you want to close without saving changes?
+          </Typography>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCancelClose} color="primary">

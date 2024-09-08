@@ -3,17 +3,16 @@ import axios from "axios";
 axios.defaults.withCredentials = true;
 
 axios.interceptors.response.use(
-  response => {
+  (response) => {
     return response;
   },
-  error => {
+  (error) => {
     if (error.response && error.response.status === 401) {
-      window.location.href = '/';
+      window.location.href = "/";
     }
-    return Promise.reject(error); 
+    return Promise.reject(error);
   }
 );
-
 
 export const login = async ({ email, password }) => {
   const response = await axios.post("http://localhost:5000/api/auth/login", {
@@ -23,8 +22,7 @@ export const login = async ({ email, password }) => {
   return response.data;
 };
 
-
-export const sendFeedback = async ({ name, email, message}) => {
+export const sendFeedback = async ({ name, email, message }) => {
   const response = await axios.post("http://localhost:5000/api/sendFeedback", {
     name,
     email,
@@ -44,15 +42,15 @@ export const addStudent = async (userData) => {
 export const updateStudent = async (userData) => {
   try {
     const response = await axios.put(
-      `http://localhost:5000/manager-dashboard/Student_update/${userData.studentID}`, 
+      `http://localhost:5000/manager-dashboard/Student_update/${userData.studentID}`,
       userData
     );
     return response.data;
   } catch (error) {
     console.error("Error updating student:", error);
-    throw error; 
+    throw error;
   }
-}
+};
 
 export const addTeacher = async (userData) => {
   try {
@@ -62,26 +60,26 @@ export const addTeacher = async (userData) => {
     );
     return response.data;
   } catch (error) {
-    console.error("Error adding teacher:", error.response?.data?.error || error.message);
-    throw error; 
+    console.error(
+      "Error adding teacher:",
+      error.response?.data?.error || error.message
+    );
+    throw error;
   }
 };
-
-
-
 
 export const updateTeacher = async (userData) => {
   try {
     console.log(userData);
     const response = await axios.put(
-      `http://localhost:5000/manager-dashboard/Teacher_update/${userData.TeacherID}`, 
+      `http://localhost:5000/manager-dashboard/Teacher_update/${userData.TeacherID}`,
       userData
     );
 
     return response.data;
   } catch (error) {
     console.error("Error updating teacher:", error);
-    throw error; 
+    throw error;
   }
 };
 
@@ -111,7 +109,6 @@ export const updateClass = async (formData) => {
   }
 };
 
-
 export const deleteClass = async (ClassID) => {
   console.log(`Deleting class with ClassID API: ${ClassID}`);
   const response = await axios.delete(
@@ -121,18 +118,18 @@ export const deleteClass = async (ClassID) => {
   return response.data;
 };
 
-
 export const ManagerStatistics = async () => {
   const response = await axios.get("http://localhost:5000/manager-dashboard/");
   return response.data;
 };
 
-
 export const getFeedback = async () => {
   try {
-    const response = await axios.get("http://localhost:5000/manager-dashboard/feedback");
+    const response = await axios.get(
+      "http://localhost:5000/manager-dashboard/feedback"
+    );
     return response.data;
-  } catch(error) {
+  } catch (error) {
     console.error(`Error getting Feedback: ${error.message}`);
   }
 };
@@ -166,10 +163,11 @@ export const deleteStudent = async (studentID) => {
   return response.data;
 };
 
-
 export const fetchClasses = async () => {
   try {
-    const response = await axios.get("http://localhost:5000/manager-dashboard/fetchClasses");
+    const response = await axios.get(
+      "http://localhost:5000/manager-dashboard/fetchClasses"
+    );
     return response;
   } catch (error) {
     console.error("Error fetching classes:", error);
@@ -179,81 +177,104 @@ export const fetchClasses = async () => {
 
 export const fetchStudentData = async (studentID) => {
   try {
-    const response = await axios.get(`http://localhost:5000/student-dashboard/fetchStudentData/${studentID}`);
+    const response = await axios.get(
+      `http://localhost:5000/student-dashboard/fetchStudentData/${studentID}`
+    );
     return response.data;
   } catch (error) {
     console.error("Error getting student Data", error);
     throw error;
   }
-}
+};
 
 export const fetchPaymentData = async (studentID) => {
   console.log("Fetching payment data for student ID:", studentID);
   try {
-    const response = await axios.get(`http://localhost:5000/student-dashboard/fetchPaymentData/${studentID}`);
+    const response = await axios.get(
+      `http://localhost:5000/student-dashboard/fetchPaymentData/${studentID}`
+    );
     console.log("Response from fetchPaymentData:", response.data);
     return response.data;
   } catch (error) {
     console.error("Error getting payment Data", error);
     throw error;
   }
-}
+};
 
 export const fetchTutorData = async (tutorID) => {
   try {
-    const response = await axios.get(`http://localhost:5000/tutor-dashboard/fetchTutorData/${tutorID}`);
+    const response = await axios.get(
+      `http://localhost:5000/tutor-dashboard/fetchTutorData/${tutorID}`
+    );
     return response.data;
   } catch (error) {
     console.error("Error getting tutor Data", error);
     throw error;
   }
-}
-
-
+};
 
 export const fetchStudentProfile = async (studentID) => {
   try {
-    const response = await axios.get(`http://localhost:5000/student-dashboard/fetchStudentProfile/${studentID}`);
+    const response = await axios.get(
+      `http://localhost:5000/student-dashboard/fetchStudentProfile/${studentID}`
+    );
     return response.data;
   } catch (error) {
     console.error("Error getting student Profile", error);
     throw error;
   }
-}
-export const changeStudentPassword = async ({studentID, currentPassword, newPassword}) => {
+};
+export const changeStudentPassword = async ({
+  studentID,
+  currentPassword,
+  newPassword,
+}) => {
   try {
-    const response = await axios.post(`http://localhost:5000/student-dashboard/changeStudentPassword/`, {studentID, currentPassword, newPassword});
+    const response = await axios.post(
+      `http://localhost:5000/student-dashboard/changeStudentPassword/`,
+      { studentID, currentPassword, newPassword }
+    );
     return response.data;
   } catch (error) {
     console.error("Error changing student password", error);
     throw error;
   }
-}
+};
 
-export const changeTeacherPassword = async ({studentID, currentPassword, newPassword}) => {
+export const changeTeacherPassword = async ({
+  studentID,
+  currentPassword,
+  newPassword,
+}) => {
   try {
-    const response = await axios.post(`http://localhost:5000/teacher-dashboard/changeTeacherPassword/`, {studentID, currentPassword, newPassword});
+    const response = await axios.post(
+      `http://localhost:5000/teacher-dashboard/changeTeacherPassword/`,
+      { studentID, currentPassword, newPassword }
+    );
     return response.data;
   } catch (error) {
     console.error("Error changing student password", error);
     throw error;
   }
-}
-
+};
 
 export const fetchStudentAttendance = async (studentID) => {
   try {
-    const response = await axios.get(`http://localhost:5000/student-dashboard/fetchStudentAttendance/${studentID}`);
+    const response = await axios.get(
+      `http://localhost:5000/student-dashboard/fetchStudentAttendance/${studentID}`
+    );
     return response.data;
   } catch (error) {
     console.error("Error getting student Attendance", error);
     throw error;
   }
-}
+};
 
 export const fetchTeachers = async () => {
   try {
-    const response = await axios.get("http://localhost:5000/manager-dashboard/fetchTeachers");
+    const response = await axios.get(
+      "http://localhost:5000/manager-dashboard/fetchTeachers"
+    );
     return response;
   } catch (error) {
     console.error("Error fetching teachers:", error);
@@ -263,7 +284,9 @@ export const fetchTeachers = async () => {
 
 export const fetchClasses_id = async (studentID) => {
   try {
-    const response = await axios.get(`http://localhost:5000/student-dashboard/fetchClasses_id/${studentID}`);
+    const response = await axios.get(
+      `http://localhost:5000/student-dashboard/fetchClasses_id/${studentID}`
+    );
     return response;
   } catch (error) {
     console.error("API_Error fetching classes:", error);
@@ -273,9 +296,11 @@ export const fetchClasses_id = async (studentID) => {
 
 export const fetchAllPaymentsData = async () => {
   try {
-    console.log('Received API Request for payments')
-    const response = await axios.get("http://localhost:5000/manager-dashboard/fetchAllPayments");
-    console.log('Received Data from Backend')
+    console.log("Received API Request for payments");
+    const response = await axios.get(
+      "http://localhost:5000/manager-dashboard/fetchAllPayments"
+    );
+    console.log("Received Data from Backend");
     return response.data;
   } catch (error) {
     console.error("Error fetching all payments:", error);

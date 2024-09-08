@@ -8,7 +8,7 @@ import {
   Box,
 } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
-import Logo from "../assets/logo.png"; // Import the PNG file
+import Logo from "../assets/logo.png";
 import { handleLogout } from "./logout"; // Import the handleLogout function
 import Login from "./Login"; // Import the Login popup component
 
@@ -27,7 +27,6 @@ const Navbar = () => {
 
   return (
     <>
-      {/* Set position to "sticky" to keep the Navbar in place when scrolling */}
       <AppBar
         position="sticky"
         sx={{ backgroundColor: "#333", color: "#fff", zIndex: 1100 }}
@@ -40,7 +39,6 @@ const Navbar = () => {
               alignItems: "center",
             }}
           >
-            {/* Left Section: Logo and Title */}
             <Box sx={{ display: "flex", alignItems: "center" }}>
               <img
                 src={Logo}
@@ -51,13 +49,13 @@ const Navbar = () => {
               />
               <Typography
                 variant="h6"
-                component={Link} // Make the title a link
-                to="/" // Navigate to the home page on click
+                component={Link}
+                to="/"
                 sx={{
-                  textDecoration: "none", // Remove default link underline
-                  color: "inherit", // Inherit color from parent
+                  textDecoration: "none",
+                  color: "inherit",
                   "&:hover": {
-                    color: "#f0f0f0", // Change color on hover if desired
+                    color: "#f0f0f0",
                   },
                 }}
               >
@@ -65,7 +63,6 @@ const Navbar = () => {
               </Typography>
             </Box>
 
-            {/* Center Section: Navigation Buttons */}
             <Box
               sx={{
                 display: "flex",
@@ -80,7 +77,7 @@ const Navbar = () => {
                 to="/"
                 sx={{
                   "&:hover": {
-                    backgroundColor: "#555", // Add hover background color
+                    backgroundColor: "#555",
                   },
                 }}
               >
@@ -92,7 +89,7 @@ const Navbar = () => {
                 to="/about"
                 sx={{
                   "&:hover": {
-                    backgroundColor: "#555", // Add hover background color
+                    backgroundColor: "#555",
                   },
                 }}
               >
@@ -104,7 +101,7 @@ const Navbar = () => {
                 to="/contact"
                 sx={{
                   "&:hover": {
-                    backgroundColor: "#555", // Add hover background color
+                    backgroundColor: "#555",
                   },
                 }}
               >
@@ -116,7 +113,7 @@ const Navbar = () => {
                 to="/gallery"
                 sx={{
                   "&:hover": {
-                    backgroundColor: "#555", // Add hover background color
+                    backgroundColor: "#555",
                   },
                 }}
               >
@@ -154,7 +151,6 @@ const Navbar = () => {
         </Container>
       </AppBar>
 
-      {/* Render Login Popup */}
       <Login open={isLoginOpen} onClose={handleCloseLogin} />
     </>
   );

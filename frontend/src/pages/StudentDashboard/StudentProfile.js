@@ -1,4 +1,4 @@
-import React , {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -8,18 +8,14 @@ import {
   Typography,
   Grid,
 } from "@mui/material";
-import StudentSidebar from "../StudentDashboard/StudentSidebar"; // Import Sidebar
+import StudentSidebar from "../StudentDashboard/StudentSidebar";
 import ChangePasswordPopup from "../../popups/ChangePasswordStudent";
 import { fetchStudentProfile } from "../../services/api";
 import { useNavigate } from "react-router-dom";
 
-
 const drawerWidth = 240;
 
-
 const Profile = () => {
-
-
   const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
 
   const handleOpenChangePassword = () => {
@@ -31,16 +27,16 @@ const Profile = () => {
   };
 
   const navigate = useNavigate();
-  const studentID = localStorage.getItem('studentID');
+  const studentID = localStorage.getItem("studentID");
   if (!studentID) {
-    navigate('/login');
+    navigate("/login");
   }
 
   const [student, setStudent] = useState({
-    'profile': {
-      'name': '',
+    profile: {
+      name: "",
     },
-    'classes': [],
+    classes: [],
   });
 
   useEffect(() => {
@@ -55,14 +51,12 @@ const Profile = () => {
           }
         }
       } catch (error) {
-        console.error('Error fetching classes:', error);
+        console.error("Error fetching classes:", error);
       }
     };
 
     fetchStudentDetails();
   }, []);
-
-
 
   return (
     <div>
@@ -89,7 +83,7 @@ const Profile = () => {
               width: "100%",
               mb: 3,
               "&:hover": {
-                boxShadow: 6, // Add hover effect for the card
+                boxShadow: 6,
               },
             }}
           >
@@ -97,7 +91,9 @@ const Profile = () => {
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
                   {console.log(student)}
-                  <Typography variant="h6">Name: {student.profile.Name}</Typography>
+                  <Typography variant="h6">
+                    Name: {student.profile.Name}
+                  </Typography>
                   <Typography variant="body1">
                     Date of Birth: {student.profile.DOB}
                   </Typography>
@@ -119,11 +115,9 @@ const Profile = () => {
                   <Typography variant="body1">
                     Classes Attending:
                     <ul>
-                    {student.classes.map((className, index) => (
+                      {student.classes.map((className, index) => (
                         <li key={index}>{className.className}</li>
                       ))}
-                    
-
                     </ul>
                   </Typography>
                 </Grid>
@@ -135,16 +129,15 @@ const Profile = () => {
             variant="contained"
             color="secondary"
             sx={{ mt: 2 }}
-            onClick={handleOpenChangePassword} // Add change password functionality here
+            onClick={handleOpenChangePassword}
           >
             Change Password
           </Button>
         </Container>
         <ChangePasswordPopup
-  open={isChangePasswordOpen}
-  handleClose={handleCloseChangePassword}
-/>
-
+          open={isChangePasswordOpen}
+          handleClose={handleCloseChangePassword}
+        />
       </Box>
     </div>
   );

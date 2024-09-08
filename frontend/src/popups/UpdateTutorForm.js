@@ -6,13 +6,13 @@ import {
   Modal,
   Typography,
   Snackbar,
-  Alert
+  Alert,
 } from "@mui/material";
 import { updateTeacher } from "../services/api";
 
 const UpdateTutorForm = ({ open, onClose, tutorData, onUpdate }) => {
   const [formData, setFormData] = useState({
-    TeacherID: "", // Add TeacherID to formData
+    TeacherID: "",
     name: "",
     email: "",
     phone: "",
@@ -77,7 +77,7 @@ const UpdateTutorForm = ({ open, onClose, tutorData, onUpdate }) => {
             left: "50%",
             transform: "translate(-50%, -50%)",
             width: 400,
-            maxHeight: '80vh',
+            maxHeight: "80vh",
             bgcolor: "background.paper",
             borderRadius: 2,
             boxShadow: 24,
@@ -160,7 +160,7 @@ const UpdateTutorForm = ({ open, onClose, tutorData, onUpdate }) => {
         <Alert
           onClose={handleSnackbarClose}
           severity={snackbarSeverity}
-          sx={{ width: '100%' }}
+          sx={{ width: "100%" }}
         >
           {snackbarMessage}
         </Alert>

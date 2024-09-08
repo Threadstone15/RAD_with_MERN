@@ -39,7 +39,7 @@ const Contact = () => {
     try {
       await sendFeedback(formData);
       console.log("This got executed");
-      setShowSnackbar(true); // Display success message if needed
+      setShowSnackbar(true);
       setFormData({
         name: "",
         email: "",

@@ -14,7 +14,7 @@ const AttendanceSchema = new mongoose.Schema({
   date: {
     type: Date,
     required: true,
-  }
+  },
 });
 
 const Attendance = mongoose.model("Attendance", AttendanceSchema);

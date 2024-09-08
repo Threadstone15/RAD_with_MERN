@@ -1,5 +1,12 @@
-import React from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography } from '@mui/material';
+import React from "react";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  Typography,
+} from "@mui/material";
 
 const LogoutDialog = ({ open, onClose, onConfirm }) => {
   return (
@@ -10,7 +17,9 @@ const LogoutDialog = ({ open, onClose, onConfirm }) => {
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
-        <Button onClick={onConfirm} color="error">Log Out</Button>
+        <Button onClick={onConfirm} color="error">
+          Log Out
+        </Button>
       </DialogActions>
     </Dialog>
   );

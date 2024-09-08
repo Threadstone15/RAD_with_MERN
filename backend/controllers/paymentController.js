@@ -1,4 +1,4 @@
-const Payment = require('../models/Payment');
+const Payment = require("../models/Payment");
 
 // Controller function to get payments by studentId
 exports.getPaymentsByStudentId = async (req, res) => {
@@ -6,7 +6,9 @@ exports.getPaymentsByStudentId = async (req, res) => {
     const payments = await Payment.find({ studentId: req.params.studentId });
 
     if (!payments) {
-      return res.status(404).json({ message: 'No payments found for this student' });
+      return res
+        .status(404)
+        .json({ message: "No payments found for this student" });
     }
 
     res.status(200).json(payments);

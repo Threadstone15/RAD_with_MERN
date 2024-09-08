@@ -35,7 +35,7 @@ function RouteLoader({ children }) {
     setLoading(true);
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 300); // Adjust the timing to your needs
+    }, 300);
 
     return () => clearTimeout(timer);
   }, [location]);
@@ -49,7 +49,6 @@ function App() {
       <RouteLoader>
         <Routes>
           <Route path="/" element={<Home />} />{" "}
-          {/* Set Home as the default route */}
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />

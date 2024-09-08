@@ -8,12 +8,12 @@ import {
   Typography,
   Grid,
 } from "@mui/material";
-import { useNavigate } from 'react-router-dom'; // Add useNavigate to handle redirection
-import TutorSidebar from "./TutorSidebar"; // Import Sidebar
+import { useNavigate } from "react-router-dom";
+import TutorSidebar from "./TutorSidebar";
 import ChangePasswordPopup from "../../popups/ChangePasswordTeacher";
 import { fetchTutorData } from "../../services/api";
 
-const drawerWidth = 240; // Assuming the width of the sidebar is 240px
+const drawerWidth = 240;
 
 const TutorProfile = () => {
   const [tutorData, setTutor] = useState({
@@ -22,17 +22,16 @@ const TutorProfile = () => {
     phone: "",
     dob: "",
     address: "",
-    subjects: [], // Ensure subjects is initialized as an array
+    subjects: [],
   });
 
   const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
-  const tutorID = localStorage.getItem('teacherID'); // Get the tutorID from localStorage
-  const navigate = useNavigate(); // Declare navigate for redirection
+  const tutorID = localStorage.getItem("teacherID");
+  const navigate = useNavigate();
 
-  // Redirect to login if tutorID is not found
   useEffect(() => {
     if (!tutorID) {
-      navigate("/login"); // Redirect to login page if no tutorID
+      navigate("/login");
     }
   }, [tutorID, navigate]);
   console.log(tutorID);
@@ -49,7 +48,9 @@ const TutorProfile = () => {
             // Ensure that subjects is an array
             setTutor({
               ...response,
-              subjects: Array.isArray(response.subjects) ? response.subjects : [], // Handle non-array subjects
+              subjects: Array.isArray(response.subjects)
+                ? response.subjects
+                : [], // Handle non-array subjects
             });
             console.log("Tutor state updated:", response);
           }
@@ -95,7 +96,7 @@ const TutorProfile = () => {
               width: "100%",
               mb: 3,
               "&:hover": {
-                boxShadow: 6, // Add hover effect for the card
+                boxShadow: 6,
               },
             }}
           >
@@ -121,12 +122,13 @@ const TutorProfile = () => {
                     Subjects Taught:
                     <ul>
                       {/* Check if subjects is an array before mapping */}
-                      {Array.isArray(tutorData.subjects) && tutorData.subjects.length > 0 ? (
+                      {Array.isArray(tutorData.subjects) &&
+                      tutorData.subjects.length > 0 ? (
                         tutorData.subjects.map((subject, index) => (
                           <li key={index}>{subject}</li>
                         ))
                       ) : (
-                        <li>No subjects assigned</li> // Handle no subjects case
+                        <li>No subjects assigned</li>
                       )}
                     </ul>
                   </Typography>

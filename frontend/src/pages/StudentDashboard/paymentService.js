@@ -61,7 +61,7 @@ export const startPayment = async (course, student, hash) => {
           classID: course._id,
           amount: course.fee,
           date: new Date().toISOString(),
-          month: new Date().getMonth() + 1, // Current date and time
+          month: new Date().getMonth() + 1,
         };
 
         console.log("Sending payment notification to backend:", paymentData);
@@ -88,20 +88,16 @@ export const startPayment = async (course, student, hash) => {
             error
           );
         }
-
-        // Optionally, you can redirect to a success page or handle the success case further
       };
 
       // Listen for the payment dismissed event
       window.payhere.onDismissed = function onDismissed() {
         console.log("Payment dismissed by user.");
-        // Handle the case when the payment popup is closed without completing the payment
       };
 
       // Listen for errors
       window.payhere.onError = function onError(error) {
         console.error("Payment error occurred:", error);
-        // Handle the error appropriately
       };
 
       window.payhere.startPayment(payment);

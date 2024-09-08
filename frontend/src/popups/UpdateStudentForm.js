@@ -8,7 +8,7 @@ import {
   FormControl,
   InputLabel,
   Select,
-  MenuItem
+  MenuItem,
 } from "@mui/material";
 import { updateStudent, fetchClasses } from "../services/api";
 
@@ -24,11 +24,10 @@ const UpdateStudentForm = ({ open, onClose, studentData, onUpdate }) => {
     address: "",
     parentsName: "",
     parentsContact: "",
-    classIds: []
+    classIds: [],
   });
 
   const [classes, setClasses] = useState([]);
-
 
   useEffect(() => {
     const getClasses = async () => {
@@ -46,7 +45,7 @@ const UpdateStudentForm = ({ open, onClose, studentData, onUpdate }) => {
   const handleClassChange = (event) => {
     setFormData((prev) => ({
       ...prev,
-      classIds: event.target.value
+      classIds: event.target.value,
     }));
   };
 
@@ -63,7 +62,7 @@ const UpdateStudentForm = ({ open, onClose, studentData, onUpdate }) => {
         address: studentData.profile?.Address || "",
         parentsName: studentData.profile?.PName || "",
         parentsContact: studentData.profile?.PContact || "",
-        classIds: studentData.classIds || []
+        classIds: studentData.classIds || [],
       });
     }
   }, [studentData]);
@@ -88,26 +87,25 @@ const UpdateStudentForm = ({ open, onClose, studentData, onUpdate }) => {
     }
   };
 
-
   return (
     <>
       <Modal open={open} onClose={onClose}>
         <Box
           component="form"
           sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
             width: 400,
-            maxHeight: '80vh',
-            bgcolor: 'background.paper',
+            maxHeight: "80vh",
+            bgcolor: "background.paper",
             borderRadius: 2,
             boxShadow: 24,
             p: 4,
-            overflowY: 'auto',
-            display: 'flex',
-            flexDirection: 'column',
+            overflowY: "auto",
+            display: "flex",
+            flexDirection: "column",
             margin: 0,
           }}
           onSubmit={handleSubmit}
@@ -214,7 +212,9 @@ const UpdateStudentForm = ({ open, onClose, studentData, onUpdate }) => {
               value={formData.classIds}
               onChange={handleClassChange}
               renderValue={(selected) =>
-                selected.map((id) => classes.find((cls) => cls._id === id)?.className).join(", ")
+                selected
+                  .map((id) => classes.find((cls) => cls._id === id)?.className)
+                  .join(", ")
               }
             >
               {classes.map((cls) => (
@@ -235,7 +235,6 @@ const UpdateStudentForm = ({ open, onClose, studentData, onUpdate }) => {
           </Box>
         </Box>
       </Modal>
-
     </>
   );
 };

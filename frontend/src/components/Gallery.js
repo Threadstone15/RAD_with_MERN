@@ -96,7 +96,6 @@ const Gallery = () => {
         </Grid>
       </Container>
 
-      {/* Image Modal */}
       <Dialog open={!!openImage} onClose={handleClose} maxWidth="md" fullWidth>
         <DialogContent>
           <IconButton

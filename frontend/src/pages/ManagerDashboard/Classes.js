@@ -15,8 +15,8 @@ import {
   MenuItem,
 } from "@mui/material";
 import Sidebar from "../../components/Sidebar";
-import AddClassForm from "../../popups/AddClassForm"; // Import the AddClassForm component
-import ClassDetails from "../../popups/ClassDetails"; // Import the ClassDetails component
+import AddClassForm from "../../popups/AddClassForm";
+import ClassDetails from "../../popups/ClassDetails";
 import axios from "axios";
 
 const drawerWidth = 240;
@@ -28,9 +28,9 @@ const Classes = () => {
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [refresh, setRefresh] = useState(false);
 
-  const [searchTerm, setSearchTerm] = useState(""); // For search bar
-  const [teacherFilter, setTeacherFilter] = useState(""); // For teacher filter
-  const [classFilter, setClassFilter] = useState(""); //
+  const [searchTerm, setSearchTerm] = useState("");
+  const [teacherFilter, setTeacherFilter] = useState("");
+  const [classFilter, setClassFilter] = useState("");
 
   const [classOptions, setClassOptions] = useState([]);
   const [teacherOptions, setTeacherOptions] = useState([]);
@@ -38,12 +38,12 @@ const Classes = () => {
   const handleOpen = () => {
     setOpen(true);
     setRefresh((prev) => !prev);
-  }
+  };
   const handleClose = () => {
     setOpen(false);
     setDetailsOpen(false);
-    setRefresh((prev) => !prev)
-  }
+    setRefresh((prev) => !prev);
+  };
   const handleRowClick = (classData) => {
     setSelectedClass(classData);
     setDetailsOpen(true);
@@ -57,15 +57,25 @@ const Classes = () => {
   useEffect(() => {
     const fetchClasses = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/manager-dashboard/classes-with-teachers');
+        const response = await axios.get(
+          "http://localhost:5000/manager-dashboard/classes-with-teachers"
+        );
         setClasses(response.data);
 
-        const uniqueClassNames = [...new Set(response.data.map((classData) => classData.className))];
+        const uniqueClassNames = [
+          ...new Set(response.data.map((classData) => classData.className)),
+        ];
         setClassOptions(uniqueClassNames);
-        const uniqueTeachers = [...new Set(response.data.map((classData) => classData.TeacherID?.profile?.name).filter(name => name) )];
+        const uniqueTeachers = [
+          ...new Set(
+            response.data
+              .map((classData) => classData.TeacherID?.profile?.name)
+              .filter((name) => name)
+          ),
+        ];
         setTeacherOptions(uniqueTeachers);
       } catch (error) {
-        console.error('Error fetching classes:', error);
+        console.error("Error fetching classes:", error);
       }
     };
 
@@ -75,9 +85,10 @@ const Classes = () => {
   const filteredClasses = classes.filter(
     (classData) =>
       classData.className.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      (teacherFilter === "" || classData.TeacherID?.profile?.name.includes(teacherFilter)) &&
+      (teacherFilter === "" ||
+        classData.TeacherID?.profile?.name.includes(teacherFilter)) &&
       (classFilter === "" || classData.className.includes(classFilter))
-);
+  );
 
   return (
     <div>
@@ -113,7 +124,7 @@ const Classes = () => {
               variant="outlined"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              sx={{ width: "100%", height: "56px" }} // Match button height
+              sx={{ width: "100%", height: "56px" }}
             />
             <Box
               sx={{
@@ -128,7 +139,7 @@ const Classes = () => {
                 label="Filter by Teacher"
                 value={teacherFilter}
                 onChange={(e) => setTeacherFilter(e.target.value)}
-                sx={{ flexGrow: 1, height: "56px" }} // Match button height
+                sx={{ flexGrow: 1, height: "56px" }}
               >
                 <MenuItem value="">All</MenuItem>
                 {teacherOptions.map((teacherName) => (
@@ -136,14 +147,13 @@ const Classes = () => {
                     {teacherName}
                   </MenuItem>
                 ))}
-
               </TextField>
               <TextField
                 select
                 label="Filter by Class"
                 value={classFilter}
                 onChange={(e) => setClassFilter(e.target.value)}
-                sx={{ flexGrow: 1, height: "56px" }} // Match button height
+                sx={{ flexGrow: 1, height: "56px" }}
               >
                 <MenuItem value="">All</MenuItem>
                 {classOptions.map((className) => (
@@ -156,7 +166,7 @@ const Classes = () => {
                 variant="contained"
                 color="primary"
                 onClick={handleAddClass}
-                sx={{ height: "56px", width: "15%" }} // Match height of input fields
+                sx={{ height: "56px", width: "15%" }}
               >
                 Add Class
               </Button>
@@ -188,9 +198,13 @@ const Classes = () => {
                     >
                       <TableCell>{row.classId}</TableCell>
                       <TableCell>{row.className}</TableCell>
-                      <TableCell>{row.TeacherID?.profile?.name || 'Unknown'}</TableCell>
+                      <TableCell>
+                        {row.TeacherID?.profile?.name || "Unknown"}
+                      </TableCell>
                       <TableCell>{row.fee}</TableCell>
-                      <TableCell>{row.schedule.days.join(", ")} at {row.schedule.time}</TableCell>
+                      <TableCell>
+                        {row.schedule.days.join(", ")} at {row.schedule.time}
+                      </TableCell>
                       <TableCell>{row.studentIds.length}</TableCell>
                     </TableRow>
                   ))}
@@ -209,7 +223,7 @@ const Classes = () => {
               open={detailsOpen}
               onClose={() => setDetailsOpen(false)}
               classData={selectedClass}
-              onUpdate = {handleClose}
+              onUpdate={handleClose}
             />
           )}
         </Container>

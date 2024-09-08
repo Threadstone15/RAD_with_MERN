@@ -1,55 +1,84 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Grid, TextField, MenuItem } from '@mui/material';
+import React, { useState, useEffect } from "react";
+import {
+  Card,
+  CardContent,
+  Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Grid,
+  TextField,
+  MenuItem,
+} from "@mui/material";
 import TutorSidebar from "./TutorSidebar";
-import axios from 'axios';
+import axios from "axios";
 
 const TutorPage = () => {
-
   const [classes, setClasses] = useState([]);
   const [payments, setPayments] = useState([]);
   const [classTimetable, setClassTimetable] = useState([]);
-  const [selectedMonth, setSelectedMonth] = useState('');
-  const [selectedStudent, setSelectedStudent] = useState('');
-  const [selectedClass, setSelectedClass] = useState('');
-  const [selectedTeacher, setSelectedTeacher] = useState(''); // New state for teacher filter
+  const [selectedMonth, setSelectedMonth] = useState("");
+  const [selectedStudent, setSelectedStudent] = useState("");
+  const [selectedClass, setSelectedClass] = useState("");
+  const [selectedTeacher, setSelectedTeacher] = useState("");
 
-  const currentDay = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(new Date());
+  const currentDay = new Intl.DateTimeFormat("en-US", {
+    weekday: "long",
+  }).format(new Date());
 
   useEffect(() => {
-
     const dummyPayments = [
-      { date: '2024-08-01', student: 'John Doe', amount: 15000, class: 'Math 101' },
-      { date: '2024-08-05', student: 'Jane Smith', amount: 15000, class: 'Physics 201' },
+      {
+        date: "2024-08-01",
+        student: "John Doe",
+        amount: 15000,
+        class: "Math 101",
+      },
+      {
+        date: "2024-08-05",
+        student: "Jane Smith",
+        amount: 15000,
+        class: "Physics 201",
+      },
     ];
     setPayments(dummyPayments);
 
     const fetchData = async () => {
       try {
-        const classResponse = await axios.get('http://localhost:5000/tutor-dashboard/classes-with-teachers');
-        console.log('Class Response Data:', classResponse.data);
- 
+        const classResponse = await axios.get(
+          "http://localhost:5000/tutor-dashboard/classes-with-teachers"
+        );
+        console.log("Class Response Data:", classResponse.data);
+
         const classData = classResponse.data;
         setClasses(classData);
-    
-        const formattedTimetable = classData.map((classEntry) => {
-          return classEntry.schedule?.days?.map((day) => ({
-            day,
-            time: classEntry.schedule.time,
-            subject: classEntry.className,
-            teacher: classEntry.TeacherID?.profile?.name || 'Unknown',
-          })) || [];
-        }).flat();
-    
-        console.log('Formatted Timetable:', formattedTimetable);
-    
+
+        const formattedTimetable = classData
+          .map((classEntry) => {
+            return (
+              classEntry.schedule?.days?.map((day) => ({
+                day,
+                time: classEntry.schedule.time,
+                subject: classEntry.className,
+                teacher: classEntry.TeacherID?.profile?.name || "Unknown",
+              })) || []
+            );
+          })
+          .flat();
+
+        console.log("Formatted Timetable:", formattedTimetable);
+
         setClassTimetable(formattedTimetable);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       }
     };
 
     fetchData();
-
   }, []);
 
   const handleMonthChange = (event) => {
@@ -65,10 +94,10 @@ const TutorPage = () => {
   };
 
   const handleTeacherChange = (event) => {
-    setSelectedTeacher(event.target.value); // Update the teacher filter
+    setSelectedTeacher(event.target.value);
   };
 
-  const filteredPayments = payments.filter(payment => {
+  const filteredPayments = payments.filter((payment) => {
     return (
       (!selectedMonth || payment.date.startsWith(selectedMonth)) &&
       (!selectedStudent || payment.student === selectedStudent) &&
@@ -76,18 +105,19 @@ const TutorPage = () => {
     );
   });
 
-  // Filter the timetable based on the selected teacher
   const filteredTimetable = classTimetable.filter((entry) => {
     return !selectedTeacher || entry.teacher === selectedTeacher;
   });
 
   // Get unique teacher names for the filter dropdown
-  const uniqueTeachers = [...new Set(classTimetable.map((entry) => entry.teacher))];
+  const uniqueTeachers = [
+    ...new Set(classTimetable.map((entry) => entry.teacher)),
+  ];
 
   return (
-    <div style={{ display: 'flex' }}>
+    <div style={{ display: "flex" }}>
       <TutorSidebar />
-      <div style={{ flexGrow: 1, padding: '20px' }}>
+      <div style={{ flexGrow: 1, padding: "20px" }}>
         <Typography variant="h4" gutterBottom>
           Welcome, Tutor
         </Typography>
@@ -96,11 +126,11 @@ const TutorPage = () => {
         <Grid item xs={12}>
           <Card
             sx={{
-              width: '100%',
+              width: "100%",
               boxShadow: 3,
-              transition: 'transform 0.3s ease-in-out',
-              '&:hover': {
-                transform: 'scale(1.02)',
+              transition: "transform 0.3s ease-in-out",
+              "&:hover": {
+                transform: "scale(1.02)",
                 boxShadow: 6,
               },
             }}
@@ -117,7 +147,7 @@ const TutorPage = () => {
                 value={selectedTeacher}
                 onChange={handleTeacherChange}
                 fullWidth
-                style={{ marginBottom: '20px' }}
+                style={{ marginBottom: "20px" }}
               >
                 <MenuItem value="">All Teachers</MenuItem>
                 {uniqueTeachers.map((teacher, index) => (
@@ -142,9 +172,15 @@ const TutorPage = () => {
                       <TableRow
                         key={index}
                         sx={{
-                          backgroundColor: entry.day === currentDay ? 'rgba(0, 123, 255, 0.1)' : 'inherit',
-                          '&:hover': {
-                            backgroundColor: entry.day === currentDay ? 'rgba(0, 123, 255, 0.2)' : 'rgba(0, 0, 0, 0.04)',
+                          backgroundColor:
+                            entry.day === currentDay
+                              ? "rgba(0, 123, 255, 0.1)"
+                              : "inherit",
+                          "&:hover": {
+                            backgroundColor:
+                              entry.day === currentDay
+                                ? "rgba(0, 123, 255, 0.2)"
+                                : "rgba(0, 0, 0, 0.04)",
                           },
                         }}
                       >
@@ -165,12 +201,12 @@ const TutorPage = () => {
 
         {/* Filter Options */}
         <Grid item xs={12}>
-          <Card style={{ marginBottom: '20px' }}>
+          <Card style={{ marginBottom: "20px" }}>
             <CardContent>
               <Typography variant="h5" gutterBottom>
                 Filter Payments
               </Typography>
-              <Grid container spacing={2} style={{ marginBottom: '20px' }}>
+              <Grid container spacing={2} style={{ marginBottom: "20px" }}>
                 <Grid item xs={12} sm={4}>
                   <TextField
                     select
@@ -246,7 +282,6 @@ const TutorPage = () => {
             </CardContent>
           </Card>
         </Grid>
-
       </div>
     </div>
   );

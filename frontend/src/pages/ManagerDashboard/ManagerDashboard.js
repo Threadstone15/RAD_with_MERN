@@ -243,7 +243,6 @@ const ManagerDashboard = () => {
           </Box>
         </Container>
 
-        {/* Form Components */}
         <AddStudentForm
           open={isAddStudentOpen}
           onClose={handleCloseAddStudent}

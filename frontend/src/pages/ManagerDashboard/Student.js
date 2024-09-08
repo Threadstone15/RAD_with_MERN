@@ -12,7 +12,9 @@ import {
   TableBody,
   TableRow,
   Paper,
-  TableCell, TextField, MenuItem,
+  TableCell,
+  TextField,
+  MenuItem,
   Snackbar,
   Alert,
 } from "@mui/material";
@@ -32,7 +34,6 @@ const Students = () => {
   const [mediumFilter, setMediumFilter] = useState("");
   const [refresh, setRefresh] = useState(false);
 
-
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
@@ -42,12 +43,11 @@ const Students = () => {
   const handleStudentUpdate = () => {
     setRefresh((prev) => !prev);
     setOpen(false);
-    setDetailsOpen(false)
+    setDetailsOpen(false);
     setSnackbarMessage("Student updated successfully!");
-      setSnackbarSeverity("success");
+    setSnackbarSeverity("success");
     setSnackbarOpen(true);
-
-  }
+  };
 
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
@@ -66,11 +66,13 @@ const Students = () => {
   useEffect(() => {
     const fetchStudents = async () => {
       try {
-        console.log("Fetching data")
-        const response = await axios.get('http://localhost:5000/manager-dashboard/students');
+        console.log("Fetching data");
+        const response = await axios.get(
+          "http://localhost:5000/manager-dashboard/students"
+        );
         setStudents(response.data);
       } catch (error) {
-        console.error('Error fetching students:', error);
+        console.error("Error fetching students:", error);
       }
     };
 
@@ -118,7 +120,6 @@ const Students = () => {
     return matchesSearch && matchesMedium;
   });
 
-
   return (
     <div>
       <Sidebar />
@@ -145,7 +146,8 @@ const Students = () => {
               alignItems: "center",
               mb: 3,
               width: "100%",
-            }}>
+            }}
+          >
             <Box sx={{ display: "flex", gap: 1, flexGrow: 1 }}>
               <TextField
                 label="Search by Name"
@@ -174,7 +176,6 @@ const Students = () => {
               onClick={handleAddStudent}
               sx={{ ml: 1, width: "15%", height: "56px" }}
             >
-
               Add Student
             </Button>
           </Box>
@@ -184,8 +185,16 @@ const Students = () => {
               <Typography variant="h6" gutterBottom>
                 Students List
               </Typography>
-              <TableContainer component={Paper} sx={{ overflowX: "auto" }} ref={tableContainerRef} onMouseDown={handleMouseDown}
-                onMouseUp={handleMouseUp} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} style={{ cursor: isDragging ? "grabbing" : "grab" }}>
+              <TableContainer
+                component={Paper}
+                sx={{ overflowX: "auto" }}
+                ref={tableContainerRef}
+                onMouseDown={handleMouseDown}
+                onMouseUp={handleMouseUp}
+                onMouseMove={handleMouseMove}
+                onMouseLeave={handleMouseLeave}
+                style={{ cursor: isDragging ? "grabbing" : "grab" }}
+              >
                 <Table aria-label="students table" sx={{ minWidth: 1200 }}>
                   <TableHead>
                     <TableRow>

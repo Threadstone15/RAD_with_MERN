@@ -1,7 +1,7 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
-const Manager = require('../models/Manager'); // Import your Manager model
-const connectDB = require('./db'); // Your DB connection file
+const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
+const Manager = require("../models/Manager"); // Import your Manager model
+const connectDB = require("./db"); // Your DB connection file
 
 async function addManager() {
   try {
@@ -12,7 +12,7 @@ async function addManager() {
       name: "John Doe",
       email: "manager@tuition.com",
       phone: "1234567890",
-      address: "123 Main St, Anytown"
+      address: "123 Main St, Anytown",
     };
     const managerPassword = "password123";
     const managerID = "999999"; // Use the given ManagerID
@@ -24,7 +24,7 @@ async function addManager() {
     const newManager = new Manager({
       ManagerID: managerID, // Use the specified ManagerID
       password: hashedPassword,
-      profile: managerProfile // Include the profile details
+      profile: managerProfile, // Include the profile details
     });
 
     // Save the manager to the database

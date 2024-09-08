@@ -2,12 +2,12 @@ const mongoose = require("mongoose");
 
 const PaymentSchema = new mongoose.Schema({
   studentID: {
-    type: String, 
+    type: String,
     required: true,
   },
   classID: {
-    type: mongoose.Schema.Types.ObjectId,  
-    ref: "Class", 
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Class",
     required: true,
   },
   amount: {
@@ -19,7 +19,7 @@ const PaymentSchema = new mongoose.Schema({
     required: true,
   },
   month: {
-    type: String,  
+    type: String,
     required: true,
   },
 });

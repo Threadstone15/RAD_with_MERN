@@ -1,33 +1,45 @@
-import React, { useState, useEffect } from 'react';
-import { Box, TextField, Button, Typography, Modal, Snackbar, Alert, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
-import { updateClass, fetchTeachers } from '../services/api';
+import React, { useState, useEffect } from "react";
+import {
+  Box,
+  TextField,
+  Button,
+  Typography,
+  Modal,
+  Snackbar,
+  Alert,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+} from "@mui/material";
+import { updateClass, fetchTeachers } from "../services/api";
 
 const UpdateClassForm = ({ open, onClose, classData, onUpdate }) => {
   const [formData, setFormData] = useState({
-    _id: '',
-    classId: '',
-    className: '',
-    fee: '',
-    TeacherID: '',
+    _id: "",
+    classId: "",
+    className: "",
+    fee: "",
+    TeacherID: "",
     scheduleDays: [],
-    scheduleTime: '',
+    scheduleTime: "",
   });
 
   const [teachers, setTeachers] = useState([]);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
-  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
   useEffect(() => {
     if (classData) {
       setFormData({
-        _id: classData._id || '',
-        classID: classData.classId || '',
-        className: classData.className || '',
-        fee: classData.fee || '',
-        TeacherID: classData.TeacherID || '',
+        _id: classData._id || "",
+        classID: classData.classId || "",
+        className: classData.className || "",
+        fee: classData.fee || "",
+        TeacherID: classData.TeacherID || "",
         scheduleDays: classData.scheduleDays || [],
-        scheduleTime: classData.scheduleTime || '',
+        scheduleTime: classData.scheduleTime || "",
       });
     }
   }, [classData]);
@@ -38,7 +50,7 @@ const UpdateClassForm = ({ open, onClose, classData, onUpdate }) => {
         const response = await fetchTeachers();
         setTeachers(response.data);
       } catch (error) {
-        console.error('Failed to fetch teachers:', error);
+        console.error("Failed to fetch teachers:", error);
       }
     };
 
@@ -56,23 +68,26 @@ const UpdateClassForm = ({ open, onClose, classData, onUpdate }) => {
 
   const handleScheduleDaysChange = (e) => {
     const { value } = e.target;
-    setFormData((prev) => ({ ...prev, scheduleDays: value.split(',').map(day => day.trim()) }));
+    setFormData((prev) => ({
+      ...prev,
+      scheduleDays: value.split(",").map((day) => day.trim()),
+    }));
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log('Submit event:', event);
-    console.log('FormData:', formData);
+    console.log("Submit event:", event);
+    console.log("FormData:", formData);
     try {
       const response = await updateClass(formData);
-      console.log('Update Class response:', response);
-      setSnackbarMessage('Class updated successfully!');
-      setSnackbarSeverity('success');
+      console.log("Update Class response:", response);
+      setSnackbarMessage("Class updated successfully!");
+      setSnackbarSeverity("success");
       onUpdate(); // Call the onUpdate function passed as a prop
     } catch (error) {
-      console.error('Update Class failed:', error);
-      setSnackbarMessage('Failed to update class.');
-      setSnackbarSeverity('error');
+      console.error("Update Class failed:", error);
+      setSnackbarMessage("Failed to update class.");
+      setSnackbarSeverity("error");
     }
     setSnackbarOpen(true);
   };
@@ -90,19 +105,19 @@ const UpdateClassForm = ({ open, onClose, classData, onUpdate }) => {
       <Modal open={open} onClose={handleClose}>
         <Box
           sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
             width: 400,
-            maxHeight: '80vh',
-            bgcolor: 'background.paper',
+            maxHeight: "80vh",
+            bgcolor: "background.paper",
             borderRadius: 2,
             boxShadow: 24,
             p: 4,
-            overflowY: 'auto',
-            display: 'flex',
-            flexDirection: 'column',
+            overflowY: "auto",
+            display: "flex",
+            flexDirection: "column",
           }}
         >
           <Box sx={{ mb: 2 }}>
@@ -155,7 +170,7 @@ const UpdateClassForm = ({ open, onClose, classData, onUpdate }) => {
               <TextField
                 label="Schedule Days (comma separated)"
                 name="scheduleDays"
-                value={formData.scheduleDays.join(', ')}
+                value={formData.scheduleDays.join(", ")}
                 onChange={handleScheduleDaysChange}
                 fullWidth
                 margin="normal"
@@ -170,7 +185,12 @@ const UpdateClassForm = ({ open, onClose, classData, onUpdate }) => {
                 margin="normal"
                 required
               />
-              <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                sx={{ mt: 2 }}
+              >
                 Update
               </Button>
             </form>

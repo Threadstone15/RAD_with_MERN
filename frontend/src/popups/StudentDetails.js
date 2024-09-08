@@ -26,12 +26,14 @@ const StudentDetails = ({ open, onClose, studentData, onDelete, onUpdate }) => {
     console.log("Deleting student with StudentID:", studentData.studentID);
     setShowConfirmDialog(false);
     try {
-      const response = await deleteStudent({ studentID: studentData.studentID });
+      const response = await deleteStudent({
+        studentID: studentData.studentID,
+      });
       console.log("Deleted student successfully:", response);
     } catch (error) {
       console.log("Couldn't delete student:", error.message);
     }
-    onClose(); // Close the details modal
+    onClose();
   };
 
   const handleCancelDelete = () => {
@@ -39,12 +41,12 @@ const StudentDetails = ({ open, onClose, studentData, onDelete, onUpdate }) => {
   };
 
   const handleUpdateClick = () => {
-    setShowAddStudentForm(true); // Open AddStudentForm modal
+    setShowAddStudentForm(true);
   };
 
   const handleCloseUpdateStudent = () => {
     onClose();
-    setShowAddStudentForm(false); // Close AddStudentForm modal
+    setShowAddStudentForm(false);
   };
 
   const handleUpdateSuccess = () => {
@@ -114,7 +116,9 @@ const StudentDetails = ({ open, onClose, studentData, onDelete, onUpdate }) => {
                 </Typography>
               </>
             ) : (
-              <Typography variant="body1">No student data available.</Typography>
+              <Typography variant="body1">
+                No student data available.
+              </Typography>
             )}
             <Box
               sx={{ display: "flex", justifyContent: "space-between", mt: 3 }}
@@ -139,7 +143,6 @@ const StudentDetails = ({ open, onClose, studentData, onDelete, onUpdate }) => {
         </Box>
       </Modal>
 
-      {/* Confirmation Dialog */}
       <Dialog open={showConfirmDialog} onClose={handleCancelDelete}>
         <DialogTitle>Confirm Delete</DialogTitle>
         <DialogContent>
@@ -155,12 +158,11 @@ const StudentDetails = ({ open, onClose, studentData, onDelete, onUpdate }) => {
         </DialogActions>
       </Dialog>
 
-      {/* Add/Edit Student Form Modal */}
       <UpdateStudentForm
         open={showAddStudentForm}
         onClose={handleCloseUpdateStudent}
         studentData={studentData}
-        onUpdate={handleUpdateSuccess} // Ensure onUpdate is handled properly in AddStudentForm
+        onUpdate={handleUpdateSuccess}
       />
     </>
   );

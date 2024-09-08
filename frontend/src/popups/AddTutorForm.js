@@ -30,7 +30,6 @@ const AddTutorForm = ({ open, onClose, tutorData, onConfirmClose }) => {
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
-
   useEffect(() => {
     if (tutorData) {
       setFormData({
@@ -230,13 +229,13 @@ const AddTutorForm = ({ open, onClose, tutorData, onConfirmClose }) => {
         autoHideDuration={6000}
         onClose={handleSnackbarClose}
       >
-      <Alert
-        onClose={handleSnackbarClose}
-        severity={snackbarSeverity}
-        sx={{ width: '100%' }}
-      >
-        {errorMessage}
-      </Alert>
+        <Alert
+          onClose={handleSnackbarClose}
+          severity={snackbarSeverity}
+          sx={{ width: "100%" }}
+        >
+          {errorMessage}
+        </Alert>
       </Snackbar>
     </>
   );

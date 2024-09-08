@@ -1,27 +1,41 @@
-import React, { useState, useEffect } from 'react';
-import { Box, TextField, Button, Typography, Modal, IconButton, Dialog, DialogActions, DialogContent, DialogTitle, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import { addStudent } from '../services/api';
-import { fetchClasses } from '../services/api'; // Import your API call for fetching classes
+import React, { useState, useEffect } from "react";
+import {
+  Box,
+  TextField,
+  Button,
+  Typography,
+  Modal,
+  IconButton,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import { addStudent } from "../services/api";
+import { fetchClasses } from "../services/api";
 
 const AddStudentForm = ({ open, onClose, studentData }) => {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    dateOfBirth: '',
-    phone: '',
-    medium: '',
-    school: '',
-    address: '',
-    parentsName: '',
-    parentsContact: '',
-    classIds: [] // New field for classes
+    name: "",
+    email: "",
+    dateOfBirth: "",
+    phone: "",
+    medium: "",
+    school: "",
+    address: "",
+    parentsName: "",
+    parentsContact: "",
+    classIds: [],
   });
   const [classes, setClasses] = useState([]); // State to hold available classes
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
   useEffect(() => {
-    // Fetch available classes when the component mounts
     const getClasses = async () => {
       try {
         const response = await fetchClasses();
@@ -37,29 +51,29 @@ const AddStudentForm = ({ open, onClose, studentData }) => {
   useEffect(() => {
     if (studentData) {
       setFormData({
-        name: studentData.name || '',
-        email: studentData.email || '',
-        dateOfBirth: studentData.dateOfBirth || '',
-        phone: studentData.phone || '',
-        medium: studentData.medium || '',
-        school: studentData.school || '',
-        address: studentData.address || '',
-        parentsName: studentData.parentsName || '',
-        parentsContact: studentData.parentsContact || '',
-        classIds: studentData.classIds || [] // Populate classIds if studentData is passed
+        name: studentData.name || "",
+        email: studentData.email || "",
+        dateOfBirth: studentData.dateOfBirth || "",
+        phone: studentData.phone || "",
+        medium: studentData.medium || "",
+        school: studentData.school || "",
+        address: studentData.address || "",
+        parentsName: studentData.parentsName || "",
+        parentsContact: studentData.parentsContact || "",
+        classIds: studentData.classIds || [],
       });
     } else {
       setFormData({
-        name: '',
-        email: '',
-        dateOfBirth: '',
-        phone: '',
-        medium: '',
-        school: '',
-        address: '',
-        parentsName: '',
-        parentsContact: '',
-        classIds: []
+        name: "",
+        email: "",
+        dateOfBirth: "",
+        phone: "",
+        medium: "",
+        school: "",
+        address: "",
+        parentsName: "",
+        parentsContact: "",
+        classIds: [],
       });
     }
   }, [studentData]);
@@ -72,7 +86,7 @@ const AddStudentForm = ({ open, onClose, studentData }) => {
   const handleClassChange = (event) => {
     setFormData((prev) => ({
       ...prev,
-      classIds: event.target.value
+      classIds: event.target.value,
     }));
   };
 
@@ -87,7 +101,12 @@ const AddStudentForm = ({ open, onClose, studentData }) => {
   };
 
   const handleClose = () => {
-    if (Object.values(formData).some(value => value !== '' && (Array.isArray(value) ? value.length !== 0 : true))) {
+    if (
+      Object.values(formData).some(
+        (value) =>
+          value !== "" && (Array.isArray(value) ? value.length !== 0 : true)
+      )
+    ) {
       setShowConfirmDialog(true); // Show confirmation dialog if there are unsaved changes
     } else {
       onClose();
@@ -97,16 +116,16 @@ const AddStudentForm = ({ open, onClose, studentData }) => {
   const handleConfirmClose = () => {
     setShowConfirmDialog(false);
     setFormData({
-      name: '',
-      email: '',
-      dateOfBirth: '',
-      phone: '',
-      medium: '',
-      school: '',
-      address: '',
-      parentsName: '',
-      parentsContact: '',
-      classIds: []
+      name: "",
+      email: "",
+      dateOfBirth: "",
+      phone: "",
+      medium: "",
+      school: "",
+      address: "",
+      parentsName: "",
+      parentsContact: "",
+      classIds: [],
     });
     onClose();
   };
@@ -120,27 +139,27 @@ const AddStudentForm = ({ open, onClose, studentData }) => {
       <Modal open={open} onClose={handleClose}>
         <Box
           sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
             width: 400,
-            maxHeight: '80vh',
-            bgcolor: 'background.paper',
+            maxHeight: "80vh",
+            bgcolor: "background.paper",
             borderRadius: 2,
             boxShadow: 24,
             p: 4,
-            overflowY: 'auto',
-            display: 'flex',
-            flexDirection: 'column',
+            overflowY: "auto",
+            display: "flex",
+            flexDirection: "column",
             margin: 0,
           }}
         >
           <Box
             sx={{
-              display: 'flex',
-              justifyContent: 'flex-end',
-              position: 'absolute',
+              display: "flex",
+              justifyContent: "flex-end",
+              position: "absolute",
               top: 10,
               right: 10,
             }}
@@ -151,8 +170,13 @@ const AddStudentForm = ({ open, onClose, studentData }) => {
           </Box>
 
           <Box sx={{ mt: 5, mb: 2 }}>
-            <Typography variant="h6" component="h2" gutterBottom sx={{ margin: 0 }}>
-              {studentData ? 'Update Student Details' : 'Add a Student'}
+            <Typography
+              variant="h6"
+              component="h2"
+              gutterBottom
+              sx={{ margin: 0 }}
+            >
+              {studentData ? "Update Student Details" : "Add a Student"}
             </Typography>
             <form onSubmit={handleSubmit}>
               {/* Other form fields */}
@@ -185,7 +209,7 @@ const AddStudentForm = ({ open, onClose, studentData }) => {
                 required
                 InputLabelProps={{ shrink: true }}
               />
-              
+
               <TextField
                 label="Contact Number"
                 name="phone"
@@ -248,7 +272,13 @@ const AddStudentForm = ({ open, onClose, studentData }) => {
                   name="classIds"
                   value={formData.classIds}
                   onChange={handleClassChange}
-                  renderValue={(selected) => selected.map(id => classes.find(cls => cls._id === id)?.className).join(', ')}
+                  renderValue={(selected) =>
+                    selected
+                      .map(
+                        (id) => classes.find((cls) => cls._id === id)?.className
+                      )
+                      .join(", ")
+                  }
                 >
                   {classes.map((cls) => (
                     <MenuItem key={cls._id} value={cls._id}>
@@ -258,21 +288,25 @@ const AddStudentForm = ({ open, onClose, studentData }) => {
                 </Select>
               </FormControl>
 
-              <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
-                {studentData ? 'Update' : 'Submit'}
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                sx={{ mt: 2 }}
+              >
+                {studentData ? "Update" : "Submit"}
               </Button>
             </form>
           </Box>
         </Box>
       </Modal>
 
-      <Dialog
-        open={showConfirmDialog}
-        onClose={handleCancelClose}
-      >
+      <Dialog open={showConfirmDialog} onClose={handleCancelClose}>
         <DialogTitle>Unsaved Changes</DialogTitle>
         <DialogContent>
-          <Typography>Are you sure you want to close without saving changes?</Typography>
+          <Typography>
+            Are you sure you want to close without saving changes?
+          </Typography>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCancelClose} color="primary">

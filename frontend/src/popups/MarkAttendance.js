@@ -1,19 +1,30 @@
-import React, { useState, useEffect } from 'react';
-import { QrReader } from 'react-qr-reader';
-import axios from 'axios';
-import { Dialog, DialogActions, DialogContent, DialogTitle, Button, Typography, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
-import { fetchClasses } from '../services/api';
-import debounce from 'lodash/debounce';
+import React, { useState, useEffect } from "react";
+import { QrReader } from "react-qr-reader";
+import axios from "axios";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Button,
+  Typography,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+} from "@mui/material";
+import { fetchClasses } from "../services/api";
+import debounce from "lodash/debounce";
 
 const MarkAttendance = ({ open, onClose }) => {
   const [scanResult, setScanResult] = useState(null);
   const [error, setError] = useState(null);
-  const [classId, setClassId] = useState('');
+  const [classId, setClassId] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const [isScanComplete, setIsScanComplete] = useState(false);
   const [classes, setClasses] = useState([]);
-  const [step, setStep] = useState(1); // Step 1: Class selection, Step 2: Scanning
-  const [scannerEnabled, setScannerEnabled] = useState(true); // New state variable
+  const [step, setStep] = useState(1);
+  const [scannerEnabled, setScannerEnabled] = useState(true);
 
   useEffect(() => {
     const getClasses = async () => {
@@ -30,30 +41,40 @@ const MarkAttendance = ({ open, onClose }) => {
 
   // Debounce the handleResult function to avoid multiple rapid calls
   const handleResult = debounce(async (result) => {
-    if (result && !isProcessing && !isScanComplete && classId && scannerEnabled) {
+    if (
+      result &&
+      !isProcessing &&
+      !isScanComplete &&
+      classId &&
+      scannerEnabled
+    ) {
       setIsProcessing(true);
       setScannerEnabled(false); // Disable the scanner immediately
 
       try {
         const studentID = result.text;
-        if (!studentID) throw new Error('Invalid QR code data: missing studentID');
+        if (!studentID)
+          throw new Error("Invalid QR code data: missing studentID");
 
-        const response = await axios.post('http://localhost:5000/manager-dashboard/mark-attendance', { studentID, classId: String(classId) });
+        const response = await axios.post(
+          "http://localhost:5000/manager-dashboard/mark-attendance",
+          { studentID, classId: String(classId) }
+        );
         setScanResult(response.data.message);
         setIsScanComplete(true);
       } catch (err) {
-        console.error('QR code scan error:', err);
+        console.error("QR code scan error:", err);
       } finally {
         setIsProcessing(false);
         setScannerEnabled(true); // Re-enable scanner after processing
       }
     } else if (!classId) {
-      setError('Please select a class before scanning.');
+      setError("Please select a class before scanning.");
     }
   }, 1000); // Debounce time of 1 second
 
   const handleError = (err) => {
-    console.error('QR code scan error:', err);
+    console.error("QR code scan error:", err);
   };
 
   const handleClassChange = (event) => {
@@ -65,7 +86,7 @@ const MarkAttendance = ({ open, onClose }) => {
     if (classId) {
       setStep(2); // Move to scanning step
     } else {
-      setError('Please select a class.');
+      setError("Please select a class.");
     }
   };
 
@@ -79,7 +100,7 @@ const MarkAttendance = ({ open, onClose }) => {
   const handleClose = () => {
     setScanResult(null);
     setError(null);
-    setClassId('');
+    setClassId("");
     setStep(1); // Reset to class selection step
     setScannerEnabled(true); // Ensure scanner is enabled on close
     onClose();
@@ -97,8 +118,10 @@ const MarkAttendance = ({ open, onClose }) => {
                 value={classId}
                 onChange={handleClassChange}
                 renderValue={(selected) => {
-                  const selectedClass = classes.find(cls => cls._id === selected);
-                  return selectedClass ? selectedClass.className : '';
+                  const selectedClass = classes.find(
+                    (cls) => cls._id === selected
+                  );
+                  return selectedClass ? selectedClass.className : "";
                 }}
               >
                 {classes.map((cls) => (
@@ -126,11 +149,17 @@ const MarkAttendance = ({ open, onClose }) => {
                   handleError(error);
                 }
               }}
-              style={{ width: '100%' }}
+              style={{ width: "100%" }}
               disable={!scannerEnabled} // Disable scanner based on state
             />
-            <Typography>{isScanComplete ? 'Scan complete. Press "Next" to continue.' : 'No QR code scanner active'}</Typography>
-            {scanResult && <Typography color="primary">{scanResult}</Typography>}
+            <Typography>
+              {isScanComplete
+                ? 'Scan complete. Press "Next" to continue.'
+                : "No QR code scanner active"}
+            </Typography>
+            {scanResult && (
+              <Typography color="primary">{scanResult}</Typography>
+            )}
             {error && <Typography color="error">{error}</Typography>}
             {isScanComplete && (
               <Button onClick={handleNextScan} color="primary">
