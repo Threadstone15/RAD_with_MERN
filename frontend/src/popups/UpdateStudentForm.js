@@ -83,6 +83,7 @@ const UpdateStudentForm = ({ open, onClose, studentData, onUpdate }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      console.log(formData);
       await updateStudent(formData);
       setSnackbarMessage("Student updated successfully!");
       setSnackbarSeverity("success");
