@@ -2,7 +2,8 @@ const mongoose = require("mongoose");
 
 const PaymentSchema = new mongoose.Schema({
   studentID: {
-    type: String, 
+    type: mongoose.Schema.Types.ObjectId,  
+    ref: "Student", 
     required: true,
   },
   classID: {

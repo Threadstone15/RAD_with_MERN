@@ -713,6 +713,26 @@ router.put('/updateClass/:_id', async (req, res) => {
   }
 });
 
+router.get('/fetchAllPayments', async (req, res) => {
+
+  try {
+    console.log('Received request to fetch all payment data');
+    // Fetch all payments
+    const payments = await Payment.find({})
+    .populate('classID','className')
+    .populate('studentID','profile.Name');
+
+    console.log(`Fetched payments: ${payments}`);
+
+    // Return the payments as JSON
+    res.json(payments);
+  } catch (error) {
+    console.error('Server error fetching all payments:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+
 
 
 
