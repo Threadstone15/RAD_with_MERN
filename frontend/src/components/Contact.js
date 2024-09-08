@@ -2,7 +2,6 @@ import {
   Container,
   Typography,
   Box,
-  Grid,
   TextField,
   Button,
   Card,
@@ -69,92 +68,71 @@ const Contact = () => {
             below or through our contact details.
           </Typography>
         </Box>
+        {/* Form Section */}
+        <Box display="flex" justifyContent="center" mb={4}>
+          <Card style={{ maxWidth: 600, width: "100%" }}>
+            <CardContent>
+              <Typography variant="h4" gutterBottom>
+                Send Us a Message
+              </Typography>
+              <form>
+                <TextField
+                  fullWidth
+                  label="Name"
+                  variant="outlined"
+                  margin="normal"
+                  required
+                />
+                <TextField
+                  fullWidth
+                  label="Email"
+                  type="email"
+                  variant="outlined"
+                  margin="normal"
+                  required
+                />
+                <TextField
+                  fullWidth
+                  label="Message"
+                  variant="outlined"
+                  margin="normal"
+                  multiline
+                  rows={4}
+                  required
+                />
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="large"
+                  sx={{ mt: 2 }}
+                  type="submit"
+                >
+                  Submit
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+        </Box>
 
-        <Grid container spacing={4}>
-          {/* Contact Form Section */}
-          <Grid item xs={12} md={6}>
-            <Card>
-              <CardContent>
-                <Typography variant="h4" gutterBottom>
-                  Send Us a Message
-                </Typography>
-                <form onSubmit={handleSubmit}>
-                  <TextField
-                    fullWidth
-                    label="Name"
-                    variant="outlined"
-                    margin="normal"
-                    required
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                  />
-                  <TextField
-                    fullWidth
-                    label="Email"
-                    type="email"
-                    variant="outlined"
-                    margin="normal"
-                    required
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                  />
-                  <TextField
-                    fullWidth
-                    label="Message"
-                    variant="outlined"
-                    margin="normal"
-                    multiline
-                    rows={4}
-                    required
-                    name="message"
-                    value={formData.message}
-                    onChange={handleChange}
-                  />
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    size="large"
-                    sx={{ mt: 2 }}
-                    type="submit"
-                  >
-                    Submit
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Snackbar
-            open={showSnackbar}
-            autoHideDuration={6000}
-            onClose={handleSnackbarClose}
-          >
-            <Alert onClose={handleSnackbarClose} severity={errorMessage ? "error" : "success"}>
-              {errorMessage || "Feedback given successful"}
-            </Alert>
-          </Snackbar>
-          {/* Contact Details Section */}
-          <Grid item xs={12} md={6}>
-            <Card>
-              <CardContent>
-                <Typography variant="h4" gutterBottom>
-                  Our Contact Details
-                </Typography>
-                <Typography variant="body1" color="textSecondary" paragraph>
-                  <strong>Address:</strong> 123 Success Street, Colombo, Sri
-                  Lanka
-                </Typography>
-                <Typography variant="body1" color="textSecondary" paragraph>
-                  <strong>Phone:</strong> +94 77 123 4567
-                </Typography>
-                <Typography variant="body1" color="textSecondary" paragraph>
-                  <strong>Email:</strong> info@successinstitute.com
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
+        {/* Contact Details Section */}
+        <Box display="flex" justifyContent="center" mt={4}>
+          <Card style={{ maxWidth: 600, width: "100%" }}>
+            <CardContent>
+              <Typography variant="h4" gutterBottom>
+                Our Contact Details
+              </Typography>
+              <Typography variant="body1" color="textSecondary" paragraph>
+                <strong>Address:</strong> 123 Success Street, Colombo, Sri Lanka
+              </Typography>
+              <Typography variant="body1" color="textSecondary" paragraph>
+                <strong>Phone:</strong> +94 77 123 4567
+              </Typography>
+              <Typography variant="body1" color="textSecondary" paragraph>
+                <strong>Email:</strong> info@successinstitute.com
+              </Typography>
+            </CardContent>
+          </Card>
+        </Box>
       </Container>
     </div>
   );
