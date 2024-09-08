@@ -48,7 +48,9 @@ const ClassDetails = ({ open, onClose, classData, onUpdate }) => {
 
   const handleUpdateSuccess = () => {
     console.log("Class updated successfully!");
+    setShowUpdateClassForm(false); // Close UpdateClassForm modal
     onUpdate(); // Call the onUpdate function passed as prop
+
   };
 
   return (
