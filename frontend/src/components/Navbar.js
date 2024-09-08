@@ -27,7 +27,11 @@ const Navbar = () => {
 
   return (
     <>
-      <AppBar position="static" sx={{ backgroundColor: "#333", color: "#fff" }}>
+      {/* Set position to "sticky" to keep the Navbar in place when scrolling */}
+      <AppBar
+        position="sticky"
+        sx={{ backgroundColor: "#333", color: "#fff", zIndex: 1100 }}
+      >
         <Container>
           <Toolbar
             sx={{
@@ -45,7 +49,18 @@ const Navbar = () => {
                 height={40}
                 style={{ marginRight: 16 }}
               />
-              <Typography variant="h6" component="div">
+              <Typography
+                variant="h6"
+                component={Link} // Make the title a link
+                to="/" // Navigate to the home page on click
+                sx={{
+                  textDecoration: "none", // Remove default link underline
+                  color: "inherit", // Inherit color from parent
+                  "&:hover": {
+                    color: "#f0f0f0", // Change color on hover if desired
+                  },
+                }}
+              >
                 Tutor
               </Typography>
             </Box>
@@ -59,16 +74,52 @@ const Navbar = () => {
                 justifyContent: "center",
               }}
             >
-              <Button color="inherit" component={Link} to="/">
+              <Button
+                color="inherit"
+                component={Link}
+                to="/"
+                sx={{
+                  "&:hover": {
+                    backgroundColor: "#555", // Add hover background color
+                  },
+                }}
+              >
                 Home
               </Button>
-              <Button color="inherit" component={Link} to="/about">
+              <Button
+                color="inherit"
+                component={Link}
+                to="/about"
+                sx={{
+                  "&:hover": {
+                    backgroundColor: "#555", // Add hover background color
+                  },
+                }}
+              >
                 About Us
               </Button>
-              <Button color="inherit" component={Link} to="/contact">
+              <Button
+                color="inherit"
+                component={Link}
+                to="/contact"
+                sx={{
+                  "&:hover": {
+                    backgroundColor: "#555", // Add hover background color
+                  },
+                }}
+              >
                 Contact Us
               </Button>
-              <Button color="inherit" component={Link} to="/gallery">
+              <Button
+                color="inherit"
+                component={Link}
+                to="/gallery"
+                sx={{
+                  "&:hover": {
+                    backgroundColor: "#555", // Add hover background color
+                  },
+                }}
+              >
                 Gallery
               </Button>
             </Box>

@@ -10,6 +10,8 @@ import {
   CardMedia,
 } from "@mui/material";
 import Navbar from "./Navbar";
+import AboutHome from "./AboutHome";
+import ContactHome from "./ContactHome";
 import students1 from "./images/students1.jpg";
 import students2 from "./images/students2.jpg";
 import students3 from "./images/students3.jpeg";
@@ -83,13 +85,21 @@ const Home = () => {
           <Grid container spacing={4}>
             {features.map((feature, index) => (
               <Grid item key={index} xs={12} sm={6} md={4}>
-                <Card>
+                <Card
+                  sx={{
+                    transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                    "&:hover": {
+                      transform: "scale(1.05)",
+                      boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
+                    },
+                  }}
+                >
                   <CardMedia
                     component="img"
                     alt={feature.title}
                     height="200"
                     image={feature.image}
-                    style={{
+                    sx={{
                       objectFit: "cover",
                       display: "block",
                       margin: "0 auto",
@@ -111,6 +121,11 @@ const Home = () => {
             ))}
           </Grid>
         </Box>
+        <Box my={20}>
+          <AboutHome />
+        </Box>
+
+        <ContactHome />
       </Container>
     </div>
   );

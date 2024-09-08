@@ -1,13 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { Box, Grid, Card, CardContent, Typography, Container, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
-import Sidebar from '../../components/Sidebar';
-import { getFeedback } from '../../services/api';
+import React, { useState, useEffect } from "react";
+import {
+  Box,
+  Grid,
+  Card,
+  CardContent,
+  Typography,
+  Container,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+} from "@mui/material";
+import Sidebar from "../../components/Sidebar";
+import { getFeedback } from "../../services/api";
 
 const drawerWidth = 240;
 
 const Feedback = () => {
   const [Feedback, setFeedback] = useState([]);
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -16,7 +29,7 @@ const Feedback = () => {
         console.log(feedbacks);
         setFeedback(feedbacks);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       }
     };
 
@@ -32,10 +45,10 @@ const Feedback = () => {
           flexGrow: 1,
           p: 3,
           ml: `${drawerWidth}px`,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          minHeight: '100vh',
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          minHeight: "100vh",
         }}
       >
         <Container maxWidth="lg">
@@ -51,13 +64,13 @@ const Feedback = () => {
             <Grid item xs={12}>
               <Card
                 sx={{
-                  width: '100%',
+                  width: "100%",
                   boxShadow: 3,
-                  transition: 'transform 0.3s ease-in-out',
-                  '&:hover': {
-                    transform: 'scale(1.02)',
-                    boxShadow: 6
-                  }
+                  transition: "transform 0.3s ease-in-out",
+                  "&:hover": {
+                    transform: "scale(1.02)",
+                    boxShadow: 6,
+                  },
                 }}
               >
                 <CardContent>
@@ -76,15 +89,14 @@ const Feedback = () => {
                       </TableHead>
                       <TableBody>
                         {Feedback.map((entry, index) => (
-                          <TableRow
-                            key={index}
-                            sx={{ cursor: "pointer" }}
-                          >
+                          <TableRow key={index} sx={{ cursor: "pointer" }}>
                             <TableCell component="th" scope="row">
                               {entry.name}
                             </TableCell>
                             <TableCell align="center">{entry.email}</TableCell>
-                            <TableCell align="center">{entry.message}</TableCell>
+                            <TableCell align="center">
+                              {entry.message}
+                            </TableCell>
                             <TableCell align="center">{entry.date}</TableCell>
                           </TableRow>
                         ))}
