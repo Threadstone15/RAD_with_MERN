@@ -48,6 +48,7 @@ const StudentDetails = ({ open, onClose, studentData, onDelete, onUpdate }) => {
   };
 
   const handleUpdateSuccess = () => {
+    onUpdate();
     console.log("Student updated successfully!");
   };
 
