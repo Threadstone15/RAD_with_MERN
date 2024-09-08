@@ -28,7 +28,7 @@ const Tutors = () => {
   const [detailsOpen, setDetailsOpen] = useState(false);
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [subjectFilter, setSubjectFilter] = useState(""); 
+  const [subjectFilter, setSubjectFilter] = useState("");
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -46,14 +46,16 @@ const Tutors = () => {
   useEffect(() => {
     const fetchTutors = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/manager-dashboard/teachers');
+        const response = await axios.get(
+          "http://localhost:5000/manager-dashboard/teachers"
+        );
         setTutors(response.data);
         console.log(response.data);
       } catch (error) {
-        console.error('Error fetching tutors:', error);
+        console.error("Error fetching tutors:", error);
       }
     };
-  
+
     fetchTutors();
   }, []);
 

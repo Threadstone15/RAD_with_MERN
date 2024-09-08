@@ -1,11 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import { Box, Grid, Card, CardContent, Typography, Container, ButtonBase, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import Sidebar from '../../components/Sidebar';
-import AddStudentForm from '../../popups/AddStudentForm';
-import AddTeacherForm from '../../popups/AddTutorForm';
-import MarkAttendance from '../../popups/MarkAttendance';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import {
+  Box,
+  Grid,
+  Card,
+  CardContent,
+  Typography,
+  Container,
+  ButtonBase,
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+} from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import Sidebar from "../../components/Sidebar";
+import AddStudentForm from "../../popups/AddStudentForm";
+import AddTeacherForm from "../../popups/AddTutorForm";
+import MarkAttendance from "../../popups/MarkAttendance";
+import axios from "axios";
 
 const drawerWidth = 240;
 
@@ -29,31 +45,37 @@ const ManagerDashboard = () => {
   const handleCloseAddStudent = () => setAddStudentOpen(false);
   const handleCloseAddTeacher = () => setAddTeacherOpen(false);
 
-  const currentDay = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(new Date());
+  const currentDay = new Intl.DateTimeFormat("en-US", {
+    weekday: "long",
+  }).format(new Date());
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-
-
-        const classResponse = await axios.get('http://localhost:5000/manager-dashboard/classes-with-teachers');
-        const ManagerStatistics = await axios.get("http://localhost:5000/manager-dashboard/");
+        const classResponse = await axios.get(
+          "http://localhost:5000/manager-dashboard/classes-with-teachers"
+        );
+        const ManagerStatistics = await axios.get(
+          "http://localhost:5000/manager-dashboard/"
+        );
         setStats(ManagerStatistics.data);
 
         const classData = classResponse.data;
 
-        const formattedTimetable = classData.map((classEntry) => {
-          return classEntry.schedule.days.map((day) => ({
-            day,
-            time: classEntry.schedule.time,
-            subject: classEntry.className,
-            teacher: classEntry.TeacherID?.profile?.name || 'Unknown',
-          }));
-        }).flat();
+        const formattedTimetable = classData
+          .map((classEntry) => {
+            return classEntry.schedule.days.map((day) => ({
+              day,
+              time: classEntry.schedule.time,
+              subject: classEntry.className,
+              teacher: classEntry.TeacherID?.profile?.name || "Unknown",
+            }));
+          })
+          .flat();
 
         setClassTimetable(formattedTimetable);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       }
     };
 
@@ -69,10 +91,10 @@ const ManagerDashboard = () => {
           flexGrow: 1,
           p: 3,
           ml: `${drawerWidth}px`,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          minHeight: '100vh',
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          minHeight: "100vh",
         }}
       >
         <Container maxWidth="lg">
@@ -87,18 +109,18 @@ const ManagerDashboard = () => {
           >
             <Grid item xs={12} sm={6} md={3}>
               <ButtonBase
-                sx={{ width: '100%' }}
-                onClick={() => handleCardClick('/manager-dashboard/students')}
+                sx={{ width: "100%" }}
+                onClick={() => handleCardClick("/manager-dashboard/students")}
               >
-                <Card 
-                  sx={{ 
-                    width: '100%', 
+                <Card
+                  sx={{
+                    width: "100%",
                     boxShadow: 3,
-                    transition: 'transform 0.3s ease-in-out',
-                    '&:hover': {
-                      transform: 'scale(1.05)',
-                      boxShadow: 6
-                    }
+                    transition: "transform 0.3s ease-in-out",
+                    "&:hover": {
+                      transform: "scale(1.05)",
+                      boxShadow: 6,
+                    },
                   }}
                 >
                   <CardContent>
@@ -110,18 +132,18 @@ const ManagerDashboard = () => {
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
               <ButtonBase
-                sx={{ width: '100%' }}
-                onClick={() => handleCardClick('/manager-dashboard/tutors')}
+                sx={{ width: "100%" }}
+                onClick={() => handleCardClick("/manager-dashboard/tutors")}
               >
-                <Card 
-                  sx={{ 
-                    width: '100%', 
+                <Card
+                  sx={{
+                    width: "100%",
                     boxShadow: 3,
-                    transition: 'transform 0.3s ease-in-out',
-                    '&:hover': {
-                      transform: 'scale(1.05)',
-                      boxShadow: 6
-                    }
+                    transition: "transform 0.3s ease-in-out",
+                    "&:hover": {
+                      transform: "scale(1.05)",
+                      boxShadow: 6,
+                    },
                   }}
                 >
                   <CardContent>
@@ -134,13 +156,13 @@ const ManagerDashboard = () => {
             <Grid item xs={12}>
               <Card
                 sx={{
-                  width: '100%',
+                  width: "100%",
                   boxShadow: 3,
-                  transition: 'transform 0.3s ease-in-out',
-                  '&:hover': {
-                    transform: 'scale(1.02)',
-                    boxShadow: 6
-                  }
+                  transition: "transform 0.3s ease-in-out",
+                  "&:hover": {
+                    transform: "scale(1.02)",
+                    boxShadow: 6,
+                  },
                 }}
               >
                 <CardContent>
@@ -162,9 +184,15 @@ const ManagerDashboard = () => {
                           <TableRow
                             key={index}
                             sx={{
-                              backgroundColor: entry.day === currentDay ? 'rgba(0, 123, 255, 0.1)' : 'inherit',
-                              '&:hover': {
-                                backgroundColor: entry.day === currentDay ? 'rgba(0, 123, 255, 0.2)' : 'rgba(0, 0, 0, 0.04)',
+                              backgroundColor:
+                                entry.day === currentDay
+                                  ? "rgba(0, 123, 255, 0.1)"
+                                  : "inherit",
+                              "&:hover": {
+                                backgroundColor:
+                                  entry.day === currentDay
+                                    ? "rgba(0, 123, 255, 0.2)"
+                                    : "rgba(0, 0, 0, 0.04)",
                               },
                             }}
                           >
@@ -172,8 +200,12 @@ const ManagerDashboard = () => {
                               {entry.day}
                             </TableCell>
                             <TableCell align="center">{entry.time}</TableCell>
-                            <TableCell align="center">{entry.subject}</TableCell>
-                            <TableCell align="center">{entry.teacher}</TableCell>
+                            <TableCell align="center">
+                              {entry.subject}
+                            </TableCell>
+                            <TableCell align="center">
+                              {entry.teacher}
+                            </TableCell>
                           </TableRow>
                         ))}
                       </TableBody>
@@ -184,7 +216,9 @@ const ManagerDashboard = () => {
             </Grid>
           </Grid>
 
-          <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mt: 4 }}>
+          <Box
+            sx={{ display: "flex", justifyContent: "center", gap: 2, mt: 4 }}
+          >
             <Button
               variant="contained"
               color="primary"
@@ -210,9 +244,18 @@ const ManagerDashboard = () => {
         </Container>
 
         {/* Form Components */}
-        <AddStudentForm open={isAddStudentOpen} onClose={handleCloseAddStudent} />
-        <AddTeacherForm open={isAddTeacherOpen} onClose={handleCloseAddTeacher} />
-        <MarkAttendance open={isMarkAttendanceOpen} onClose={handleCloseMarkAttendance} />
+        <AddStudentForm
+          open={isAddStudentOpen}
+          onClose={handleCloseAddStudent}
+        />
+        <AddTeacherForm
+          open={isAddTeacherOpen}
+          onClose={handleCloseAddTeacher}
+        />
+        <MarkAttendance
+          open={isMarkAttendanceOpen}
+          onClose={handleCloseMarkAttendance}
+        />
       </Box>
     </div>
   );
