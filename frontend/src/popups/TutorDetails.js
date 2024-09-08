@@ -9,9 +9,11 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Snackbar,
+  Alert
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import UpdateTutorForm from "./UpdateTutorForm"; 
+import UpdateTutorForm from "./UpdateTutorForm";
 import { deleteTutor } from "../services/api";
 
 const TutorDetails = ({ open, onClose, tutorData, onDelete, onUpdate }) => {
@@ -23,15 +25,14 @@ const TutorDetails = ({ open, onClose, tutorData, onDelete, onUpdate }) => {
   };
 
   const handleConfirmDelete = async () => {
-    console.log("Deleting tutor with TeacherID:", tutorData.TeacherID);
     setShowConfirmDialog(false);
     try {
-      const response = await deleteTutor({ TeacherID: tutorData.TeacherID });
-      console.log("Deleted teacher successfully:", response);
+      await deleteTutor({ TeacherID: tutorData.TeacherID });
+      onDelete("Tutor Deleted successfully!", "success"); // Close the details modal
     } catch (error) {
-      console.log("Couldn't delete teacher:", error.message);
+      console.error("Couldn't delete teacher:", error.message);
+      onDelete("Failed to delete tutor. Please try again.", "error")
     }
-    onClose(); // Close the details modal
   };
 
   const handleCancelDelete = () => {
@@ -47,7 +48,8 @@ const TutorDetails = ({ open, onClose, tutorData, onDelete, onUpdate }) => {
   };
 
   const handleUpdateSuccess = () => {
-    console.log("Tutor updated successfully!");
+    setShowUpdateTutor(false); // Close UpdateTutor modal
+    onClose();
   };
 
   return (
@@ -136,7 +138,7 @@ const TutorDetails = ({ open, onClose, tutorData, onDelete, onUpdate }) => {
           </Box>
         </Box>
       </Modal>
-
+ 
       {/* Confirmation Dialog */}
       <Dialog open={showConfirmDialog} onClose={handleCancelDelete}>
         <DialogTitle>Confirm Delete</DialogTitle>
