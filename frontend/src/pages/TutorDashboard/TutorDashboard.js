@@ -18,7 +18,7 @@ const TutorPage = () => {
 
     const fetchData = async () => {
       try {
-        const classResponse = await axios.get('http://localhost:5000/tutor-dashboard/classes-with-teachers');
+        const classResponse = await axios.get('http://localhost:5000/teacher-dashboard/classes-with-teachers');
         console.log('Class Response Data:', classResponse.data);
  
         const classData = classResponse.data;
