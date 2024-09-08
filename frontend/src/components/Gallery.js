@@ -54,71 +54,95 @@ const Gallery = () => {
   return (
     <div>
       <Navbar />
-      <Container maxWidth="lg">
-        <Box my={4} textAlign="center">
-          <Typography variant="h2" component="h1" gutterBottom>
-            Photo Gallery
-          </Typography>
-          <Typography variant="h5" color="textSecondary" paragraph>
-            Explore our collection of images showcasing various events and
-            activities.
-          </Typography>
-        </Box>
+      <Box
+        sx={{
+          background: "linear-gradient(to bottom, #b3e5fc, white)", // Light blue to white gradient
+          minHeight: "100vh",
+          paddingTop: 4,
+          paddingBottom: 4,
+          color: "#333", // Default text color
+        }}
+      >
+        <Container maxWidth="lg">
+          <Box my={4} textAlign="center">
+            <Typography
+              variant="h2"
+              component="h1"
+              gutterBottom
+              sx={{ color: "#2d3436" }} // Dark gray for strong contrast
+            >
+              Photo Gallery
+            </Typography>
+            <Typography
+              variant="h5"
+              color="#4a4a4a" // Matches text color from Home page
+              paragraph
+            >
+              Explore our collection of images showcasing various events and
+              activities.
+            </Typography>
+          </Box>
 
-        <Grid container spacing={4}>
-          {galleryImages.map((image, index) => (
-            <Grid item key={index} xs={12} sm={6} md={4}>
-              <Card
-                sx={{
-                  transition: "transform 0.3s ease, box-shadow 0.3s ease",
-                  "&:hover": {
-                    transform: "scale(1.05)",
-                    boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
-                    cursor: "pointer",
-                  },
-                }}
-              >
-                <CardMedia
-                  component="img"
-                  alt={image.title}
-                  height="200"
-                  image={image.image}
-                  style={{
-                    objectFit: "cover",
-                    display: "block",
-                    margin: "0 auto",
+          <Grid container spacing={4}>
+            {galleryImages.map((image, index) => (
+              <Grid item key={index} xs={12} sm={6} md={4}>
+                <Card
+                  sx={{
+                    transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                    "&:hover": {
+                      transform: "scale(1.05)",
+                      boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
+                      cursor: "pointer",
+                    },
                   }}
-                  onClick={() => handleClickOpen(image.image)}
-                />
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-      </Container>
+                >
+                  <CardMedia
+                    component="img"
+                    alt={image.title}
+                    height="200"
+                    image={image.image}
+                    style={{
+                      objectFit: "cover",
+                      display: "block",
+                      margin: "0 auto",
+                    }}
+                    onClick={() => handleClickOpen(image.image)}
+                  />
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        </Container>
 
-      {/* Image Modal */}
-      <Dialog open={!!openImage} onClose={handleClose} maxWidth="md" fullWidth>
-        <DialogContent>
-          <IconButton
-            edge="end"
-            color="inherit"
-            onClick={handleClose}
-            aria-label="close"
-            sx={{ position: "absolute", top: 8, right: 8 }}
-          >
-            <CloseIcon />
-          </IconButton>
-          <img
-            src={openImage}
-            alt="Enlarged"
-            style={{
-              width: "100%",
-              height: "auto",
-              borderRadius: 8,
-            }}
-          />
-        </DialogContent>
-      </Dialog>
+        {/* Image Modal */}
+        <Dialog
+          open={!!openImage}
+          onClose={handleClose}
+          maxWidth="md"
+          fullWidth
+        >
+          <DialogContent>
+            <IconButton
+              edge="end"
+              color="inherit"
+              onClick={handleClose}
+              aria-label="close"
+              sx={{ position: "absolute", top: 8, right: 8 }}
+            >
+              <CloseIcon />
+            </IconButton>
+            <img
+              src={openImage}
+              alt="Enlarged"
+              style={{
+                width: "100%",
+                height: "auto",
+                borderRadius: 8,
+              }}
+            />
+          </DialogContent>
+        </Dialog>
+      </Box>
     </div>
   );
 };
