@@ -2,6 +2,7 @@ import {
   Container,
   Typography,
   Box,
+  Grid,
   TextField,
   Button,
   Card,
@@ -63,20 +64,23 @@ const Contact = () => {
             below or through our contact details.
           </Typography>
         </Box>
-        {/* Form Section */}
+
         <Box display="flex" justifyContent="center" mb={4}>
           <Card style={{ maxWidth: 600, width: "100%" }}>
             <CardContent>
               <Typography variant="h4" gutterBottom>
                 Send Us a Message
               </Typography>
-              <form>
+              <form onSubmit={handleSubmit}>
                 <TextField
                   fullWidth
                   label="Name"
                   variant="outlined"
                   margin="normal"
                   required
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
                 />
                 <TextField
                   fullWidth
@@ -85,6 +89,9 @@ const Contact = () => {
                   variant="outlined"
                   margin="normal"
                   required
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
                 />
                 <TextField
                   fullWidth
@@ -94,6 +101,9 @@ const Contact = () => {
                   multiline
                   rows={4}
                   required
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
                 />
                 <Button
                   variant="contained"
@@ -108,7 +118,18 @@ const Contact = () => {
             </CardContent>
           </Card>
         </Box>
-
+        <Snackbar
+          open={showSnackbar}
+          autoHideDuration={6000}
+          onClose={handleSnackbarClose}
+        >
+          <Alert
+            onClose={handleSnackbarClose}
+            severity={errorMessage ? "error" : "success"}
+          >
+            {errorMessage || "Feedback given successful"}
+          </Alert>
+        </Snackbar>
         {/* Contact Details Section */}
         <Box display="flex" justifyContent="center" mt={4}>
           <Card style={{ maxWidth: 600, width: "100%" }}>
