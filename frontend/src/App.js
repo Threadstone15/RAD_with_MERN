@@ -20,11 +20,11 @@ import Classes from "./pages/ManagerDashboard/Classes";
 import Payments from "./pages/ManagerDashboard/Payment";
 import BouncingDotsLoader from "./BouncingDotsLoader";
 
-
 import StudentProfile from "./pages/StudentDashboard/StudentProfile";
 import TutorProfile from "./pages/TutorDashboard/TutorProfile";
 
 import TutorPayment from "./pages/TutorDashboard/TutorPayment";
+import StudentPayment from "./pages/StudentDashboard/StudentPayment";
 
 function RouteLoader({ children }) {
   const [loading, setLoading] = useState(false);
@@ -69,10 +69,13 @@ function App() {
             path="/teacher-dashboard/payments"
             element={<TutorPayment />}
           />
+          <Route
+            path="/student-dashboard/payments"
+            element={<StudentPayment />}
+          />
           <Route path="/teacher-dashboard/profile" element={<TutorProfile />} />
           <Route path="/manager-dashboard" element={<ManagerDashboard />} />
         </Routes>
-
       </RouteLoader>
     </Router>
   );
