@@ -10,7 +10,7 @@ const ChangePasswordPopup = ({ open, handleClose }) => {
   const [error, setError] = useState('');
 
   const navigate = useNavigate();
-  const studentID = localStorage.getItem('studentID');
+  const studentID = localStorage.getItem('teacherID');
   if(!studentID) {
     navigate('/login');
   }

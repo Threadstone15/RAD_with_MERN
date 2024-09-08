@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import HomeIcon from '@mui/icons-material/Home';
 import ClassIcon from '@mui/icons-material/Class';
 import LogoutIcon from '@mui/icons-material/Logout';
+import PaymentIcon from '@mui/icons-material/Payment';
 import LogoutDialog from '../../popups/LogoutConfirmation'; // Import LogoutDialog
 
 const Sidebar = () => {
@@ -57,6 +58,12 @@ const Sidebar = () => {
             <ClassIcon />
           </ListItemIcon>
           <ListItemText primary="Profile" />
+        </ListItem>
+        <ListItem button component={Link} to="/teacher-dashboard/payment">
+          <ListItemIcon sx={{ color: '#fff' }}>
+            <PaymentIcon />
+          </ListItemIcon>
+          <ListItemText primary="Payment" />
         </ListItem>
       </List>
 

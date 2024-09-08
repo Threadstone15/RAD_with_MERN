@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
   Box,
-  Button,
   Typography,
   Container,
   Card,
@@ -11,81 +10,82 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  TextField,
-  MenuItem,
   InputLabel,
   FormControl,
   Select,
+  MenuItem,
 } from "@mui/material";
-import Sidebar from "./TutorSidebar";
+import Sidebar from "./TutorSidebar"; // Assuming Sidebar is the correct import
+import { fetchTeacherPaymentData } from "../../services/api"; // Updated service function for teacher payments
+
+// Mapping of month numbers to month names
+const monthNames = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
 
 const drawerWidth = 240; // Assuming the width of the sidebar is 240px
 
 const TutorPayment = () => {
   const [payments, setPayments] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [uniqueMonths, setUniqueMonths] = useState([]);
+  const [uniqueClasses, setUniqueClasses] = useState([]);
   const [selectedMonth, setSelectedMonth] = useState("");
-  const [selectedStudent, setSelectedStudent] = useState("");
   const [selectedClass, setSelectedClass] = useState("");
-
-  // Dummy data for payments
-  const dummyData = [
-    {
-      paymentId: 1,
-      paymentDate: "2024-08-15",
-      month: "August",
-      class: "Math",
-      amount: "$150",
-      paidBy: "John Doe",
-      studentName: "Alice Johnson",
-    },
-    {
-      paymentId: 2,
-      paymentDate: "2024-08-16",
-      month: "August",
-      class: "Science",
-      amount: "$200",
-      paidBy: "Jane Smith",
-      studentName: "Bob Brown",
-    },
-    {
-      paymentId: 3,
-      paymentDate: "2024-07-20",
-      month: "July",
-      class: "English",
-      amount: "$120",
-      paidBy: "Alice Johnson",
-      studentName: "Charlie Davis",
-    },
-  ];
+  const [teacherID, setTeacherID] = useState("");
 
   useEffect(() => {
-    // Simulate data fetching
-    setPayments(dummyData);
+    // Retrieve teacherID from local storage
+    const storedTeacherID = localStorage.getItem("teacherID");
+    if (storedTeacherID) {
+      setTeacherID(storedTeacherID);
+    } else {
+      console.error("Teacher ID not found in local storage");
+    }
   }, []);
 
-  const handleSearch = (event) => {
-    setSearchTerm(event.target.value);
-  };
+  useEffect(() => {
+    if (teacherID) {
+      // Fetch payments data from the server
+      const fetchPayments = async () => {
+        try {
+          console.log("Fetching payments for teacher ID:", teacherID);
+          const response = await fetchTeacherPaymentData(teacherID); // Fetch data for teacher
+          console.log("Response from fetchTeacherPaymentData:", response);
+
+          // Convert month numbers to month names and extract unique months and classes
+          const convertedPayments = response.map(payment => ({
+            ...payment,
+            month: monthNames[payment.month - 1] // Convert month number to name
+          }));
+
+          const months = [...new Set(convertedPayments.map(payment => payment.month))];
+          const classes = [...new Set(convertedPayments.map(payment => payment.classID?.className))];
+          
+          setPayments(convertedPayments);
+          setUniqueMonths(months);
+          setUniqueClasses(classes);
+        } catch (error) {
+          console.error("Error fetching payments:", error);
+        }
+      };
+
+      fetchPayments();
+    }
+  }, [teacherID]);
 
   const handleMonthChange = (event) => {
     setSelectedMonth(event.target.value);
-  };
-
-  const handleStudentChange = (event) => {
-    setSelectedStudent(event.target.value);
   };
 
   const handleClassChange = (event) => {
     setSelectedClass(event.target.value);
   };
 
-  const filteredPayments = payments.filter(payment => {
+  const filteredPayments = payments.filter((payment) => {
     return (
-      (searchTerm === "" || payment.studentName.toLowerCase().includes(searchTerm.toLowerCase())) &&
       (selectedMonth === "" || payment.month === selectedMonth) &&
-      (selectedStudent === "" || payment.studentName === selectedStudent) &&
-      (selectedClass === "" || payment.class === selectedClass)
+      (selectedClass === "" || (payment.classID && payment.classID.className === selectedClass))
     );
   });
 
@@ -106,7 +106,7 @@ const TutorPayment = () => {
       >
         <Container>
           <Typography variant="h4" gutterBottom align="center">
-            Tutor Payments Management
+            Tutor Payments List
           </Typography>
 
           <Card sx={{ width: "100%", mb: 3 }}>
@@ -116,13 +116,6 @@ const TutorPayment = () => {
               </Typography>
 
               <Box sx={{ display: "flex", gap: 2, mb: 3 }}>
-                <TextField
-                  label="Search"
-                  variant="outlined"
-                  onChange={handleSearch}
-                  value={searchTerm}
-                  sx={{ flex: 1 }}
-                />
                 <FormControl sx={{ minWidth: 120 }}>
                   <InputLabel>Month</InputLabel>
                   <Select
@@ -131,21 +124,9 @@ const TutorPayment = () => {
                     label="Month"
                   >
                     <MenuItem value="">All</MenuItem>
-                    <MenuItem value="August">August</MenuItem>
-                    <MenuItem value="July">July</MenuItem>
-                  </Select>
-                </FormControl>
-                <FormControl sx={{ minWidth: 120 }}>
-                  <InputLabel>Student</InputLabel>
-                  <Select
-                    value={selectedStudent}
-                    onChange={handleStudentChange}
-                    label="Student"
-                  >
-                    <MenuItem value="">All</MenuItem>
-                    <MenuItem value="Alice Johnson">Alice Johnson</MenuItem>
-                    <MenuItem value="Bob Brown">Bob Brown</MenuItem>
-                    <MenuItem value="Charlie Davis">Charlie Davis</MenuItem>
+                    {uniqueMonths.map(month => (
+                      <MenuItem key={month} value={month}>{month}</MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
                 <FormControl sx={{ minWidth: 120 }}>
@@ -156,9 +137,9 @@ const TutorPayment = () => {
                     label="Class"
                   >
                     <MenuItem value="">All</MenuItem>
-                    <MenuItem value="Math">Math</MenuItem>
-                    <MenuItem value="Science">Science</MenuItem>
-                    <MenuItem value="English">English</MenuItem>
+                    {uniqueClasses.map(className => (
+                      <MenuItem key={className} value={className}>{className}</MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
               </Box>
@@ -166,25 +147,17 @@ const TutorPayment = () => {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Payment ID</TableCell>
-                    <TableCell>Payment Date</TableCell>
                     <TableCell>Month</TableCell>
                     <TableCell>Class</TableCell>
                     <TableCell>Amount</TableCell>
-                    <TableCell>Paid By</TableCell>
-                    <TableCell>Student Name</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {filteredPayments.map((payment) => (
-                    <TableRow key={payment.paymentId}>
-                      <TableCell>{payment.paymentId}</TableCell>
-                      <TableCell>{payment.paymentDate}</TableCell>
+                    <TableRow key={payment._id}>
                       <TableCell>{payment.month}</TableCell>
-                      <TableCell>{payment.class}</TableCell>
+                      <TableCell>{payment.classID ? payment.classID.className : 'N/A'}</TableCell>
                       <TableCell>{payment.amount}</TableCell>
-                      <TableCell>{payment.paidBy}</TableCell>
-                      <TableCell>{payment.studentName}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
