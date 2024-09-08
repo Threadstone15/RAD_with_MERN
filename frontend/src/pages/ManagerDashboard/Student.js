@@ -179,14 +179,25 @@ const Students = () => {
             </Button>
           </Box>
 
-          <Card sx={{ width: "100%", mb: 3 }}>
+
+              <Card
+                sx={{
+                  width: "100%",
+                  boxShadow: 3,
+                  transition: "transform 0.3s ease-in-out",
+                  "&:hover": {
+                    transform: "scale(1.005)",
+                    boxShadow: 6,
+                  },
+                }}
+              >
             <CardContent>
               <Typography variant="h6" gutterBottom>
                 Students List
               </Typography>
               <TableContainer component={Paper} sx={{ overflowX: "auto" }} ref={tableContainerRef} onMouseDown={handleMouseDown}
                 onMouseUp={handleMouseUp} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} style={{ cursor: isDragging ? "grabbing" : "grab" }}>
-                <Table aria-label="students table" sx={{ minWidth: 1200 }}>
+                <Table aria-label="students table" sx={{ minWidth: 1200  }}>
                   <TableHead>
                     <TableRow>
                       <TableCell>ID</TableCell>
@@ -206,7 +217,11 @@ const Students = () => {
                       <TableRow
                         key={row.StudentID}
                         onClick={() => handleRowClick(row)}
-                        sx={{ cursor: "pointer" }}
+                        sx={{ cursor: "pointer" ,
+                        "&:hover": {
+                          backgroundColor
+                              : "rgba(0, 0, 0, 0.04)",
+                        },}}
                       >
                         <TableCell>{row.studentID}</TableCell>
                         <TableCell>{row.profile.Name}</TableCell>

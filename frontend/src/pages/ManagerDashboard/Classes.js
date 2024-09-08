@@ -12,7 +12,7 @@ import {
   TableRow,
   TableCell,
   TextField,
-  MenuItem,
+  MenuItem,Grid
 } from "@mui/material";
 import Sidebar from "../../components/Sidebar";
 import AddClassForm from "../../popups/AddClassForm"; // Import the AddClassForm component
@@ -163,7 +163,18 @@ const Classes = () => {
             </Box>
           </Box>
 
-          <Card sx={{ width: "100%", mb: 3 }}>
+          <Grid item xs={12}>
+              <Card
+                sx={{
+                  width: "100%",
+                  boxShadow: 3,
+                  transition: "transform 0.3s ease-in-out",
+                  "&:hover": {
+                    transform: "scale(1.02)",
+                    boxShadow: 6,
+                  },
+                }}
+              >
             <CardContent>
               <Typography variant="h6" gutterBottom>
                 Classes List
@@ -198,6 +209,7 @@ const Classes = () => {
               </Table>
             </CardContent>
           </Card>
+          </Grid>
 
           <AddClassForm
             open={open}
