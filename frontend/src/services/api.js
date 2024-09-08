@@ -268,3 +268,14 @@ export const fetchClasses_id = async (studentID) => {
   }
 };
 
+export const fetchAllPaymentsData = async () => {
+  try {
+    console.log('Received API Request for payments')
+    const response = await axios.get("http://localhost:5000/manager-dashboard/fetchAllPayments");
+    console.log('Received Data from Backend')
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching all payments:", error);
+    throw error;
+  }
+};

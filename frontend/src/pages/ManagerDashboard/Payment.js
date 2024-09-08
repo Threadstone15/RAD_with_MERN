@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
   Box,
-  Button,
   Typography,
   Container,
   Card,
@@ -18,53 +17,54 @@ import {
   Select,
 } from "@mui/material";
 import Sidebar from "../../components/Sidebar";
+import { fetchAllPaymentsData } from "../../services/api"; // Adjust the import based on your actual API service
 
 const drawerWidth = 240; // Assuming the width of the sidebar is 240px
+
+const monthNames = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
+
 
 const Payments = () => {
   const [payments, setPayments] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [uniqueMonths, setUniqueMonths] = useState([]);
+  const [uniqueClasses, setUniqueClasses] = useState([]);
   const [selectedMonth, setSelectedMonth] = useState("");
   const [selectedTutor, setSelectedTutor] = useState("");
   const [selectedStudent, setSelectedStudent] = useState("");
 
-  // Dummy data for payments
-  const dummyData = [
-    {
-      paymentId: 1,
-      paymentDate: "2024-08-15",
-      month: "August",
-      class: "Math",
-      amount: "$150",
-      paidBy: "John Doe",
-      studentName: "Alice Johnson",
-      tutorName: "Mr. Smith",
-    },
-    {
-      paymentId: 2,
-      paymentDate: "2024-08-16",
-      month: "August",
-      class: "Science",
-      amount: "$200",
-      paidBy: "Jane Smith",
-      studentName: "Bob Brown",
-      tutorName: "Ms. Johnson",
-    },
-    {
-      paymentId: 3,
-      paymentDate: "2024-07-20",
-      month: "July",
-      class: "English",
-      amount: "$120",
-      paidBy: "Alice Johnson",
-      studentName: "Charlie Davis",
-      tutorName: "Mr. Clark",
-    },
-  ];
-
   useEffect(() => {
-    // Simulate data fetching
-    setPayments(dummyData);
+    const fetchPayments = async () => {
+      try {
+        console.log("Fetching all payments");
+        const response = await fetchAllPaymentsData(); // Call the API to fetch all payments
+        console.log("Response from fetchAllPaymentsData:", response);
+    
+        // Process the payments data
+        const convertedPayments = response.map(payment => ({
+          ...payment,
+          className: payment.classID ? payment.classID.className : 'N/A', // Extract class name
+          studentName: payment.studentID && payment.studentID.profile ? payment.studentID.profile.Name : 'N/A', // Extract student name
+          formattedDate: new Date(payment.date).toLocaleDateString() // Format the date
+        }));
+    
+        // Extract unique values for filtering
+        const months = [...new Set(convertedPayments.map(payment => payment.month))];
+        const classes = [...new Set(convertedPayments.map(payment => payment.className))];
+    
+        setPayments(convertedPayments);
+        setUniqueMonths(months);
+        setUniqueClasses(classes);
+      } catch (error) {
+        console.error("Error fetching payments:", error);
+      }
+    };
+    
+
+    fetchPayments();
   }, []);
 
   const handleSearch = (event) => {
@@ -100,11 +100,11 @@ const Payments = () => {
         sx={{
           flexGrow: 1,
           p: 3,
-          ml: `${drawerWidth}px`, // Corrected string interpolation
+          ml: `${drawerWidth}px`,
           minHeight: "100vh",
           display: "flex",
-          flexDirection: "column", // Stack items vertically
-          alignItems: "center", // Center items horizontally
+          flexDirection: "column",
+          alignItems: "center",
         }}
       >
         <Container>
@@ -169,27 +169,19 @@ const Payments = () => {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Payment ID</TableCell>
                     <TableCell>Payment Date</TableCell>
-                    <TableCell>Month</TableCell>
-                    <TableCell>Class</TableCell>
+                    <TableCell>Class Name</TableCell>
                     <TableCell>Amount</TableCell>
                     <TableCell>Paid By</TableCell>
-                    <TableCell>Student Name</TableCell>
-                    <TableCell>Tutor Name</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {filteredPayments.map((payment) => (
-                    <TableRow key={payment.paymentId}>
-                      <TableCell>{payment.paymentId}</TableCell>
-                      <TableCell>{payment.paymentDate}</TableCell>
-                      <TableCell>{payment.month}</TableCell>
-                      <TableCell>{payment.class}</TableCell>
+                    <TableRow>
+                      <TableCell>{payment.formattedDate}</TableCell>
+                      <TableCell>{payment.className}</TableCell> {/* Displaying className */}
                       <TableCell>{payment.amount}</TableCell>
-                      <TableCell>{payment.paidBy}</TableCell>
                       <TableCell>{payment.studentName}</TableCell>
-                      <TableCell>{payment.tutorName}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
