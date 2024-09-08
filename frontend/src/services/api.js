@@ -8,7 +8,7 @@ axios.interceptors.response.use(
   },
   error => {
     if (error.response && error.response.status === 401) {
-      window.location.href = '/login';
+      window.location.href = '/';
     }
     return Promise.reject(error); 
   }
@@ -72,10 +72,12 @@ export const addTeacher = async (userData) => {
 
 export const updateTeacher = async (userData) => {
   try {
+    console.log(userData);
     const response = await axios.put(
       `http://localhost:5000/manager-dashboard/Teacher_update/${userData.TeacherID}`, 
       userData
     );
+
     return response.data;
   } catch (error) {
     console.error("Error updating teacher:", error);
@@ -152,7 +154,8 @@ export const deleteTutor = async (TeacherID) => {
     "http://localhost:5000/manager-dashboard/deleteTeacher",
     TeacherID
   );
-  return response.data;
+  console.log(response);
+  return response;
 };
 
 export const deleteStudent = async (studentID) => {

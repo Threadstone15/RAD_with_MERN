@@ -1,4 +1,4 @@
-import React, { useState, useEffect ,useRef} from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Box,
   Button,
@@ -12,7 +12,9 @@ import {
   TableBody,
   TableRow,
   Paper,
-  TableCell,TextField,MenuItem
+  TableCell, TextField, MenuItem,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import Sidebar from "../../components/Sidebar";
 import AddStudentForm from "../../popups/AddStudentForm";
@@ -30,10 +32,25 @@ const Students = () => {
   const [mediumFilter, setMediumFilter] = useState("");
   const [refresh, setRefresh] = useState(false);
 
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
-    setRefresh((prev)=> !prev);
+    setRefresh((prev) => !prev);
+  };
+
+  const handleStudentUpdate = () => {
+    setRefresh((prev) => !prev);
+    setOpen(false);
+    setDetailsOpen(false)
+    setSnackbarMessage("Student updated successfully!");
+      setSnackbarSeverity("success");
+    setSnackbarOpen(true);
+
+  }
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
   };
 
   const handleRowClick = (student) => {
@@ -56,29 +73,33 @@ const Students = () => {
         console.error('Error fetching students:', error);
       }
     };
-  
+
     fetchStudents();
   }, [refresh]);
 
-const [isDragging, setIsDragging] = useState(false);
-const [startX, setStartX] = useState(0);
-const [scrollLeft, setScrollLeft] = useState(0);
-const tableContainerRef = useRef(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
+  const tableContainerRef = useRef(null);
+
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
   const handleMouseDown = (e) => {
     setIsDragging(true);
     setStartX(e.pageX - tableContainerRef.current.offsetLeft);
     setScrollLeft(tableContainerRef.current.scrollLeft);
   };
-  
+
   const handleMouseLeave = () => {
     setIsDragging(false);
   };
-  
+
   const handleMouseUp = () => {
     setIsDragging(false);
   };
-  
+
   const handleMouseMove = (e) => {
     if (!isDragging) return;
     e.preventDefault();
@@ -86,17 +107,17 @@ const tableContainerRef = useRef(null);
     const walk = (x - startX) * 1.5; // Multiply for faster scroll
     tableContainerRef.current.scrollLeft = scrollLeft - walk;
   };
-  
+
   const filteredStudents = students.filter((student) => {
     const matchesSearch = student.profile.Name.toLowerCase().includes(
       searchTerm.toLowerCase()
     );
     const matchesMedium =
       mediumFilter === "" || student.profile.Medium === mediumFilter;
-  
+
     return matchesSearch && matchesMedium;
   });
-  
+
 
   return (
     <div>
@@ -117,7 +138,7 @@ const tableContainerRef = useRef(null);
           <Typography variant="h4" gutterBottom align="center">
             Student Management
           </Typography>
-          <Box 
+          <Box
             sx={{
               display: "flex",
               justifyContent: "space-between",
@@ -125,36 +146,36 @@ const tableContainerRef = useRef(null);
               mb: 3,
               width: "100%",
             }}>
-            <Box sx={{ display: "flex", gap: 1, flexGrow: 1}}>
+            <Box sx={{ display: "flex", gap: 1, flexGrow: 1 }}>
               <TextField
-              label="Search by Name"
-              variant="outlined"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              sx={{ flexGrow: 2 , height:"56px" }}
+                label="Search by Name"
+                variant="outlined"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                sx={{ flexGrow: 2, height: "56px" }}
               />
 
-          <TextField
-            select
-            label="Filter by Medium"
-            value={mediumFilter}
-            onChange={(e) => setMediumFilter(e.target.value)}
-            sx={{ flexGrow: 1 , height: "56px"}}
-          >
-            <MenuItem value="">All</MenuItem>
-            <MenuItem value="English">English</MenuItem>
-            <MenuItem value="Sinhala">Sinhala</MenuItem>
-          </TextField>
-        </Box>
+              <TextField
+                select
+                label="Filter by Medium"
+                value={mediumFilter}
+                onChange={(e) => setMediumFilter(e.target.value)}
+                sx={{ flexGrow: 1, height: "56px" }}
+              >
+                <MenuItem value="">All</MenuItem>
+                <MenuItem value="English">English</MenuItem>
+                <MenuItem value="Sinhala">Sinhala</MenuItem>
+              </TextField>
+            </Box>
 
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleAddStudent}
-            sx={{ ml:1, width:"15%",height:"56px" }}
-          >
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleAddStudent}
+              sx={{ ml: 1, width: "15%", height: "56px" }}
+            >
 
-            Add Student
+              Add Student
             </Button>
           </Box>
 
@@ -163,48 +184,61 @@ const tableContainerRef = useRef(null);
               <Typography variant="h6" gutterBottom>
                 Students List
               </Typography>
-              <TableContainer component={Paper} sx={{ overflowX: "auto" }} ref={tableContainerRef} onMouseDown={handleMouseDown} 
-                onMouseUp={handleMouseUp} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} style={{cursor: isDragging ? "grabbing" : "grab"}}>
-              <Table aria-label="students table" sx={{ minWidth: 1200 }}>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>ID</TableCell>
-                    <TableCell>Name</TableCell>
-                    <TableCell>Email</TableCell>
-                    <TableCell>Date of Birth</TableCell>
-                    <TableCell>Telephone</TableCell>
-                    <TableCell>Medium</TableCell>
-                    <TableCell>School</TableCell>
-                    <TableCell>Address</TableCell>
-                    <TableCell>Parents Name</TableCell>
-                    <TableCell>Parents Contact</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {filteredStudents.map((row) => (
-                    <TableRow
-                      key={row.StudentID}
-                      onClick={() => handleRowClick(row)}
-                      sx={{ cursor: "pointer" }}
-                    >
-                      <TableCell>{row.studentID}</TableCell>
-                      <TableCell>{row.profile.Name}</TableCell>
-                      <TableCell>{row.profile.email}</TableCell>
-                      <TableCell>{row.profile.DOB}</TableCell>
-                      <TableCell>{row.profile.phone}</TableCell>
-                      <TableCell>{row.profile.Medium}</TableCell>
-                      <TableCell>{row.profile.School}</TableCell>
-                      <TableCell>{row.profile.Address}</TableCell>
-                      <TableCell>{row.profile.PName}</TableCell>
-                      <TableCell>{row.profile.PContact}</TableCell>
+              <TableContainer component={Paper} sx={{ overflowX: "auto" }} ref={tableContainerRef} onMouseDown={handleMouseDown}
+                onMouseUp={handleMouseUp} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} style={{ cursor: isDragging ? "grabbing" : "grab" }}>
+                <Table aria-label="students table" sx={{ minWidth: 1200 }}>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>ID</TableCell>
+                      <TableCell>Name</TableCell>
+                      <TableCell>Email</TableCell>
+                      <TableCell>Date of Birth</TableCell>
+                      <TableCell>Telephone</TableCell>
+                      <TableCell>Medium</TableCell>
+                      <TableCell>School</TableCell>
+                      <TableCell>Address</TableCell>
+                      <TableCell>Parents Name</TableCell>
+                      <TableCell>Parents Contact</TableCell>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  </TableHead>
+                  <TableBody>
+                    {filteredStudents.map((row) => (
+                      <TableRow
+                        key={row.StudentID}
+                        onClick={() => handleRowClick(row)}
+                        sx={{ cursor: "pointer" }}
+                      >
+                        <TableCell>{row.studentID}</TableCell>
+                        <TableCell>{row.profile.Name}</TableCell>
+                        <TableCell>{row.profile.email}</TableCell>
+                        <TableCell>{row.profile.DOB}</TableCell>
+                        <TableCell>{row.profile.phone}</TableCell>
+                        <TableCell>{row.profile.Medium}</TableCell>
+                        <TableCell>{row.profile.School}</TableCell>
+                        <TableCell>{row.profile.Address}</TableCell>
+                        <TableCell>{row.profile.PName}</TableCell>
+                        <TableCell>{row.profile.PContact}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
               </TableContainer>
             </CardContent>
           </Card>
 
+          <Snackbar
+            open={snackbarOpen}
+            autoHideDuration={6000}
+            onClose={handleSnackbarClose}
+          >
+            <Alert
+              onClose={handleSnackbarClose}
+              severity={snackbarSeverity}
+              sx={{ width: "100%" }}
+            >
+              {snackbarMessage}
+            </Alert>
+          </Snackbar>
           <AddStudentForm
             open={open}
             onClose={handleClose}
@@ -214,9 +248,11 @@ const tableContainerRef = useRef(null);
             <StudentDetails
               open={detailsOpen}
               onClose={() => {
-                setRefresh((prev)=>!prev);
+                setRefresh((prev) => !prev);
                 setOpen(false);
-                setDetailsOpen(false)}}
+                setDetailsOpen(false);
+              }}
+              onUpdate={handleStudentUpdate}
               studentData={selectedStudent}
             />
           )}

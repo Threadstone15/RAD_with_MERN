@@ -501,7 +501,15 @@ router.put("/Teacher_update/:id", async (req, res) => {
     // Update the teacher details
     const updatedTeacher = await Teacher.findOneAndUpdate(
       { TeacherID: teacherId },
-      req.body,
+      {
+        profile: {
+          name: req.body.name,
+          email: req.body.email,
+          phone: req.body.phone,
+          address: req.body.address,
+        },
+        subjects: req.body.subjects
+      },
       { new: true, runValidators: true } // Return the updated document and run validators
     );
     
@@ -551,7 +559,6 @@ router.put("/Student_update/:id", async (req, res) => {
       return res.status(404).json({ error: "Student not found" });
     }
 
-    console.log("Updated student:", updatedStudent);
     res.status(200).json(updatedStudent); // Return the updated teacher
   } catch (err) {
     console.error("Error updating student:", err);
@@ -561,23 +568,26 @@ router.put("/Student_update/:id", async (req, res) => {
 
 router.post("/deleteTeacher", async (req, res) => {
   try {
-    console.log(req.body.TeacherID);
     const Something = await Teacher.findOneAndDelete({
       TeacherID: req.body.TeacherID,
     });
+    res.status(200).json({message: "Successfully Deleted teacher"});
   } catch (err) {
     console.log("couldn't delete teacher");
+    res.status(500).json({error: "Error Deleting teacher"});
   }
 });
 
 router.post("/deleteStudent", async (req, res) => {
   try {
-    console.log(req.body.studentID);
     const Something = await Student.findOneAndDelete({
       studentID: req.body.studentID,
     });
+    res.status(200).json({message: "Successfully Deleted student"})
   } catch (err) {
     console.log("couldn't delete student");
+    res.status(500).json({error: "Error Deleting teacher"});
+
   }
 });
 
