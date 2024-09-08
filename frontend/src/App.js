@@ -12,6 +12,7 @@ import Tutors from './pages/ManagerDashboard/Tutors';
 import Students from './pages/ManagerDashboard/Student'
 import Classes from './pages/ManagerDashboard/Classes';
 import Payments from './pages/ManagerDashboard/Payment';
+import Feedback from './pages/ManagerDashboard/Feedback';
 import BouncingDotsLoader from './BouncingDotsLoader';
 
 import StudentProfile from './pages/StudentDashboard/StudentProfile'
@@ -51,6 +52,7 @@ function App() {
         <Route path="/manager-dashboard/students" element={<Students />} />
         <Route path="/manager-dashboard/classes" element={<Classes />} />
         <Route path="/manager-dashboard/payments" element={<Payments />} />
+        <Route path="/manager-dashboard/feedback" element={<Feedback />} />
 
         <Route path="/student-dashboard/" element={<StudentDashboard />} />
         <Route path="/student-dashboard/profile" element={<StudentProfile />} />

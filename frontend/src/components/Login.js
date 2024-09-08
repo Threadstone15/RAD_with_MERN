@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../services/api';
-import { TextField, Button, Typography, Box, Modal, Paper, Link, Checkbox, FormControlLabel, Grid } from '@mui/material';
+import { TextField, Button, Typography, Box, Modal, Paper, Grid } from '@mui/material';
 import './Login.css';
 import Logo from '../assets/logo.png';
 
