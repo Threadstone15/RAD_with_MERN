@@ -14,7 +14,7 @@ import {
   TextField,
   MenuItem,
   Snackbar,
-  Alert
+  Alert,Grid
 } from "@mui/material";
 import AddTutorForm from "../../popups/AddTutorForm";
 import TutorDetails from "../../popups/TutorDetails";
@@ -137,7 +137,18 @@ const Tutors = () => {
             </Button>
           </Box>
 
-          <Card sx={{ width: "100%", mb: 3 }}>
+          <Grid item xs={12}>
+              <Card
+                sx={{
+                  width: "100%",
+                  boxShadow: 3,
+                  transition: "transform 0.3s ease-in-out",
+                  "&:hover": {
+                    transform: "scale(1.02)",
+                    boxShadow: 6,
+                  },
+                }}
+              >
             <CardContent>
               <Typography variant="h6" gutterBottom>
                 Tutors List
@@ -174,6 +185,7 @@ const Tutors = () => {
               </Table>
             </CardContent>
           </Card>
+          </Grid>
           <Snackbar
         open={snackbarOpen}
         autoHideDuration={6000}

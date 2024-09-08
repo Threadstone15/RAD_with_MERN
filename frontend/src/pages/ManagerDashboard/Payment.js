@@ -14,7 +14,7 @@ import {
   MenuItem,
   InputLabel,
   FormControl,
-  Select,
+  Select,Grid
 } from "@mui/material";
 import Sidebar from "../../components/Sidebar";
 import { fetchAllPaymentsData } from "../../services/api"; // Adjust the import based on your actual API service
@@ -118,7 +118,18 @@ const Payments = () => {
             Payments Management
           </Typography>
 
-          <Card sx={{ width: "100%", mb: 3 }}>
+          <Grid item xs={12}>
+              <Card
+                sx={{
+                  width: "100%",
+                  boxShadow: 3,
+                  transition: "transform 0.3s ease-in-out",
+                  "&:hover": {
+                    transform: "scale(1.02)",
+                    boxShadow: 6,
+                  },
+                }}
+              >
             <CardContent>
               <Typography variant="h6" gutterBottom>
                 Payments List
@@ -198,6 +209,7 @@ const Payments = () => {
               </Table>
             </CardContent>
           </Card>
+          </Grid>
         </Container>
       </Box>
     </div>
