@@ -10,34 +10,68 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  TextField,
-  MenuItem,
   InputLabel,
   FormControl,
   Select,
+  MenuItem,
 } from "@mui/material";
 import Sidebar from "./StudentSidebar";
-import axios from "axios"; // For fetching data from the server
+import { fetchPaymentData } from "../../services/api";
+
+// Mapping of month numbers to month names
+const monthNames = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
 
 const drawerWidth = 240; // Assuming the width of the sidebar is 240px
 
-const StudentPayment = ({ studentID }) => {
+const StudentPayment = () => {
   const [payments, setPayments] = useState([]);
+  const [uniqueMonths, setUniqueMonths] = useState([]);
+  const [uniqueClasses, setUniqueClasses] = useState([]);
   const [selectedMonth, setSelectedMonth] = useState("");
   const [selectedClass, setSelectedClass] = useState("");
+  const [studentID, setStudentID] = useState("");
 
   useEffect(() => {
-    // Fetch payments data from the server
-    const fetchPayments = async () => {
-      try {
-        const response = await axios.get(`/api/payments/${studentID}`);
-        setPayments(response.data);
-      } catch (error) {
-        console.error("Error fetching payments", error);
-      }
-    };
+    // Retrieve studentID from local storage
+    const storedStudentID = localStorage.getItem("studentID");
+    if (storedStudentID) {
+      setStudentID(storedStudentID);
+    } else {
+      console.error("Student ID not found in local storage");
+    }
+  }, []);
 
-    fetchPayments();
+  useEffect(() => {
+    if (studentID) {
+      // Fetch payments data from the server
+      const fetchPayments = async () => {
+        try {
+          console.log("Fetching payments for student ID:", studentID);
+          const response = await fetchPaymentData(studentID);
+          console.log("Response from fetchPaymentData:", response);
+
+          // Convert month numbers to month names and extract unique months and classes
+          const convertedPayments = response.map(payment => ({
+            ...payment,
+            month: monthNames[payment.month - 1] // Convert month number to name
+          }));
+
+          const months = [...new Set(convertedPayments.map(payment => payment.month))];
+          const classes = [...new Set(convertedPayments.map(payment => payment.classID?.className))];
+          
+          setPayments(convertedPayments);
+          setUniqueMonths(months);
+          setUniqueClasses(classes);
+        } catch (error) {
+          console.error("Error fetching payments:", error);
+        }
+      };
+
+      fetchPayments();
+    }
   }, [studentID]);
 
   const handleMonthChange = (event) => {
@@ -51,7 +85,7 @@ const StudentPayment = ({ studentID }) => {
   const filteredPayments = payments.filter((payment) => {
     return (
       (selectedMonth === "" || payment.month === selectedMonth) &&
-      (selectedClass === "" || payment.class === selectedClass)
+      (selectedClass === "" || (payment.classID && payment.classID.className === selectedClass))
     );
   });
 
@@ -90,8 +124,9 @@ const StudentPayment = ({ studentID }) => {
                     label="Month"
                   >
                     <MenuItem value="">All</MenuItem>
-                    <MenuItem value="August">August</MenuItem>
-                    <MenuItem value="July">July</MenuItem>
+                    {uniqueMonths.map(month => (
+                      <MenuItem key={month} value={month}>{month}</MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
                 <FormControl sx={{ minWidth: 120 }}>
@@ -102,9 +137,9 @@ const StudentPayment = ({ studentID }) => {
                     label="Class"
                   >
                     <MenuItem value="">All</MenuItem>
-                    <MenuItem value="Math">Math</MenuItem>
-                    <MenuItem value="Science">Science</MenuItem>
-                    <MenuItem value="English">English</MenuItem>
+                    {uniqueClasses.map(className => (
+                      <MenuItem key={className} value={className}>{className}</MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
               </Box>
@@ -120,10 +155,8 @@ const StudentPayment = ({ studentID }) => {
                 <TableBody>
                   {filteredPayments.map((payment) => (
                     <TableRow key={payment._id}>
-                      {" "}
-                      {/* Assuming _id or a similar unique identifier */}
                       <TableCell>{payment.month}</TableCell>
-                      <TableCell>{payment.class}</TableCell>
+                      <TableCell>{payment.classID ? payment.classID.className : 'N/A'}</TableCell>
                       <TableCell>{payment.amount}</TableCell>
                     </TableRow>
                   ))}
