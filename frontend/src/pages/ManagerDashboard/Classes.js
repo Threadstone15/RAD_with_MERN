@@ -26,6 +26,7 @@ const Classes = () => {
   const [selectedClass, setSelectedClass] = useState(null);
   const [classes, setClasses] = useState([]);
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const [refresh, setRefresh] = useState(false);
 
   const [searchTerm, setSearchTerm] = useState(""); // For search bar
   const [teacherFilter, setTeacherFilter] = useState(""); // For teacher filter
@@ -34,9 +35,15 @@ const Classes = () => {
   const [classOptions, setClassOptions] = useState([]);
   const [teacherOptions, setTeacherOptions] = useState([]);
 
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
+  const handleOpen = () => {
+    setOpen(true);
+    setRefresh((prev) => !prev);
+  }
+  const handleClose = () => {
+    setOpen(false);
+    setDetailsOpen(false);
+    setRefresh((prev) => !prev)
+  }
   const handleRowClick = (classData) => {
     setSelectedClass(classData);
     setDetailsOpen(true);
@@ -64,7 +71,7 @@ const Classes = () => {
     };
 
     fetchClasses();
-  }, []);
+  }, [refresh]);
 
   const filteredClasses = classes.filter(
     (classData) =>
@@ -203,6 +210,7 @@ const Classes = () => {
               open={detailsOpen}
               onClose={() => setDetailsOpen(false)}
               classData={selectedClass}
+              onUpdate = {handleClose}
             />
           )}
         </Container>
