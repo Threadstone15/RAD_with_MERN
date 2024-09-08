@@ -3,7 +3,7 @@ const Student = require('../models/Student');
 const Teacher = require('../models/Teacher'); 
 const Manager = require('../models/Manager'); 
 
-const SECRET_KEY = process.env.SECRET_KEY || 'your_secret_key'; 
+const SECRET_KEY = process.env.SECRET_KEY || 'w3f4f4w3f4w3f4'; 
 
 module.exports = async (req, res, next) => {
   const token = req.cookies.token; 
