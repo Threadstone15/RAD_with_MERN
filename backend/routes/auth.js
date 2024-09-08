@@ -1,13 +1,13 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const Student = require('../models/Student'); // Importing the Student model
+const Student = require('../models/Student'); 
 const Teacher = require('../models/Teacher');
-const Manager = require('../models/Manager'); // Importing the Manager model
+const Manager = require('../models/Manager'); 
 const router = express.Router();
 
-const SECRET_KEY = process.env.SECRET_KEY || 'your_secret_key'; // Use environment variable for secret key
+const SECRET_KEY = process.env.SECRET_KEY || 'your_secret_key'; 
 
-// Unified Login Route
+
 router.post('/login', async (req, res) => {
   console.log('Login request received');
   try {
@@ -20,32 +20,30 @@ router.post('/login', async (req, res) => {
 
     console.log('Searching for user in Student collection');
     let user = await Student.findOne({ 'profile.email': email });
-    let userType = 'student'; // Default to student
-    let userID = user?._id; // Get the user ID if found in students
+    let userType = 'student'; 
+    let userID = user?._id; 
 
     if (!user) {
       console.log('User not found in Student collection');
-      // If not found, try to find the user in the teachers collection by email
+
       console.log('Searching for user in Teacher collection');
       user = await Teacher.findOne({ 'profile.email': email });
       if (user) {
         console.log('User found in Teacher collection');
         userType = 'teacher';
-        userID = user._id; // Get the user ID if found in teachers
+        userID = user._id; 
       } else {
         console.log('User not found in Teacher collection');
-        // If not found, try to find the user in the managers collection by email
         console.log('Searching for user in Manager collection');
         user = await Manager.findOne({ 'profile.email': email });
         if (user) {
           console.log('User found in Manager collection');
           userType = 'manager';
-          userID = user._id; // Get the user ID if found in managers
+          userID = user._id; 
         }
       }
     }
 
-    // If no user found or password does not match
     if (!user || !(await user.comparePassword(password))) {
       console.log('User not found or password does not match');
       return res.status(401).json({ error: 'Invalid credentials' });
@@ -63,10 +61,10 @@ router.post('/login', async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
-      maxAge: 3600000, // 1 hour
+      maxAge: 3600000, 
     });
 
-    // Set the redirect URL based on user type
+
     let redirectUrl;
     if (userType === 'student') {
       redirectUrl = '/student-dashboard';
@@ -80,7 +78,7 @@ router.post('/login', async (req, res) => {
     res.json({ message: 'Login successful', redirectUrl, userType, userID });
 
   } catch (error) {
-    // General error handling
+
     console.error('Error during login:', error);
     res.status(400).json({ error: 'An error occurred during login' });
   }

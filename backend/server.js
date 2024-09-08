@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const { createProxyMiddleware } = require('http-proxy-middleware');
-const connectDB = require('./controllers/db');  // Import the database connection file
+const connectDB = require('./controllers/db');  
 
 // Routes
 const authRoutes = require('./routes/auth');
