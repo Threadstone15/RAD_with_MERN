@@ -24,13 +24,11 @@ const getLastMonthRange = () => {
 
 router.get('/fetchStudentData/:studentID', async (req, res) => {
 
-    console.log(`Got a request to fetchStudentData for studentID: ${req.params.studentID}`);
 
     try {
         const { studentID } = req.params;
         const studentObjectId = new mongoose.Types.ObjectId(studentID);
 
-        console.log(`Fetching student with ID: ${studentObjectId} from the database`);
 
         const student = await Student.findById(studentObjectId).populate("classIds");
 
@@ -38,7 +36,6 @@ router.get('/fetchStudentData/:studentID', async (req, res) => {
             console.log(`Student with ID: ${studentID} not found in database`);
             return res.status(404).json({ error: 'Student not found' });
         }
-        console.log(`Student found: ${student}`);
 
         res.json(student);
     } catch (error) {
@@ -124,7 +121,7 @@ router.post('/changeStudentPassword', async(req, res) => {
 
 router.get('/fetchStudentAttendance/:studentID', async (req, res) => {
     const { startOfMonth, endOfMonth } = getLastMonthRange();
-
+    console.log("Requesting Attendance");
     try {
         const { studentID } = req.params;
         const studentObjectId = new mongoose.Types.ObjectId(studentID);
@@ -149,7 +146,7 @@ router.get('/fetchStudentAttendance/:studentID', async (req, res) => {
                 },
               });
       
-              return { name: classObj.className, value: count };
+              return { name: classObj.className, value: count*25 };
             })
           );
           console.log(classData);

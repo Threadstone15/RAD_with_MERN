@@ -7,7 +7,7 @@ const ClassGraph = () => {
   const navigate = useNavigate();
   const studentID = localStorage.getItem("studentID");
   if (!studentID) {
-    navigate("/login");
+    navigate("/");
   }
 
   const [animated, setAnimated] = useState(false);
