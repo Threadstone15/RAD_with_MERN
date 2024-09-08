@@ -19,27 +19,6 @@ const TutorPage = () => {
     registeredClasses: [],
   });
 
-  useEffect(() => {
-    const fetchTutorDetails = async () => {
-      console.log("Fetching tutor details for tutorID:", tutorID);
-      try {
-        if (tutorID) {
-          const response = await fetchTutorData(tutorID);
-          console.log("Response from fetchTeacherData:", response);
-          if (response) {
-            setTutor(response);
-            console.log("Tutor state updated:", response);
-          }
-        }
-      } catch (error) {
-        console.error('Error fetching tutor details:', error);
-      }
-    };
-
-    fetchTutorDetails();
-
-  }, [tutorID]);
-
   const [classes, setClasses] = useState([]);
   const [payments, setPayments] = useState([]);
   const [classTimetable, setClassTimetable] = useState([]);
@@ -51,35 +30,23 @@ const TutorPage = () => {
   const currentDay = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(new Date());
 
   useEffect(() => {
-
-    const dummyPayments = [
-      { date: '2024-08-01', student: 'John Doe', amount: 15000, class: 'Math 101' },
-      { date: '2024-08-05', student: 'Jane Smith', amount: 15000, class: 'Physics 201' },
-    ];
-    setPayments(dummyPayments);
-
     const fetchData = async () => {
       try {
-        const classResponse = await axios.get('http://localhost:5000/teacher-dashboard/classes-with-teachers');
-        console.log('Class Response Data:', classResponse.data);
-    
-        const statisticsResponse = await axios.get("http://localhost:5000/teacher-dashboard/statistics");
-        setStats(statisticsResponse.data);
-    
+
+        console.log('Started Fetching');
+        const classResponse = await axios.get("http://localhost:5000/tutor-dashboard/classes-with-teachers");
+
         const classData = classResponse.data;
-        setClasses(classData);
-    
+
         const formattedTimetable = classData.map((classEntry) => {
-          return classEntry.schedule?.days?.map((day) => ({
+          return classEntry.schedule.days.map((day) => ({
             day,
             time: classEntry.schedule.time,
             subject: classEntry.className,
-            teacher: classEntry.teacherId?.profile?.name || 'Unknown',
-          })) || [];
+            teacher: classEntry.TeacherID?.profile?.name || 'Unknown',
+          }));
         }).flat();
-    
-        console.log('Formatted Timetable:', formattedTimetable);
-    
+
         setClassTimetable(formattedTimetable);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -87,7 +54,6 @@ const TutorPage = () => {
     };
 
     fetchData();
-
   }, []);
 
   const handleMonthChange = (event) => {

@@ -9,13 +9,14 @@ const AuthMiddleware = require("../middleware/AuthMiddleware");
 const roleMiddleware = require("../middleware/roleMiddleware");
 
 router.use(AuthMiddleware);
+router.use(roleMiddleware(["tutor"]));
 
 router.post('/changeTeacherPassword', async(req, res) => {
     console.log("Got a request to changeTeacherPassword");
     try {
         console.log(req.body);
         const {teacherID, currentPassword, newPassword} = req.body;
-        const teacher = await Teacher.findById(studentID);
+        const teacher = await Teacher.findById(teacherID);
     
             if (!teacher) {
                 console.log(`Teacher with ID: ${teacherID} not found in database`);
@@ -35,6 +36,20 @@ router.post('/changeTeacherPassword', async(req, res) => {
         res.status(500).json({ error: 'Server error' });
     }
 })
+
+router.get("/classes-with-teachers", async (req, res) => {
+    try {
+      console.log('Request Received');
+      const classes = await Class.find()
+        .populate("TeacherID")
+        .exec();
+      res.json(classes);
+      console.log("Runned");
+    } catch (error) {
+      console.error("Error fetching class details:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  });
 
 router.get('/fetchTutorData/:tutorID', async (req, res) => {
     console.log("Got a request to fetchTutorData");
